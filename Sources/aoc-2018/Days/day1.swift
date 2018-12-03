@@ -1,14 +1,19 @@
 import Foundation
 
-private func makeInt(_ string: String) -> Int {
-    return Int(string)!
-}
-
 func day1() throws {
     let data = try Data(file: .day1)
     
-    print("1A: \(day1aValue(data))")
-    print("1B: \(day1bValue(data))")
+    let correctA = 416
+    let correctB = 56752
+    
+    let a = day1aValue(data)
+    let b = day1bValue(data)
+    
+    assert(a == correctA)
+    assert(b == correctB)
+    
+    print("1A: \(a)")
+    print("1B: \(b)")
 }
 
 func day1aValue(_ data: Data) -> Int {
@@ -32,4 +37,8 @@ func day1bValue(_ data: Data) -> Int {
         }
     }
     fatalError("Never reached the right value")
+}
+
+private func makeInt(_ string: String) -> Int {
+    return Int(string)!
 }

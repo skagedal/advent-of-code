@@ -1,5 +1,22 @@
 import Foundation
 
+func day2() throws {
+    let data = try Data(file: .day2)
+    
+    let correctA = 7688
+    let correctB = "lsrivmotzbdxpkxnaqmuwcchj"
+
+    let a = day2aValue(data)
+    let b = day2bValue(data)
+    
+    assert(a == correctA)
+    assert(b == correctB)
+    
+    print("2A: \(a)")
+    print("2B: \(b)")
+}
+
+
 struct BoxIDCheck {
     let twos: Int
     let threes: Int
@@ -26,10 +43,6 @@ extension Sequence where Element: Hashable {
     }
 }
 
-func day2() throws {
-    print(day2aValue(try Data(file: .day2)))
-}
-
 func day2aValue(_ data: Data) -> Int {
     return data
         .lines
@@ -38,3 +51,19 @@ func day2aValue(_ data: Data) -> Int {
         .checkSum()
 }
 
+func day2bValue(_ data: Data) -> String {
+    var previous: Set<String> = []
+    for line in data.lines {
+        for previousLine in previous {
+            if simpleDiffSum(line, previousLine) == 1 {
+                return commonLetters(line, previousLine)
+            }
+        }
+        previous.insert(line)
+    }
+    fatalError("No solution to day 2B")
+}
+
+private func commonLetters(_ a: String, _ b: String) -> String {
+    return String(Array(a).removing(at: diffingIndices(a, b)))
+}
