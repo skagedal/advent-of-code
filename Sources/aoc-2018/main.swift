@@ -10,10 +10,8 @@ guard let argument = ProcessInfo.processInfo.arguments.dropFirst().first else {
 }
 
 switch argument {
-case "1a":
-    try day1a()
-case "1b":
-    try day1b()
+case "1": try day1()
+case "2": try day2()
 default:
     die("Unknown argument: \(argument)")
 }
