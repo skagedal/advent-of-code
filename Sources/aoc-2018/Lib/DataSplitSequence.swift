@@ -43,4 +43,8 @@ extension Data {
     func splitSequence(separator: UInt8) -> DataSplitSequence {
         return DataSplitSequence(data: self, separator: separator)
     }
+    
+    var lines: LazyMapSequence<DataSplitSequence, String> {
+        return splitSequence(separator: 10).lazy.map { String(data: $0, encoding: .utf8)! }
+    }
 }
