@@ -1,5 +1,20 @@
 import Foundation
 
+/// This should soon be in Swift stdlib, taken from commit:
+/// https://github.com/apple/swift/pull/16099/commits/25b2fd8f4c1691609e2cb486dfde6371860f1590
+extension Sequence {
+    @inlinable
+    public func count(where predicate: (Element) throws -> Bool) rethrows -> Int {
+        var count = 0
+        for e in self {
+            if try predicate(e) {
+                count += 1
+            }
+        }
+        return count
+    }
+}
+
 extension Sequence where Element: Equatable {
     func countingOccurrences(of element: Element) -> Int {
         return reduce(0, { $0 + ($1 == element ? 1 : 0) })

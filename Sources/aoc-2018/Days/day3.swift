@@ -8,8 +8,10 @@ func day3() throws {
     print("3A: \(a)")
 }
 
+// MARK: - First solution
+
 /// This is horribly inefficient
-func day3aValue(_ data: Data) -> Int {
+func day3aValue_slow(_ data: Data) -> Int {
     let decoder = FabricClaimDecoder()
     let claims = data.lines.map({ try! decoder.decode($0) })
     return Array(claims)
@@ -19,6 +21,24 @@ func day3aValue(_ data: Data) -> Int {
         .reduce([], union)
         .count
 }
+
+func day3aValue(_ data: Data) -> Int {
+    let decoder = FabricClaimDecoder()
+    let claims = data.lines.map({ try! decoder.decode($0) })
+    
+    var claimsForTile: [FabricTile: Int] = [:]
+    for claim in claims {
+        for y in claim.top..<claim.bottom {
+            for x in claim.left..<claim.right {
+                let tile = FabricTile(x: x, y: y)
+                claimsForTile[tile, default: 0] += 1
+            }
+        }
+    }
+    return claimsForTile.values.count(where: { $0 > 1 })
+}
+
+// MARK: - Data stuctures
 
 struct FabricClaim {
     let identifier: Int
@@ -43,27 +63,6 @@ extension FabricClaim: CustomStringConvertible {
     }
 }
 
-class FabricClaimDecoder {
-    enum Error: Swift.Error {
-        case invalidClaim(String)
-    }
-
-    private lazy var regex = try! RegularExpression(pattern: "#(\\d+) @ (\\d+),(\\d+): (\\d+)x(\\d+)")
-
-    func decode(_ string: String) throws -> FabricClaim {
-        let matches = regex.matches(in: string)
-        guard matches.count == 1 else {
-            throw Error.invalidClaim(string)
-        }
-        let match = matches[0]
-        return FabricClaim(identifier: Int(match[1])!,
-                           left: Int(match[2])!,
-                           top: Int(match[3])!,
-                           width: Int(match[4])!,
-                           height: Int(match[5])!)
-    }
-}
-
 struct FabricTile: Hashable, Equatable {
     let x: Int
     let y: Int
@@ -84,4 +83,27 @@ func overlappingTiles(_ a: FabricClaim, _ b: FabricClaim) -> Set<FabricTile> {
     })
     
     return Set(tiles)
+}
+
+// MARK: - Decoding claims
+
+class FabricClaimDecoder {
+    enum Error: Swift.Error {
+        case invalidClaim(String)
+    }
+    
+    private lazy var regex = try! RegularExpression(pattern: "#(\\d+) @ (\\d+),(\\d+): (\\d+)x(\\d+)")
+    
+    func decode(_ string: String) throws -> FabricClaim {
+        let matches = regex.matches(in: string)
+        guard matches.count == 1 else {
+            throw Error.invalidClaim(string)
+        }
+        let match = matches[0]
+        return FabricClaim(identifier: Int(match[1])!,
+                           left: Int(match[2])!,
+                           top: Int(match[3])!,
+                           width: Int(match[4])!,
+                           height: Int(match[5])!)
+    }
 }
