@@ -8,12 +8,14 @@ func day2() throws {
 
     let a = day2aValue(data)
     let b = day2bValue(data)
+    let b2 = day2bValue_alt2(data)
     
     assert(a == correctA)
     assert(b == correctB)
     
     print("2A: \(a)")
     print("2B: \(b)")
+    print("    \(b2)")
 }
 
 
@@ -62,6 +64,13 @@ func day2bValue(_ data: Data) -> String {
         previous.insert(line)
     }
     fatalError("No solution to day 2B")
+}
+
+func day2bValue_alt2(_ data: Data) -> String{
+    return Array(data.lines)
+        .trianglePairs()
+        .first(where: { simpleDiffSum($0.0, $0.1) == 1 })
+        .map({ commonLetters($0.0, $0.1) })!
 }
 
 private func commonLetters(_ a: String, _ b: String) -> String {
