@@ -3,8 +3,8 @@ import Foundation
 func day4() throws {
     let data = try Data(file: .day4)
     
-    let a = puzzleSolution(data, statisticsKey: \.totalMinutes)
-    let b = puzzleSolution(data, statisticsKey: \.daysOfMostSleepMinute)
+    let a = puzzleSolution(data, statisticsKey: \.totalSleepMinutes)
+    let b = puzzleSolution(data, statisticsKey: \.daysOfMostSleepyMinute)
 
     print("4A: \(a)")
     print("4B: \(b)")
@@ -64,7 +64,7 @@ struct GuardStatistics {
         }
     }
     
-    var totalMinutes: Int {
+    var totalSleepMinutes: Int {
         return minutes.values.reduce(0, +)
     }
     
@@ -72,7 +72,7 @@ struct GuardStatistics {
         return minutes.max(by: { $0.value < $1.value })?.key
     }
     
-    var daysOfMostSleepMinute: Int {
+    var daysOfMostSleepyMinute: Int {
         return minutes[mostSleepyMinute!]!
     }
 }
