@@ -23,26 +23,32 @@ private func puzzleSolution(_ data: Data, statisticsKey: KeyPath<GuardStatistics
 
 private func calculateGuardStatistics(_ sortedEvents: [GuardEvent]) -> [GuardIdentifier: GuardStatistics] {
     enum State {
-        case initial, inShift(GuardIdentifier), asleep(GuardIdentifier, Minute)
+        case initial, working(GuardIdentifier), asleep(GuardIdentifier, Minute)
     }
     
     var statistics: [GuardIdentifier: GuardStatistics] = [:]
     var currentState: State = .initial
 
     for event in sortedEvents {
-        switch (currentState, event.event) {
-        case (.initial, .beginsShift(let identifier)),
-             (.inShift, .beginsShift(let identifier)):
-            currentState = .inShift(identifier)
-        case (.inShift(let identifier), .fallsAsleep):
-            currentState = .asleep(identifier, event.dateTime.minute)
-        case (.asleep(let identifier, let minute), .wakesUp):
-            statistics[identifier, default: .zero].addMinutes(fallsAsleepMinute: minute,
-                                                              wakeUpMinute: event.dateTime.minute)
-            currentState = .inShift(identifier)
-        default:
-            fatalError("Ignoring illegal event \(event) in state \(currentState)")
-        }
+        currentState = {
+            switch(currentState, event.event) {
+                
+            case (.initial, .beginsShift(let `guard`)),
+                 (.working, .beginsShift(let `guard`)):
+                return .working(`guard`)
+                
+            case (.working(let `guard`), .fallsAsleep):
+                return .asleep(`guard`, event.dateTime.minute)
+                
+            case (.asleep(let `guard`, let minute), .wakesUp):
+                statistics[`guard`, default: .zero].addMinutes(fallsAsleepMinute: minute,
+                                                               wakeUpMinute: event.dateTime.minute)
+                return .working(`guard`)
+
+            default:
+                fatalError("Event \(event) illegal in state \(currentState)")
+            }
+        }()
     }
     return statistics
 }
