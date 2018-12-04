@@ -15,6 +15,10 @@ struct RegularExpression {
             let range = ns.range(at: index)
             return (string as NSString).substring(with: range)
         }
+        
+        func ranges() -> [String] {
+            return (0..<ns.numberOfRanges).map({ self[$0] })
+        }
     }
     
     let ns: NSRegularExpression
@@ -30,4 +34,14 @@ struct RegularExpression {
         }
         return ns.matches(in: string, options: options, range: range).map(match)
     }
+    
+    func firstMatch(in string: String, options: NSRegularExpression.MatchingOptions = []) -> Match? {
+        return matches(in: string, options: options).first
+    }
 }
+
+/// Makes it possible to match on regular expressions in switch statements.
+func ~=(_ regex: RegularExpression, _ string: String) -> Bool {
+    return !regex.matches(in: string).isEmpty
+}
+

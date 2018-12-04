@@ -10,7 +10,7 @@ func day3() throws {
     print("3B: \(b)")
 }
 
-// MARK: - First solution
+// MARK: - 3A. First solution
 
 /// This is horribly inefficient
 func day3aValue_slow(_ data: Data) -> Int {
@@ -24,6 +24,8 @@ func day3aValue_slow(_ data: Data) -> Int {
         .count
 }
 
+// MARK: - 3A. Efficient solution
+
 func day3aValue(_ data: Data) -> Int {
     return data
         .fabricClaims
@@ -32,6 +34,8 @@ func day3aValue(_ data: Data) -> Int {
         .count(where: { $0 > 1 })
 }
 
+// MARK: - 3B.
+
 func day3bValue(_ data: Data) -> Int {
     let claims = data.fabricClaims
     let claimsForTile = claims.countPerTile()
@@ -39,6 +43,8 @@ func day3bValue(_ data: Data) -> Int {
         claimsForTile[$0] == 1
     })})!.identifier
 }
+
+// MARK: - Common algorithm for solutions to A & B
 
 extension Sequence where Element == FabricClaim {
     func countPerTile() -> [FabricTile: Int] {
