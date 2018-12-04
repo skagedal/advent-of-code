@@ -4,8 +4,10 @@ func day3() throws {
     let data = try Data(file: .day3)
 
     let a = day3aValue(data)
-    
     print("3A: \(a)")
+
+    let b = day3bValue(data)
+    print("3B: \(b)")
 }
 
 // MARK: - First solution
@@ -23,16 +25,31 @@ func day3aValue_slow(_ data: Data) -> Int {
 }
 
 func day3aValue(_ data: Data) -> Int {
-    let decoder = FabricClaimDecoder()
-    let claims = data.lines.map({ try! decoder.decode($0) })
-    
-    var claimsForTile: [FabricTile: Int] = [:]
-    for claim in claims {
-        for tile in claim.tiles {
-            claimsForTile[tile, default: 0] += 1
+    return data
+        .fabricClaims
+        .countPerTile()
+        .values
+        .count(where: { $0 > 1 })
+}
+
+func day3bValue(_ data: Data) -> Int {
+    let claims = data.fabricClaims
+    let claimsForTile = claims.countPerTile()
+    return claims.first(where: { $0.tiles.allSatisfy({
+        claimsForTile[$0] == 1
+    })})!.identifier
+}
+
+extension Sequence where Element == FabricClaim {
+    func countPerTile() -> [FabricTile: Int] {
+        var claimsForTile: [FabricTile: Int] = [:]
+        for claim in self {
+            for tile in claim.tiles {
+                claimsForTile[tile, default: 0] += 1
+            }
         }
+        return claimsForTile
     }
-    return claimsForTile.values.count(where: { $0 > 1 })
 }
 
 // MARK: - Data stuctures
@@ -108,5 +125,12 @@ class FabricClaimDecoder {
                            top: Int(match[3])!,
                            width: Int(match[4])!,
                            height: Int(match[5])!)
+    }
+}
+
+private extension Data {
+    var fabricClaims: AnySequence<FabricClaim> {
+        let decoder = FabricClaimDecoder()
+        return AnySequence(lines.map({ try! decoder.decode($0) }))
     }
 }
