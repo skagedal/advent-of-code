@@ -35,6 +35,32 @@ extension Sequence where Element: Hashable {
     }
 }
 
+extension Sequence {
+    func sorted<Value>(by keyPath: KeyPath<Element, Value>) -> [Element] where Value: Comparable {
+        return sorted(by: isLessThan(for: [keyPath]))
+    }
+    
+    func sorted<Value>(by keyPaths: [KeyPath<Element, Value>]) -> [Element] where Value: Comparable {
+        return sorted(by: isLessThan(for: keyPaths))
+    }
+    
+    func max<Value>(by keyPath: KeyPath<Element, Value>) -> Element? where Value: Comparable {
+        return self.max(by: isLessThan(for: [keyPath]))
+    }
+
+    func max<Value>(by keyPaths: [KeyPath<Element, Value>]) -> Element? where Value: Comparable {
+        return self.max(by: isLessThan(for: keyPaths))
+    }
+
+    func min<Value>(by keyPath: KeyPath<Element, Value>) -> Element? where Value: Comparable {
+        return self.min(by: isLessThan(for: [keyPath]))
+    }
+    
+    func min<Value>(by keyPaths: [KeyPath<Element, Value>]) -> Element? where Value: Comparable {
+        return self.min(by: isLessThan(for: keyPaths))
+    }
+}
+
 // MARK: - Diffing
 
 /// Calculates the number of places `sequenceA` and `sequenceB` where the elements are different,

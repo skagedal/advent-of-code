@@ -3,50 +3,22 @@ import Foundation
 func day4() throws {
     let data = try Data(file: .day4)
     
-    let a = day4aValue(data)
+    let a = puzzleSolution(data, statisticsKey: \.totalMinutes)
+    let b = puzzleSolution(data, statisticsKey: \.daysOfMostSleepMinute)
+
     print("4A: \(a)")
-    
-    let b = day4bValue(data)
     print("4B: \(b)")
 }
 
-func day4aValue(_ data: Data) -> Int {
+private func puzzleSolution(_ data: Data, statisticsKey: KeyPath<GuardStatistics, Int>) -> Int {
     let decoder = GuardEventDecoder()
     let sortedEvents = data.lines.map({ decoder.decode($0) }).sorted()
     
     let statistics = calculateGuardStatistics(sortedEvents)
-    guard let maxStats = statistics.max(by: { lhs, rhs in
-        lhs.value.totalMinutes < rhs.value.totalMinutes
-    }) else {
-        fatalError("Couldn't find a most sleepy guard")
-    }
-    
-    let mostSleepyGuard = maxStats.key
-    
-    guard let mostSleepyMinute = maxStats.value.mostSleepyMinute else {
-        fatalError("Couldn't find a most sleepy minute")
-    }
-    return mostSleepyGuard * mostSleepyMinute
-}
-
-func day4bValue(_ data: Data) -> Int {
-    let decoder = GuardEventDecoder()
-    let sortedEvents = data.lines.map({ decoder.decode($0) }).sorted()
-    
-    let statistics = calculateGuardStatistics(sortedEvents)
-    guard let maxStats = statistics.max(by: { lhs, rhs in
-        lhs.value.daysOfMostSleepMinute < rhs.value.daysOfMostSleepMinute
-    }) else {
-        fatalError("Couldn't find a most sleepy guard")
-    }
-    
-    let mostSleepyGuard = maxStats.key
-    
-    guard let mostSleepyMinute = maxStats.value.mostSleepyMinute else {
-        fatalError("Couldn't find a most sleepy minute")
-    }
-    return mostSleepyGuard * mostSleepyMinute
-
+    let sleepyStats = statistics.max(byValue: statisticsKey)!
+    let sleepyGuard = sleepyStats.key
+    let sleepyMinute = sleepyStats.value.mostSleepyMinute!
+    return sleepyGuard * sleepyMinute
 }
 
 private func calculateGuardStatistics(_ sortedEvents: [GuardEvent]) -> [GuardIdentifier: GuardStatistics] {
@@ -125,9 +97,7 @@ struct GuardEvent {
 
 extension GuardEvent.DateTime: Comparable {
     static func < (lhs: GuardEvent.DateTime, rhs: GuardEvent.DateTime) -> Bool {
-        return
-            (lhs.year, lhs.month, lhs.day, lhs.hour, lhs.minute) <
-            (rhs.year, rhs.month, rhs.day, rhs.hour, rhs.minute)
+        return isLessThan(for: [\.year, \.month, \.day, \.hour, \.minute])(lhs, rhs)
     }
 }
 
