@@ -5,11 +5,12 @@ func day4() throws {
     
     let a = day4aValue(data)
     print("4A: \(a)")
+    
+    let b = day4bValue(data)
+    print("4B: \(b)")
 }
 
 func day4aValue(_ data: Data) -> Int {
-    // Read data and sort it.
-    
     let decoder = GuardEventDecoder()
     let sortedEvents = data.lines.map({ decoder.decode($0) }).sorted()
     
@@ -28,6 +29,26 @@ func day4aValue(_ data: Data) -> Int {
     return mostSleepyGuard * mostSleepyMinute
 }
 
+func day4bValue(_ data: Data) -> Int {
+    let decoder = GuardEventDecoder()
+    let sortedEvents = data.lines.map({ decoder.decode($0) }).sorted()
+    
+    let statistics = calculateGuardStatistics(sortedEvents)
+    guard let maxStats = statistics.max(by: { lhs, rhs in
+        lhs.value.daysOfMostSleepMinute < rhs.value.daysOfMostSleepMinute
+    }) else {
+        fatalError("Couldn't find a most sleepy guard")
+    }
+    
+    let mostSleepyGuard = maxStats.key
+    
+    guard let mostSleepyMinute = maxStats.value.mostSleepyMinute else {
+        fatalError("Couldn't find a most sleepy minute")
+    }
+    return mostSleepyGuard * mostSleepyMinute
+
+}
+
 private func calculateGuardStatistics(_ sortedEvents: [GuardEvent]) -> [GuardIdentifier: GuardStatistics] {
     enum State {
         case initial, inShift(GuardIdentifier), asleep(GuardIdentifier, Minute)
@@ -36,9 +57,7 @@ private func calculateGuardStatistics(_ sortedEvents: [GuardEvent]) -> [GuardIde
     var statistics: [GuardIdentifier: GuardStatistics] = [:]
     var currentState: State = .initial
 
-    print("Let's loop through the events")
     for event in sortedEvents {
-        print(event)
         switch (currentState, event.event) {
         case (.initial, .beginsShift(let identifier)),
              (.inShift, .beginsShift(let identifier)):
@@ -73,6 +92,10 @@ struct GuardStatistics {
     
     var mostSleepyMinute: Minute? {
         return minutes.max(by: { $0.value < $1.value })?.key
+    }
+    
+    var daysOfMostSleepMinute: Int {
+        return minutes[mostSleepyMinute!]!
     }
 }
 
