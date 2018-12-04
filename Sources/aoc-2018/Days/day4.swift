@@ -102,19 +102,15 @@ struct GuardStatistics {
 // MARK: - Data structures
 
 typealias GuardIdentifier = Int
-typealias Year = Int
-typealias Month = Int
-typealias Day = Int
-typealias Hour = Int
 typealias Minute = Int
 
 struct GuardEvent {
     struct DateTime {
-        let year: Year
-        let month: Month
-        let day: Day
-        let hour: Hour
-        let minute: Minute
+        let year: Int
+        let month: Int
+        let day: Int
+        let hour: Int
+        let minute: Int
     }
     
     enum Event {
@@ -129,22 +125,9 @@ struct GuardEvent {
 
 extension GuardEvent.DateTime: Comparable {
     static func < (lhs: GuardEvent.DateTime, rhs: GuardEvent.DateTime) -> Bool {
-        guard lhs.year == rhs.year else {
-            return lhs.year < rhs.year
-        }
-        guard lhs.month == rhs.month else {
-            return lhs.month < rhs.month
-        }
-        guard lhs.day == rhs.day else {
-            return lhs.day < rhs.day
-        }
-        guard lhs.hour == rhs.hour else {
-            return lhs.hour < rhs.hour
-        }
-        guard lhs.minute == rhs.minute else {
-            return lhs.minute < rhs.minute
-        }
-        return false
+        return
+            (lhs.year, lhs.month, lhs.day, lhs.hour, lhs.minute) <
+            (rhs.year, rhs.month, rhs.day, rhs.hour, rhs.minute)
     }
 }
 
@@ -165,10 +148,7 @@ extension GuardEvent.Event: Comparable {
 
 extension GuardEvent: Comparable {
     static func < (lhs: GuardEvent, rhs: GuardEvent) -> Bool {
-        guard lhs.dateTime == rhs.dateTime else {
-            return lhs.dateTime < rhs.dateTime
-        }
-        return lhs.event < rhs.event
+        return (lhs.dateTime, lhs.event) < (rhs.dateTime, rhs.event)
     }
 }
 
