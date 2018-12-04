@@ -28,11 +28,8 @@ func day3aValue(_ data: Data) -> Int {
     
     var claimsForTile: [FabricTile: Int] = [:]
     for claim in claims {
-        for y in claim.top..<claim.bottom {
-            for x in claim.left..<claim.right {
-                let tile = FabricTile(x: x, y: y)
-                claimsForTile[tile, default: 0] += 1
-            }
+        for tile in claim.tiles {
+            claimsForTile[tile, default: 0] += 1
         }
     }
     return claimsForTile.values.count(where: { $0 > 1 })
@@ -52,8 +49,13 @@ extension FabricClaim {
     var right: Int {
         return left + width
     }
+
     var bottom: Int {
         return top + height
+    }
+
+    var tiles: [FabricTile] {
+        return (top..<bottom).flatMap({ y in (left..<right).map({ x in FabricTile(x: x, y: y) }) })
     }
 }
 
@@ -62,6 +64,7 @@ extension FabricClaim: CustomStringConvertible {
         return "decoded #\(identifier) @ \(left),\(top): \(width)x\(height)"
     }
 }
+
 
 struct FabricTile: Hashable, Equatable {
     let x: Int
