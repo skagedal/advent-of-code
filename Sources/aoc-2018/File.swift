@@ -10,6 +10,7 @@ struct File {
     static let day2 = File("Data/day2_input.txt")
     static let day3 = File("Data/day3_input.txt")
     static let day4 = File("Data/day4_input.txt")
+    static let day5 = File("Data/day5_input.txt")
 }
 
 extension URL {

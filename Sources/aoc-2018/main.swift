@@ -11,13 +11,14 @@ func runDay(day: Int) throws {
     case 2: try day2()
     case 3: try day3()
     case 4: try day4()
+    case 5: try day5()
     default:
         die("Unknown day: \(day)")
     }
 }
 
 guard let argument = ProcessInfo.processInfo.arguments.dropFirst().first else {
-    for day in 1...4 {
+    for day in 1...5 {
         try runDay(day: day)
     }
     exit(0)
