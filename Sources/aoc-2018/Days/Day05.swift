@@ -4,11 +4,23 @@ private let a: UInt8 = 97
 private let z: UInt8 = 122
 private let caseBit: UInt8 = 32
 
-func day5() throws {
-    let data = try Data(file: .day5)
+import Foundation
+
+struct Day05: AdventDay {
+    let day = 5
     
-    print(data.reducingPolymers().count)
-    print(data.shortestPolymer())
+    func answerToFirstPart(_ data: Data) throws -> String {
+        return data
+            .reducingPolymers()
+            .count
+            .toString
+    }
+    
+    func answerToSecondPart(_ data: Data) throws -> String {
+        return data
+            .shortestPolymer()
+            .toString
+    }
 }
 
 private extension UInt8 {

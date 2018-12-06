@@ -1,13 +1,15 @@
 import Foundation
 
-func day4() throws {
-    let data = try Data(file: .day4)
+struct Day04: AdventDay {
+    let day = 4
     
-    let a = puzzleSolution(data, statisticsKey: \.totalSleepMinutes)
-    let b = puzzleSolution(data, statisticsKey: \.daysOfMostSleepyMinute)
-
-    print("4A: \(a)")
-    print("4B: \(b)")
+    func answerToFirstPart(_ data: Data) throws -> String {
+        return puzzleSolution(data, statisticsKey: \.totalSleepMinutes).toString
+    }
+    
+    func answerToSecondPart(_ data: Data) throws -> String {
+        return puzzleSolution(data, statisticsKey: \.daysOfMostSleepyMinute).toString
+    }
 }
 
 private func puzzleSolution(_ data: Data, statisticsKey: KeyPath<GuardStatistics, Int>) -> Int {

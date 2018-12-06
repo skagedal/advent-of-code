@@ -1,13 +1,24 @@
 import Foundation
 
-func day3() throws {
-    let data = try Data(file: .day3)
-
-    let a = day3aValue(data)
-    print("3A: \(a)")
-
-    let b = day3bValue(data)
-    print("3B: \(b)")
+struct Day03: AdventDay {
+    let day = 3
+    
+    func answerToFirstPart(_ data: Data) throws -> String {
+        return data
+            .fabricClaims
+            .countPerTile()
+            .values
+            .count(where: { $0 > 1 })
+            .toString
+    }
+    
+    func answerToSecondPart(_ data: Data) throws -> String {
+        let claims = data.fabricClaims
+        let claimsForTile = claims.countPerTile()
+        return claims.first(where: { $0.tiles.allSatisfy({
+            claimsForTile[$0] == 1
+        })})!.identifier.toString
+    }
 }
 
 // MARK: - 3A. First solution
@@ -22,26 +33,6 @@ func day3aValue_slow(_ data: Data) -> Int {
         .map({ overlappingTiles($0.0, $0.1) })
         .reduce([], union)
         .count
-}
-
-// MARK: - 3A. Efficient solution
-
-func day3aValue(_ data: Data) -> Int {
-    return data
-        .fabricClaims
-        .countPerTile()
-        .values
-        .count(where: { $0 > 1 })
-}
-
-// MARK: - 3B.
-
-func day3bValue(_ data: Data) -> Int {
-    let claims = data.fabricClaims
-    let claimsForTile = claims.countPerTile()
-    return claims.first(where: { $0.tiles.allSatisfy({
-        claimsForTile[$0] == 1
-    })})!.identifier
 }
 
 // MARK: - Common algorithm for solutions to A & B
@@ -87,7 +78,6 @@ extension FabricClaim: CustomStringConvertible {
         return "decoded #\(identifier) @ \(left),\(top): \(width)x\(height)"
     }
 }
-
 
 struct FabricTile: Hashable, Equatable {
     let x: Int
