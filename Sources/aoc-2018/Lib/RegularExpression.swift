@@ -16,8 +16,16 @@ struct RegularExpression {
             return (string as NSString).substring(with: range)
         }
         
+        func valueIfExists(at index: Int) -> String? {
+            let range = ns.range(at: index)
+            guard range.location != NSNotFound else {
+                return nil
+            }
+            return (string as NSString).substring(with: range)
+        }
+        
         func ranges() -> [String] {
-            return (0..<ns.numberOfRanges).map({ self[$0] })
+            return (0..<ns.numberOfRanges).compactMap({ valueIfExists(at: $0) })
         }
     }
     
