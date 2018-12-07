@@ -2,8 +2,9 @@ import Foundation
 
 struct Day01: AdventDay {
     let day = 1
+    let knownAnswerToFirstPart = "416"
+    let knownAnswerToSecondPart = "56752"
     
-    /// 416
     func answerToFirstPart(_ data: Data) throws -> String {
         return data
             .lines
@@ -12,7 +13,6 @@ struct Day01: AdventDay {
             .toString
     }
     
-    /// 56752
     func answerToSecondPart(_ data: Data) throws -> String {
         let changes = Array(data.lines.map(makeInt))
         var reached: Set<Int> = []

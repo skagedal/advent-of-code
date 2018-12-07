@@ -2,6 +2,8 @@ import Foundation
 
 struct Day03: AdventDay {
     let day = 3
+    let knownAnswerToFirstPart = "111630"
+    let knownAnswerToSecondPart = "724"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return data

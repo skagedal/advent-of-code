@@ -18,8 +18,12 @@ enum Part: String {
 
 extension AdventDay {
     func run(_ part: Part) throws {
+        if let exampleData = try? Data(exampleForDay: day) {
+            let answer = try answerToExampleForPart(part, data: exampleData)
+            printAndCheckDiff(part: part, isExample: true, answer: answer, knownAnswer: knownAnswer(toExampleFor: part))
+        }
         let answer = try answerToPart(part, data: try Data(day: day))
-        print("\(day)\(part.rawValue): \(answer)")
+        printAndCheckDiff(part: part, isExample: false, answer: answer, knownAnswer: knownAnswer(to: part))
     }
     
     func runBoth() throws {
@@ -35,17 +39,61 @@ extension AdventDay {
             return try answerToSecondPart(data)
         }
     }
+    
+    func answerToExampleForPart(_ part: Part, data: Data) throws -> String {
+        switch part {
+        case .first:
+            return try answerToExampleForFirstPart(data)
+        case .second:
+            return try answerToExampleForSecondPart(data)
+        }
+    }
+
+    func knownAnswer(to part: Part) -> String {
+        switch part {
+        case .first:
+            return knownAnswerToFirstPart
+        case .second:
+            return knownAnswerToSecondPart
+        }
+    }
+    
+    func knownAnswer(toExampleFor part: Part) -> String {
+        switch part {
+        case .first:
+            return knownAnswerToExampleForFirstPart
+        case .second:
+            return knownAnswerToExampleForSecondPart
+        }
+    }
+    
+    private func printAndCheckDiff(part: Part, isExample: Bool, answer: String, knownAnswer: String) {
+        let example = isExample ? " - example" : ""
+        let matches: String
+        if knownAnswer != Answer.unknown {
+            if knownAnswer == answer {
+                matches = "✅"
+            } else {
+                matches = "🛑 - should be \(knownAnswer)"
+            }
+        } else {
+            matches = ""
+        }
+        print("\(day)\(part.rawValue)\(example): \(answer) \(matches)")
+    }
 }
+
+
 guard let argument = ProcessInfo.processInfo.arguments.dropFirst().first else {
     for day in days {
         do {
             try day.runBoth()
+            print()
         } catch CocoaError.fileReadNoSuchFile {
             // Ignore
         } catch AdventError.unimplemented {
             // Ignore
         }
-        print()
     }
     exit(0)
 }

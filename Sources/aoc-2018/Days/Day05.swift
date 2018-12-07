@@ -8,6 +8,10 @@ import Foundation
 
 struct Day05: AdventDay {
     let day = 5
+    let knownAnswerToExampleForFirstPart = "10"
+    let knownAnswerToFirstPart = "11476"
+    let knownAnswerToExampleForSecondPart = "4"
+    let knownAnswerToSecondPart = "5446"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return data

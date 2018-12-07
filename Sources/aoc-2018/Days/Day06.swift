@@ -1,7 +1,13 @@
 import Foundation
 
+// Note: This code is known to be ugly.
+
 struct Day06: AdventDay {
     let day = 6
+    let knownAnswerToExampleForFirstPart = "17"
+    let knownAnswerToFirstPart = "5365"
+    // Example two has different values.
+    let knownAnswerToSecondPart = "42513"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         let coordinates = Array(data.lines.enumerated().map({ id, line in InputCoordinate(line, identifier: id) }))

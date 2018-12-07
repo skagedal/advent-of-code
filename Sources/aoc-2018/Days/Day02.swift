@@ -2,8 +2,9 @@ import Foundation
 
 struct Day02: AdventDay {
     let day = 2
+    let knownAnswerToFirstPart = "7688"
+    let knownAnswerToSecondPart = "lsrivmotzbdxpkxnaqmuwcchj"
     
-    /// 7688
     func answerToFirstPart(_ data: Data) throws -> String {
         return data
             .lines
@@ -13,7 +14,6 @@ struct Day02: AdventDay {
             .toString
     }
     
-    /// lsrivmotzbdxpkxnaqmuwcchj
     func answerToSecondPart(_ data: Data) throws -> String {
         return Array(data.lines)
             .trianglePairs()

@@ -2,6 +2,10 @@ import Foundation
 
 struct Day04: AdventDay {
     let day = 4
+    let knownAnswerToExampleForFirstPart = "240"
+    let knownAnswerToFirstPart = "14346"
+    let knownAnswerToExampleForSecondPart = "4455"
+    let knownAnswerToSecondPart = "5705"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return puzzleSolution(data, statisticsKey: \.totalSleepMinutes).toString
