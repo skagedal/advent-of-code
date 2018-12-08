@@ -15,10 +15,22 @@ extension Year2015 {
         }
     
         func answerToSecondPart(_ data: Data) throws -> String {
-            throw AdventError.unimplemented
+            var santa: Location = .zero
+            var roboSanta: Location = .zero
+            var visited: [Location: Int] = [.zero: 2]
+            for instructions in data.grouping(count: 2) {
+                santa = move(instructions[0], from: santa)
+                visited[santa, default: 0] += 1
+                if let instruction = instructions[safe: 1] {
+                    roboSanta = move(instruction, from: roboSanta)
+                    visited[roboSanta, default: 0] += 1
+                }
+            }
+            return visited.keys.count.toString
         }
         
         let knownAnswerToFirstPart = "2592"
+        let knownAnswerToSecondPart = "2360"
     }
 }
 
