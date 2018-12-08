@@ -6,7 +6,7 @@ private let caseBit: UInt8 = 32
 
 import Foundation
 
-struct Day05: AdventDay {
+struct Day05: AdventDay2018 {
     let day = 5
     let knownAnswerToExampleForFirstPart = "10"
     let knownAnswerToFirstPart = "11476"

@@ -5,11 +5,6 @@ func die(_ string: String) -> Never {
     exit(0)
 }
 
-enum Year {
-    case year2015
-    case year2018
-}
-
 let year: Year
 
 var arguments = ProcessInfo.processInfo.arguments.dropFirst()
@@ -53,13 +48,23 @@ func timed<T>(_ action: (() throws -> T)) rethrows -> (TimeInterval, T) {
 }
 
 extension AdventDay {
+    func data() throws -> Data {
+        let url = URL(fileURLWithPath: "Data/\(year)/day\(day)_input.txt")
+        return try Data(contentsOf: url)
+    }
+    
+    func exampleData() throws -> Data {
+        let url = URL(fileURLWithPath: "Data/\(year)/day\(day)_example.txt")
+        return try Data(contentsOf: url)
+    }
+    
     func run(_ part: Part) throws {
         do {
-            if let exampleData = try? Data(exampleForDay: day) {
+            if let exampleData = try? exampleData() {
                 let (time, answer) = try timed({ try answerToExampleForPart(part, data: exampleData) })
                 printAndCheckDiff(part: part, isExample: true, answer: answer, knownAnswer: knownAnswer(toExampleFor: part), time: time)
             }
-            let (time, answer) = try timed({ try answerToPart(part, data: try Data(day: day)) })
+            let (time, answer) = try timed({ try answerToPart(part, data: try data()) })
             printAndCheckDiff(part: part, isExample: false, answer: answer, knownAnswer: knownAnswer(to: part), time: time)
         } catch AdventError.unimplemented {
             printNotImplemented(part: part)

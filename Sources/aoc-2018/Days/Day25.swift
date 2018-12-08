@@ -1,6 +1,6 @@
 import Foundation
 
-struct Day25: AdventDay {
+struct Day25: AdventDay2018 {
     let day = 25
 
     func answerToFirstPart(_ data: Data) throws -> String {

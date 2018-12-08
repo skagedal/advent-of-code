@@ -1,6 +1,6 @@
 import Foundation
 
-struct Day08: AdventDay {
+struct Day08: AdventDay2018 {
     let day = 8
     let knownAnswerToExampleForFirstPart = "138"
     let knownAnswerToFirstPart = "41454"

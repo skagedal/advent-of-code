@@ -1,7 +1,13 @@
 import Foundation
 
+enum Year {
+    case year2015
+    case year2018
+}
+
 protocol AdventDay {
     var day: Int { get }
+    var year: Year { get }
     
     func answerToFirstPart(_ data: Data) throws -> String
     func answerToSecondPart(_ data: Data) throws -> String
@@ -15,11 +21,20 @@ protocol AdventDay {
     func answerToExampleForSecondPart(_ data: Data) throws -> String
 }
 
-protocol AdventDay2015: AdventDay {
-    
+extension AdventDay {
+    var year: Year {
+        return .year2018
+    }
 }
 
 enum Year2015 { }
+enum Year2018 { }
+
+protocol AdventDay2015: AdventDay { }
+protocol AdventDay2018: AdventDay { }
+
+extension AdventDay2015 { var year: Year { return .year2015 }}
+extension AdventDay2018 { var year: Year { return .year2018 }}
 
 enum Answer {
     static let unknown = "❔"

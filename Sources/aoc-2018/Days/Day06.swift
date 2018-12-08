@@ -2,7 +2,7 @@ import Foundation
 
 // Note: This code is known to be ugly.
 
-struct Day06: AdventDay {
+struct Day06: AdventDay2018 {
     let day = 6
     let knownAnswerToExampleForFirstPart = "17"
     let knownAnswerToFirstPart = "5365"
