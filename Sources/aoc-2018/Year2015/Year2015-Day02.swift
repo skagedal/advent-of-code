@@ -15,7 +15,16 @@ extension Year2015 {
         }
     
         func answerToSecondPart(_ data: Data) throws -> String {
-            throw AdventError.unimplemented
+            let feet: Int = Array(data.integers)
+                .grouping(count: 3)
+                .map({
+                    let d = $0.sorted()
+                    return d[0] * 2 + d[1] * 2 + d[0] * d[1] * d[2]
+                }).sum()
+            return feet.toString
         }
+        
+        let knownAnswerToFirstPart = "1588178"
+        let knownAnswerToSecondPart = "3783758"
     }
 }
