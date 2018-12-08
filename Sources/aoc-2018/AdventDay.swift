@@ -15,6 +15,12 @@ protocol AdventDay {
     func answerToExampleForSecondPart(_ data: Data) throws -> String
 }
 
+protocol AdventDay2015: AdventDay {
+    
+}
+
+enum Year2015 { }
+
 enum Answer {
     static let unknown = "❔"
 }

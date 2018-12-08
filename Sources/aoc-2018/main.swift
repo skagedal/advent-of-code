@@ -5,11 +5,37 @@ func die(_ string: String) -> Never {
     exit(0)
 }
 
-let days: [AdventDay] = [
-    Day01(), Day02(), Day03(), Day04(), Day05(), Day06(), Day07(), Day08(), Day09(), Day10(),
-    Day11(), Day12(), Day13(), Day14(), Day15(), Day16(), Day17(), Day18(), Day19(), Day20(),
-    Day21(), Day22(), Day23(), Day24(), Day25()
+enum Year {
+    case year2015
+    case year2018
+}
+
+let year: Year
+
+var arguments = ProcessInfo.processInfo.arguments.dropFirst()
+if arguments.contains(where: equals("--2015")) {
+    year = .year2015
+    arguments.removeAll(where: equals("--2015"))
+} else {
+    year = .year2018
+}
+
+let allDays: [Year: [AdventDay]] = [
+    .year2015: [
+        Year2015.Day01(), Year2015.Day02(), Year2015.Day03(), Year2015.Day04(), Year2015.Day05(),
+        Year2015.Day06(), Year2015.Day07(), Year2015.Day08(), Year2015.Day09(), Year2015.Day10(),
+        Year2015.Day11(), Year2015.Day12(), Year2015.Day13(), Year2015.Day14(), Year2015.Day15(),
+        Year2015.Day16(), Year2015.Day17(), Year2015.Day18(), Year2015.Day19(), Year2015.Day20(),
+        Year2015.Day21(), Year2015.Day22(), Year2015.Day23(), Year2015.Day24(), Year2015.Day25()
+    ],
+    .year2018: [
+        Day01(), Day02(), Day03(), Day04(), Day05(), Day06(), Day07(), Day08(), Day09(), Day10(),
+        Day11(), Day12(), Day13(), Day14(), Day15(), Day16(), Day17(), Day18(), Day19(), Day20(),
+        Day21(), Day22(), Day23(), Day24(), Day25()
+    ]
 ]
+
+let days = allDays[year]!
 
 enum Part: String {
     case first = "A"
@@ -110,7 +136,7 @@ extension AdventDay {
 }
 
 
-guard let argument = ProcessInfo.processInfo.arguments.dropFirst().first else {
+guard let argument = arguments.first else {
     for day in days {
         do {
             try day.runBoth()
