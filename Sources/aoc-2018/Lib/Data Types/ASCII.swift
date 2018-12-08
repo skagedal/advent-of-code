@@ -1,4 +1,5 @@
 enum ASCII {
+    // First, all of ASCII.
     static let nullCharacter: UInt8 = 0
     static let startOfHeading: UInt8 = 1
     static let startOfText: UInt8 = 2
@@ -127,4 +128,17 @@ enum ASCII {
     static let rightCurlyBracket: UInt8 = 125
     static let tilde: UInt8 = 126
     static let delete: UInt8 = 127
+
+    // Then, some helpers.
+
+    static func isInteger(_ character: UInt8) -> Bool {
+        return (ASCII.zero...ASCII.nine).contains(character)
+    }
+
+    static func integer(_ character: UInt8) -> Int? {
+        guard ASCII.isInteger(character) else {
+            return nil
+        }
+        return Int(character - ASCII.zero)
+    }
 }
