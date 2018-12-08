@@ -5,6 +5,7 @@ struct Day08: AdventDay {
     let knownAnswerToExampleForFirstPart = "138"
     let knownAnswerToFirstPart = "41454"
     let knownAnswerToExampleForSecondPart = "66"
+    let knownAnswerToSecondPart = "25752"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return LicenseTree

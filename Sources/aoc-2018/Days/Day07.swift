@@ -13,12 +13,14 @@ struct Day07: AdventDay {
     }
     
     func answerToSecondPart(_ data: Data) throws -> String {
+        throw AdventError.unimplemented
         let edges = SleighInstructionsDecoder().decode(data)
         let elfScheduler = ElfScheduler(edges: edges, numberOfWorkers: 5, timeOffset: 60)
         return "\(elfScheduler.scheduledSeconds())"
     }
     
     func answerToSecondPartExampleVariant(_ data: Data) throws -> String {
+        throw AdventError.unimplemented
         let edges = SleighInstructionsDecoder().decode(data)
         let elfScheduler = ElfScheduler(edges: edges, numberOfWorkers: 2, timeOffset: 0)
         return "\(elfScheduler.scheduledSeconds())"

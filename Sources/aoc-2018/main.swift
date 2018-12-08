@@ -16,15 +16,25 @@ enum Part: String {
     case second = "B"
 }
 
+func timed<T>(_ action: (() throws -> T)) rethrows -> (TimeInterval, T) {
+    let start = DispatchTime.now()
+    let answer = try action()
+    let end = DispatchTime.now()
+    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+    let timeInterval = TimeInterval(nanoTime) / 1_000_000_000
+    return (timeInterval, answer)
+    
+}
+
 extension AdventDay {
     func run(_ part: Part) throws {
         do {
             if let exampleData = try? Data(exampleForDay: day) {
-                let answer = try answerToExampleForPart(part, data: exampleData)
-                printAndCheckDiff(part: part, isExample: true, answer: answer, knownAnswer: knownAnswer(toExampleFor: part))
+                let (time, answer) = try timed({ try answerToExampleForPart(part, data: exampleData) })
+                printAndCheckDiff(part: part, isExample: true, answer: answer, knownAnswer: knownAnswer(toExampleFor: part), time: time)
             }
-            let answer = try answerToPart(part, data: try Data(day: day))
-            printAndCheckDiff(part: part, isExample: false, answer: answer, knownAnswer: knownAnswer(to: part))
+            let (time, answer) = try timed({ try answerToPart(part, data: try Data(day: day)) })
+            printAndCheckDiff(part: part, isExample: false, answer: answer, knownAnswer: knownAnswer(to: part), time: time)
         } catch AdventError.unimplemented {
             printNotImplemented(part: part)
         }
@@ -71,7 +81,7 @@ extension AdventDay {
         }
     }
     
-    private func printAndCheckDiff(part: Part, isExample: Bool, answer: String, knownAnswer: String) {
+    private func printAndCheckDiff(part: Part, isExample: Bool, answer: String, knownAnswer: String, time: TimeInterval) {
         let example = isExample ? " (example)" : ""
         let prefix: String
         let moreInfo: String?
@@ -87,7 +97,8 @@ extension AdventDay {
             prefix = "   "
             moreInfo = nil
         }
-        print("\(prefix)\(day)\(part.rawValue): \(answer)\(example)")
+        let formattedTime = String(format: "%.3f s", time)
+        print("\(prefix)\(day)\(part.rawValue): \(answer)\(example) [\(formattedTime)]")
         if let moreInfo = moreInfo {
             print(moreInfo)
         }
