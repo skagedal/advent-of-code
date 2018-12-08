@@ -75,4 +75,5 @@ extension AdventDay {
 
 enum AdventError: Swift.Error {
     case unimplemented
+    case noAnswerFound
 }
