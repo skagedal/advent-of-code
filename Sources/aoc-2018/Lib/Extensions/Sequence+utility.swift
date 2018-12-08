@@ -61,6 +61,12 @@ extension Sequence {
     }
 }
 
+extension Sequence where Element: Numeric {
+    func sum() -> Element {
+        return reduce(0, +)
+    }
+}
+
 // MARK: - Diffing
 
 /// Calculates the number of places `sequenceA` and `sequenceB` where the elements are different,

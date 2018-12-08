@@ -79,12 +79,6 @@ struct Day06: AdventDay {
     }
 }
 
-extension Sequence where Element == Int {
-    func sum() -> Int {
-        return reduce(0, +)
-    }
-}
-
 enum Position: Equatable {
     case unknown
     case fixed(PlaceIdentifier)
