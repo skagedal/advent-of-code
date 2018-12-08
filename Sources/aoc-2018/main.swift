@@ -18,12 +18,16 @@ enum Part: String {
 
 extension AdventDay {
     func run(_ part: Part) throws {
-        if let exampleData = try? Data(exampleForDay: day) {
-            let answer = try answerToExampleForPart(part, data: exampleData)
-            printAndCheckDiff(part: part, isExample: true, answer: answer, knownAnswer: knownAnswer(toExampleFor: part))
+        do {
+            if let exampleData = try? Data(exampleForDay: day) {
+                let answer = try answerToExampleForPart(part, data: exampleData)
+                printAndCheckDiff(part: part, isExample: true, answer: answer, knownAnswer: knownAnswer(toExampleFor: part))
+            }
+            let answer = try answerToPart(part, data: try Data(day: day))
+            printAndCheckDiff(part: part, isExample: false, answer: answer, knownAnswer: knownAnswer(to: part))
+        } catch AdventError.unimplemented {
+            printNotImplemented(part: part)
         }
-        let answer = try answerToPart(part, data: try Data(day: day))
-        printAndCheckDiff(part: part, isExample: false, answer: answer, knownAnswer: knownAnswer(to: part))
     }
     
     func runBoth() throws {
@@ -87,6 +91,10 @@ extension AdventDay {
         if let moreInfo = moreInfo {
             print(moreInfo)
         }
+    }
+    
+    private func printNotImplemented(part: Part) {
+        print("   \(day)\(part.rawValue) - not implemented")
     }
 }
 
