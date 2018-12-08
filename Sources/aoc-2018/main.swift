@@ -68,18 +68,25 @@ extension AdventDay {
     }
     
     private func printAndCheckDiff(part: Part, isExample: Bool, answer: String, knownAnswer: String) {
-        let example = isExample ? " - example" : ""
-        let matches: String
+        let example = isExample ? " (example)" : ""
+        let prefix: String
+        let moreInfo: String?
         if knownAnswer != Answer.unknown {
             if knownAnswer == answer {
-                matches = "✅"
+                prefix = "✅ "
+                moreInfo = nil
             } else {
-                matches = "🛑 - should be \(knownAnswer)"
+                prefix = "🛑 "
+                moreInfo = "       \(knownAnswer)"
             }
         } else {
-            matches = ""
+            prefix = "   "
+            moreInfo = nil
         }
-        print("\(day)\(part.rawValue)\(example): \(answer) \(matches)")
+        print("\(prefix)\(day)\(part.rawValue): \(answer)\(example)")
+        if let moreInfo = moreInfo {
+            print(moreInfo)
+        }
     }
 }
 

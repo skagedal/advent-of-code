@@ -1,13 +1,5 @@
 import Foundation
 
-func first<T>(_ tuple: (T, T)) -> T {
-    return tuple.0
-}
-
-func second<T>(_ tuple: (T, T)) -> T {
-    return tuple.1
-}
-
 struct DirectedGraph<Node> where Node: Hashable {
     typealias Edge = (Node, Node)
     fileprivate let edgesFrom: [Node: [Edge]]

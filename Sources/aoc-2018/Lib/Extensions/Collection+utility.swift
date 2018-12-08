@@ -17,4 +17,24 @@ extension Collection {
         }
         return self[index]
     }
+
+    var firstTwo: (Element, Element) {
+        var it = makeIterator()
+        return (it.next()!, it.next()!)
+    }
+    
+    var firstThree: (Element, Element, Element) {
+        var it = makeIterator()
+        return (it.next()!, it.next()!, it.next()!)
+    }
+
+    var firstFour: (Element, Element, Element, Element) {
+        var it = makeIterator()
+        return (it.next()!, it.next()!, it.next()!, it.next()!)
+    }
+
+    var firstFive: (Element, Element, Element, Element, Element) {
+        var it = makeIterator()
+        return (it.next()!, it.next()!, it.next()!, it.next()!, it.next()!)
+    }
 }
