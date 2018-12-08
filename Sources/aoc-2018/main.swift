@@ -129,7 +129,7 @@ extension AdventDay {
             moreInfo = nil
         }
         let formattedTime = String(format: "%.3f s", time)
-        print("\(prefix)\(day)\(part.rawValue): \(answer)\(example) [\(formattedTime)]")
+        print("\(prefix)\(year.year)-\(day)\(part.rawValue): \(answer)\(example) [\(formattedTime)]")
         if let moreInfo = moreInfo {
             print(moreInfo)
         }

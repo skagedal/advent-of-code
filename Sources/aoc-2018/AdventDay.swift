@@ -3,6 +3,13 @@ import Foundation
 enum Year {
     case year2015
     case year2018
+
+    var year: Int {
+        switch self {
+        case .year2015: return 2015
+        case .year2018: return 2018
+        }
+    }
 }
 
 protocol AdventDay {
