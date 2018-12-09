@@ -18,6 +18,15 @@ extension Collection {
         return self[index]
     }
 
+    func subsequences(ofLength length: Int) -> [SubSequence] {
+        var index = startIndex
+        return Array(count: count - length + 1, createdBy: {
+            let result = self[Range(uncheckedBounds: (index, self.index(index, offsetBy: length)))]
+            index = self.index(after: index)
+            return result
+        })
+    }
+
     var firstTwo: (Element, Element) {
         var it = makeIterator()
         return (it.next()!, it.next()!)
