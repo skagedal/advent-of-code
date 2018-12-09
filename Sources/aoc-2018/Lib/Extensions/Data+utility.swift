@@ -10,5 +10,9 @@ extension Data {
         let format = options.contains(.upperCase) ? "%02hhX" : "%02hhx"
         return map { String(format: format, $0) }.joined()
     }
+
+    var toString: String {
+        return String(data: self, encoding: .utf8)!
+    }
 }
 
