@@ -5,29 +5,41 @@ extension Year2015 {
         let day = 5
 
         func answerToFirstPart(_ data: Data) throws -> String {
-            return data.lines.count(where: isNice).toString
+            return data.lines.count(where: isNiceAccordingToFirstSetOfRules).toString
         }
     
         func answerToSecondPart(_ data: Data) throws -> String {
-            throw AdventError.unimplemented
+            return data.lines.count(where: isNiceAccordingToSecondSetOfRules).toString
         }
 
         let knownAnswerToFirstPart = "258"
+        let knownAnswerToSecondPart = "53"
     }
 }
 
-private func isNice(_ string: String) -> Bool {
+// MARK: Part 1
+
+private func isNiceAccordingToFirstSetOfRules(_ string: String) -> Bool {
     let sequencesOfTwo = string.subsequences(ofLength: 2)
     return
-        string.count(where: isVowel) >= 3 &&
+        string.count(where: isElementOf(vowels)) >= 3 &&
             sequencesOfTwo.contains(where: isRepeated) &&
             !sequencesOfTwo.contains(where: { badSubstrings.contains(String($0)) })
 }
 
-
 private let vowels: Set<Character> = Set("aeiou")
 private let badSubstrings: Set<String> = ["ab", "cd", "pq", "xy"]
 
-private func isVowel(_ character: Character) -> Bool {
-    return vowels.contains(character)
+// MARK: Part 2
+
+private func isNiceAccordingToSecondSetOfRules(_ string: String) -> Bool {
+    return
+        string
+            .subsequences(ofLength: 2)
+            .trianglePairs()
+            .contains(where: { String($0.0) == String($0.1) && !string.substringsOverlap($0.0, $0.1) })
+        &&
+        string
+            .subsequences(ofLength: 3)
+            .contains(where: isPalindromic)
 }

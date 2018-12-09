@@ -47,3 +47,7 @@ extension Collection {
         return (it.next()!, it.next()!, it.next()!, it.next()!, it.next()!)
     }
 }
+
+func isPalindromic<T>(_ collection: T) -> Bool where T: Collection, T.Element: Equatable {
+    return zip(collection, collection.reversed()).allSatisfy(==)
+}
