@@ -6,18 +6,21 @@ extension Year2015 {
 
         func answerToFirstPart(_ data: Data) throws -> String {
             let statements = data.lines.map(parseStatement)
-            let evaluator = WireEvaluator(AnySequence(statements))
+            let evaluator = WireEvaluator(Array(statements))
             return String(evaluator.evaluate("a"))
         }
     
         func answerToExampleForFirstPart(_ data: Data) throws -> String {
             let statements = data.lines.map(parseStatement)
-            let evaluator = WireEvaluator(AnySequence(statements))
+            let evaluator = WireEvaluator(Array(statements))
             return String(evaluator.evaluate("h"))
         }
         
         func answerToSecondPart(_ data: Data) throws -> String {
-            throw AdventError.unimplemented
+            let statements = data.lines.map(parseStatement).filter({ $0.0 != "b" })
+            let newStatement = ("b", Instruction.signal(.wire("a")))
+            let evaluator = WireEvaluator(Array(statements) + [newStatement])
+            return String(evaluator.evaluate("a"))
         }
         
         let knownAnswerToExampleForFirstPart = "65412"
@@ -31,7 +34,7 @@ private class WireEvaluator {
     private let instructions: Dictionary<Wire, Instruction>
     private var cache: [Wire: WireValue] = [:]
 
-    init(_ statements: AnySequence<(Wire, Instruction)>) {
+    init(_ statements: [(Wire, Instruction)]) {
         instructions = Dictionary(uniqueKeysWithValues: statements)
     }
     
