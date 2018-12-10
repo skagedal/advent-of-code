@@ -53,3 +53,6 @@ func ~=(_ regex: RegularExpression, _ string: String) -> Bool {
     return !regex.matches(in: string).isEmpty
 }
 
+func regex(_ string: String) -> RegularExpression {
+    return try! RegularExpression(pattern: string)
+}
