@@ -13,6 +13,11 @@ extension Sequence {
         }
         return count
     }
+
+    /// Sometimes it is convenient to use chaining syntax
+    var array: [Element] {
+        return Array(self)
+    }
     
     var firstTwo: (Element, Element) {
         var it = makeIterator()
