@@ -1,11 +1,12 @@
 package tech.skagedal.javaaoc;
 
-import com.google.common.collect.Streams;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.tools.Spliterators;
+import tech.skagedal.javaaoc.tools.Streams;
 
 public class Year2021_Day1 {
     public static void main(String[] args) {
@@ -13,20 +14,39 @@ public class Year2021_Day1 {
     }
 
     private void run() {
-        final var lines = read("day01_input.txt");
-        System.out.println(Streams.zip(
-                lines.stream(),
-                lines.stream().skip(1),
-                (a, b) -> new IntPair(Integer.valueOf(a), Integer.valueOf(b))
+        final var numbers = read("day01_input.txt").stream().map(Integer::valueOf).toList();
+
+        // A
+        long answerOne = countIncreasing(numbers);
+        System.out.println(answerOne);
+
+        // B
+        final var lines = readLines("day01_input.txt");
+        final var spliterator = lines.spliterator();
+        System.out.println(Spliterators.describeSpliterator(spliterator));
+    }
+
+    private static long countIncreasing(List<Integer> numbers) {
+        return Streams.zip(
+                numbers.stream(),
+                numbers.stream().skip(1),
+                IntPair::new
             )
             .filter(IntPair::isIncreasing)
-            .count());
+            .count();
     }
+
 
 
     record IntPair(Integer first, Integer second) {
         boolean isIncreasing() {
             return second > first;
+        }
+    }
+
+    record IntTriplet(Integer a, Integer b, Integer c) {
+        Integer sum() {
+            return a + b + c;
         }
     }
 
@@ -38,6 +58,16 @@ public class Year2021_Day1 {
             throw new RuntimeException(e);
         }
     }
+
+    private Stream<String> readLines(String filename) {
+        final var path = Paths.get("..", "Data", "year2021", filename);
+        try (final var reader = Files.newBufferedReader(path)) {
+            return reader.lines();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 }
