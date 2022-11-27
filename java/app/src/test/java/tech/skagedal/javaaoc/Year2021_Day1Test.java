@@ -16,6 +16,6 @@ class Year2021_Day1Test {
     void part2() {
         final var answer = new Year2021_Day1().part2();
 
-        assertEquals(-1, answer);
+        assertEquals(1130, answer);
     }
 }
