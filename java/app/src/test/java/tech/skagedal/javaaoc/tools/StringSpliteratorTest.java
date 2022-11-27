@@ -20,9 +20,9 @@ class StringSpliteratorTest {
     @Test
     void check_characteristics() {
         final var simpleStream = Stream.of("One", "Two", "Three");
-        System.out.println(Spliterators.describeSpliterator(simpleStream.spliterator()));
+        System.out.println(SpliteratorUtil.describeSpliterator(simpleStream.spliterator()));
 
         final var infiniteStream = Stream.iterate(0, i -> i + 1);
-        System.out.println(Spliterators.describeSpliterator(infiniteStream.spliterator()));
+        System.out.println(SpliteratorUtil.describeSpliterator(infiniteStream.spliterator()));
     }
 }

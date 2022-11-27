@@ -11,4 +11,11 @@ class Year2021_Day1Test {
 
         assertEquals(1167, answer);
     }
+
+    @Test
+    void part2() {
+        final var answer = new Year2021_Day1().part2();
+
+        assertEquals(-1, answer);
+    }
 }

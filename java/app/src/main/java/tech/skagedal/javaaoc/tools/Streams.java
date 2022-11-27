@@ -1,5 +1,6 @@
 package tech.skagedal.javaaoc.tools;
 
+import java.util.Spliterator;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -13,10 +14,15 @@ public class Streams {
         return sequentialStream(new Zip2Spliterator<>(s1.spliterator(), s2.spliterator(), combiner));
     }
 
-    private static <T1, T2, U> Stream<U> sequentialStream(Zip2Spliterator<T1, T2, U> spliterator) {
-        return StreamSupport.stream(
-            spliterator,
-            false
-        );
+    public static <T1, T2, T3> Stream<Tuple3<T1, T2, T3>> zip(Stream<T1> s1, Stream<T2> s2, Stream<T3> s3) {
+        return zip(s1, s2, s3, Tuple3::new);
+    }
+
+    public static <T1, T2, T3, R> Stream<R> zip(Stream<T1> s1, Stream<T2> s2, Stream<T3> s3, Function3<T1, T2, T3, R> combiner) {
+        return sequentialStream(new Zip3Spliterator<>(s1.spliterator(), s2.spliterator(), s3.spliterator(), combiner));
+    }
+
+    private static <T> Stream<T> sequentialStream(Spliterator<T> spliterator) {
+        return StreamSupport.stream(spliterator, false);
     }
 }

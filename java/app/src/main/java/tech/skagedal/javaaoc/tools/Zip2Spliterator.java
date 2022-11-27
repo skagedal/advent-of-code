@@ -1,6 +1,7 @@
 package tech.skagedal.javaaoc.tools;
 
 import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -35,15 +36,15 @@ public class Zip2Spliterator<T1, T2, U> implements Spliterator<U> {
 
     @Override
     public long estimateSize() {
-        return Math.min(t1Spliterator.estimateSize(), t2Spliterator.estimateSize());
+        return SpliteratorUtil.composedEstimateSize(
+            t1Spliterator, t2Spliterator
+        );
     }
 
     @Override
     public int characteristics() {
-        return
-            // Characteristics that are always set
-            ORDERED |
-            // Characteristics we inherit from zipped spliterators if both have them
-            (t1Spliterator.characteristics() & t2Spliterator.characteristics() & (SIZED | IMMUTABLE | NONNULL));
+        return SpliteratorUtil.composedCharacteristics(
+            t1Spliterator, t2Spliterator
+        );
     }
 }
