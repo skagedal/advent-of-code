@@ -2,24 +2,25 @@ package tech.skagedal.javaaoc;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.tools.Spliterators;
 import tech.skagedal.javaaoc.tools.Streams;
+import tech.skagedal.javaaoc.tools.Tuple2;
 
 public class Year2021_Day1 {
     public static void main(String[] args) {
         new Year2021_Day1().run();
     }
 
-    private void run() {
+    public long part1() {
         final var numbers = read("day01_input.txt").stream().map(Integer::valueOf).toList();
+        return countIncreasing(numbers);
+    }
 
-        // A
-        long answerOne = countIncreasing(numbers);
-        System.out.println(answerOne);
-
+    private void run() {
         // B
         final var lines = readLines("day01_input.txt");
         final var spliterator = lines.spliterator();
@@ -29,29 +30,18 @@ public class Year2021_Day1 {
     private static long countIncreasing(List<Integer> numbers) {
         return Streams.zip(
                 numbers.stream(),
-                numbers.stream().skip(1),
-                IntPair::new
+                numbers.stream().skip(1)
             )
-            .filter(IntPair::isIncreasing)
+            .filter(Year2021_Day1::isIncreasing)
             .count();
     }
 
-
-
-    record IntPair(Integer first, Integer second) {
-        boolean isIncreasing() {
-            return second > first;
-        }
-    }
-
-    record IntTriplet(Integer a, Integer b, Integer c) {
-        Integer sum() {
-            return a + b + c;
-        }
+    static private boolean isIncreasing(Tuple2<Integer, Integer> tuple) {
+        return tuple.value2() > tuple.value1();
     }
 
     private List<String> read(String filename) {
-        final var path = Paths.get("..", "Data", "year2021", filename);
+        final var path = findData().resolve("year2021").resolve(filename);
         try {
             return Files.readAllLines(path);
         } catch (IOException e) {
@@ -60,7 +50,7 @@ public class Year2021_Day1 {
     }
 
     private Stream<String> readLines(String filename) {
-        final var path = Paths.get("..", "Data", "year2021", filename);
+        final var path = findData().resolve("year2021").resolve(filename);
         try (final var reader = Files.newBufferedReader(path)) {
             return reader.lines();
         } catch (IOException e) {
@@ -68,6 +58,21 @@ public class Year2021_Day1 {
         }
     }
 
+    private static Path findData() {
+        return findData(Paths.get("").toAbsolutePath());
+    }
 
+    private static Path findData(Path path) {
+        System.out.println("Looking in " + path.toString());
+        final var data = path.resolve("Data");
+        if (Files.exists(data)) {
+            return data;
+        }
+        final var parent = path.getParent();
+        if (parent == null) {
+            throw new RuntimeException("Could not find Data dir");
+        }
+        return findData(parent);
+    }
 
 }
