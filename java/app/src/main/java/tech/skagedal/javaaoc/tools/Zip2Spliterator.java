@@ -1,24 +1,23 @@
 package tech.skagedal.javaaoc.tools;
 
 import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class Zip2Spliterator<T1, T2, U> implements Spliterator<U> {
+public class Zip2Spliterator<T1, T2, R> implements Spliterator<R> {
     private final Spliterator<T1> t1Spliterator;
     private final Spliterator<T2> t2Spliterator;
-    private final BiFunction<T1, T2, U> combiner;
+    private final BiFunction<T1, T2, R> combiner;
 
-    public Zip2Spliterator(Spliterator<T1> t1Spliterator, Spliterator<T2> t2Spliterator, BiFunction<T1, T2, U> combiner) {
+    public Zip2Spliterator(Spliterator<T1> t1Spliterator, Spliterator<T2> t2Spliterator, BiFunction<T1, T2, R> combiner) {
         this.t1Spliterator = t1Spliterator;
         this.t2Spliterator = t2Spliterator;
         this.combiner = combiner;
     }
 
     @Override
-    public boolean tryAdvance(Consumer<? super U> action) {
+    public boolean tryAdvance(Consumer<? super R> action) {
         AtomicBoolean accepted = new AtomicBoolean(false);
         t1Spliterator.tryAdvance(t1 ->
             t2Spliterator.tryAdvance(t2 -> {
@@ -30,7 +29,7 @@ public class Zip2Spliterator<T1, T2, U> implements Spliterator<U> {
     }
 
     @Override
-    public Spliterator<U> trySplit() {
+    public Spliterator<R> trySplit() {
         return null;
     }
 

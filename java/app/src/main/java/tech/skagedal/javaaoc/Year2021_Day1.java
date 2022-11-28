@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Spliterators;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Tuple2;
