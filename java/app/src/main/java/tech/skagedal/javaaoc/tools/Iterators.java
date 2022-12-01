@@ -3,11 +3,12 @@ package tech.skagedal.javaaoc.tools;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
 public class Iterators {
-    public static <T> Iterator<List<T>> splitting(Iterator<T> iterator, Predicate<T> isPivot) {
+    public static <T, U> Iterator<List<U>> splitting(Iterator<T> iterator, Predicate<T> isPivot, Function<T, U> mapper) {
         return new Iterator<>() {
             @Override
             public boolean hasNext() {
@@ -15,14 +16,14 @@ public class Iterators {
             }
 
             @Override
-            public List<T> next() {
-                final var list = new ArrayList<T>();
+            public List<U> next() {
+                final var list = new ArrayList<U>();
                 while (iterator.hasNext()) {
                     final var element = iterator.next();
                     if (isPivot.test(element)) {
                         return list;
                     } else {
-                        list.add(element);
+                        list.add(mapper.apply(element));
                     }
                 }
                 return list;

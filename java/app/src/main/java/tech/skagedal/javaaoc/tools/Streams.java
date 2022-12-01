@@ -1,17 +1,23 @@
 package tech.skagedal.javaaoc.tools;
 
+import com.google.common.base.Functions;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Streams {
     public static <T> Stream<List<T>> splitting(Stream<T> stream, Predicate<T> isPivot) {
-        return Streams.fromIterator(Iterators.splitting(stream.iterator(), isPivot));
+        return Streams.fromIterator(Iterators.splitting(stream.iterator(), isPivot, Functions.identity()));
+    }
+
+    public static <T, U> Stream<List<U>> splitting(Stream<T> stream, Predicate<T> isPivot, Function<T, U> mapper) {
+        return Streams.fromIterator(Iterators.splitting(stream.iterator(), isPivot, mapper));
     }
 
     public static <T> Stream<T> fromIterator(Iterator<T> iterator) {
