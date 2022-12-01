@@ -1,9 +1,8 @@
 package tech.skagedal.javaaoc;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
-import tech.skagedal.javaaoc.tools.Iterators;
 import tech.skagedal.javaaoc.tools.Streams;
 
 public class Year2022_Day01 extends Year2022Day {
@@ -14,15 +13,20 @@ public class Year2022_Day01 extends Year2022Day {
             .orElseThrow();
     }
 
+    public long part2() {
+        return Streams.splitting(getLines(), String::isBlank)
+            .map(this::sumLines)
+            .sorted(Collections.reverseOrder())
+            .limit(3)
+            .mapToLong(Long::longValue)
+            .sum();
+    }
+
     private Stream<String> getLines() {
         return readLines("day01_input.txt");
     }
 
     private Long sumLines(List<String> strings) {
         return strings.stream().mapToLong(Long::parseLong).sum();
-    }
-
-    public long part2() {
-        return 0;
     }
 }
