@@ -34,7 +34,7 @@ public class Year2022_Day02 extends Year2022Day {
         }
 
         public Round toRound() {
-            return new Round(opponentsMove, outcome.yourMoveWhenOppentsMove(opponentsMove));
+            return new Round(opponentsMove, outcome.yourMoveWhenOpponentsMove(opponentsMove));
         }
     }
 
@@ -69,7 +69,7 @@ public class Year2022_Day02 extends Year2022Day {
             };
         }
 
-        public Move yourMoveWhenOppentsMove(Move opponentsMove) {
+        public Move yourMoveWhenOpponentsMove(Move opponentsMove) {
             return switch (this) {
                 case LOSE -> switch (opponentsMove) {
                     case ROCK -> Move.SCISSORS;
