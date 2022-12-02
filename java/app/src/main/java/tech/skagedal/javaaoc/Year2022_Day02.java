@@ -11,18 +11,33 @@ public class Year2022_Day02 extends Year2022Day {
     }
 
     public long part2() {
-        return 0;
+        return getLines()
+            .map(RoundWithOutcome::fromLine)
+            .map(RoundWithOutcome::toRound)
+            .mapToLong(Round::getScore)
+            .sum();
     }
 
     public record Round(Move opponentsMove, Move yourMove) {
+
         public long getScore() {
             return yourMove.score + (((yourMove.score - opponentsMove.score) + 4) % 3) * 3;
         }
-
         public static Round fromLine(String line) {
             return new Round(Move.fromCharacter(line.charAt(0)), Move.fromCharacter(line.charAt(2)));
         }
+
     }
+    public record RoundWithOutcome(Move opponentsMove, Outcome outcome) {
+        public static RoundWithOutcome fromLine(String line) {
+            return new RoundWithOutcome(Move.fromCharacter(line.charAt(0)), Outcome.fromCharacter(line.charAt(2)));
+        }
+
+        public Round toRound() {
+            return new Round(opponentsMove, outcome.yourMoveWhenOppentsMove(opponentsMove));
+        }
+    }
+
     public enum Move {
         ROCK(1), PAPER(2), SCISSORS(3);
 
@@ -38,6 +53,35 @@ public class Year2022_Day02 extends Year2022Day {
                 case 'B', 'Y' -> Move.PAPER;
                 case 'C', 'Z' -> Move.SCISSORS;
                 default -> throw new IllegalArgumentException("Unknown move: " + character);
+            };
+        }
+    }
+
+    public enum Outcome {
+        LOSE, DRAW, WIN;
+
+        public static Outcome fromCharacter(char character) {
+            return switch (character) {
+                case 'X' -> LOSE;
+                case 'Y' -> DRAW;
+                case 'Z' -> WIN;
+                default -> throw new IllegalArgumentException("Unknown outcome: " + character);
+            };
+        }
+
+        public Move yourMoveWhenOppentsMove(Move opponentsMove) {
+            return switch (this) {
+                case LOSE -> switch (opponentsMove) {
+                    case ROCK -> Move.SCISSORS;
+                    case PAPER -> Move.ROCK;
+                    case SCISSORS -> Move.PAPER;
+                };
+                case DRAW -> opponentsMove;
+                case WIN -> switch (opponentsMove) {
+                    case ROCK -> Move.PAPER;
+                    case PAPER -> Move.SCISSORS;
+                    case SCISSORS -> Move.ROCK;
+                };
             };
         }
     }

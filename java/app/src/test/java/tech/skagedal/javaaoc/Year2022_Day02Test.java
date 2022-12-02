@@ -18,7 +18,7 @@ class Year2022_Day02Test {
     void part2() {
         final var answer = day.part2();
 
-        assertEquals(-1, answer);
+        assertEquals(12429, answer);
     }
 
     @Test
