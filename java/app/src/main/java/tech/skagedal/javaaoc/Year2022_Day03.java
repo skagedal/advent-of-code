@@ -22,7 +22,6 @@ public class Year2022_Day03 extends Year2022Day {
         while (iterator.hasNext()) {
             final String a = iterator.next(), b = iterator.next(), c = iterator.next();
             final var intsec = intersection(intersection(a, b), c.chars().boxed().toList()).get(0);
-            System.out.println(Character.toString(intsec));
             sum += getPriority(intsec);
         }
         return sum;
