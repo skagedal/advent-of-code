@@ -18,7 +18,7 @@ public class Year2021_Day1 extends Year2021Day {
     }
 
     private Stream<Long> smoothen(Stream<Long> stream) {
-        return Streams.splittingFisedSizeOverlapping(
+        return Streams.splittingFixedSizeOverlapping(
                 stream, 3, 2)
             .map(list -> list.stream().mapToLong(Long::longValue).sum());
     }
