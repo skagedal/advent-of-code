@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Tuple2;
 
 public class Year2022_Day03 extends Year2022Day {
@@ -33,6 +34,8 @@ public class Year2022_Day03 extends Year2022Day {
             line.subSequence(line.length() / 2, line.length())
         );
     }
+
+
 
     List<Integer> intersection(String s1, String s2) {
         return intersection(s1.subSequence(0, s1.length()), s2.subSequence(0, s2.length()));

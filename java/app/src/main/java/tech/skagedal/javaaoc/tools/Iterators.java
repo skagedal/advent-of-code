@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 
 public class Iterators {
     public static <T, U> Iterator<List<U>> splitting(Iterator<T> iterator, Predicate<T> isPivot, Function<T, U> mapper) {
@@ -30,4 +29,13 @@ public class Iterators {
             }
         };
     }
+
+    public static <T> Iterator<List<T>> splittingFixedSize(Iterator<T> iterator, long size) {
+        return new IteratorSplittingFixedSizeOverlapping<>(iterator, size, 0);
+    }
+
+    public static <T> Iterator<List<T>> splittingFixedSizeOverlapping(Iterator<T> iterator, long size, long overlap) {
+        return new IteratorSplittingFixedSizeOverlapping<>(iterator, size, overlap);
+    }
+
 }

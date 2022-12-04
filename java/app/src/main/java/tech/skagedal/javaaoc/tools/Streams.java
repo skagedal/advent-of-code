@@ -20,6 +20,19 @@ public class Streams {
         return Streams.fromIterator(Iterators.splitting(stream.iterator(), isPivot, mapper));
     }
 
+    public static <T> Stream<List<T>> splittingFisedSize(Stream<T> stream, long size) {
+        return Streams.fromIterator(Iterators.splittingFixedSize(stream.iterator(), size));
+    }
+
+    public static <T> Stream<List<T>> splittingFisedSizeOverlapping(Stream<T> stream, long size, long overlap) {
+        return Streams.fromIterator(Iterators.splittingFixedSizeOverlapping(stream.iterator(), size, overlap));
+    }
+
+    public static <T> Stream<Tuple2<T, T>> splittingToTuple2Overlapping(Stream<T> stream) {
+        return splittingFisedSizeOverlapping(stream, 2, 1)
+            .map(list -> new Tuple2<>(list.get(0), list.get(1)));
+    }
+
     public static <T> Stream<T> fromIterator(Iterator<T> iterator) {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
     }
