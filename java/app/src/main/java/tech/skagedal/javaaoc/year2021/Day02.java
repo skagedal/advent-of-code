@@ -1,8 +1,8 @@
 package tech.skagedal.javaaoc.year2021;
 
-import tech.skagedal.javaaoc.Year2021Day;
+import tech.skagedal.javaaoc.aoc.AocDay;
 
-public class Day02 extends Year2021Day {
+public class Day02 extends AocDay {
     public long part1() {
         final var position = readLines()
             .map(Command::fromString)

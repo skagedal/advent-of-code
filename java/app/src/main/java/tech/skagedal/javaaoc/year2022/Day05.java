@@ -4,10 +4,10 @@ import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Stack;
 import java.util.regex.Pattern;
-import tech.skagedal.javaaoc.Year2022Day;
+import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 
-public class Day05 extends Year2022Day {
+public class Day05 extends AocDay {
     public String part1() {
         final var lists = Streams.splitting(readLines(), String::isBlank).toList();
         final var initialCargo = lists.get(0);

@@ -1,4 +1,4 @@
-package tech.skagedal.javaaoc;
+package tech.skagedal.javaaoc.aoc;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,12 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class AocDay {
-    private final String yearDirectoryName;
     private static final Pattern fileNameFromFQCN = Pattern.compile("\\.([a-z0-9]+)\\.([a-zA-Z0-9]+)$");
-
-    public AocDay(String yearDirectoryName) {
-        this.yearDirectoryName = yearDirectoryName;
-    }
 
     protected static Path findData() {
         return AocDay.findData(Paths.get("").toAbsolutePath());
@@ -31,8 +26,6 @@ public class AocDay {
         }
         return AocDay.findData(parent);
     }
-
-
 
     protected Stream<String> readLines() {
         final var match = fileNameFromFQCN.matcher(this.getClass().getName())

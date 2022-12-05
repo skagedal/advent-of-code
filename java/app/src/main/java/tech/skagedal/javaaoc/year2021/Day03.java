@@ -2,9 +2,9 @@ package tech.skagedal.javaaoc.year2021;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.Predicate;
-import tech.skagedal.javaaoc.Year2021Day;
+import tech.skagedal.javaaoc.aoc.AocDay;
 
-public class Day03 extends Year2021Day {
+public class Day03 extends AocDay {
     public long part1() {
         final var occurrences = readLines()
             .map(Occurrences::fromLine)

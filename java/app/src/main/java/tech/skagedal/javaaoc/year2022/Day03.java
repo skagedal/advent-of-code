@@ -3,11 +3,11 @@ package tech.skagedal.javaaoc.year2022;
 import com.google.common.collect.Sets;
 import java.util.Set;
 import java.util.stream.Collectors;
-import tech.skagedal.javaaoc.Year2022Day;
+import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Tuple2;
 
-public class Day03 extends Year2022Day {
+public class Day03 extends AocDay {
     public long part1() {
         return readLines()
             .map(Day03::splitStringInHalf)
