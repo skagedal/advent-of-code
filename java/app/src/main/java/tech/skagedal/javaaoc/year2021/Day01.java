@@ -1,19 +1,20 @@
-package tech.skagedal.javaaoc;
+package tech.skagedal.javaaoc.year2021;
 
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.Year2021Day;
 import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Tuple2;
 
-public class Year2021_Day01 extends Year2021Day {
+public class Day01 extends Year2021Day {
     public long part1() {
         return Streams.splittingToTuple2Overlapping(getLongs())
-            .filter(Year2021_Day01::isIncreasing)
+            .filter(Day01::isIncreasing)
             .count();
     }
 
     public long part2() {
         return Streams.splittingToTuple2Overlapping(smoothen(getLongs()))
-            .filter(Year2021_Day01::isIncreasing)
+            .filter(Day01::isIncreasing)
             .count();
     }
 

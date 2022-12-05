@@ -1,13 +1,14 @@
-package tech.skagedal.javaaoc;
+package tech.skagedal.javaaoc.year2022;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.Year2022Day;
 import tech.skagedal.javaaoc.tools.Longs;
 import tech.skagedal.javaaoc.tools.Streams;
 
-public class Year2022_Day01 extends Year2022Day {
+public class Day01 extends Year2022Day {
     public long part1() {
         return Streams.splitting(getLines().map(Longs::parseOptional), Optional::isEmpty, Optional::get)
             .mapToLong(this::sumLongs)

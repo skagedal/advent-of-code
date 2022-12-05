@@ -1,10 +1,9 @@
-package tech.skagedal.javaaoc;
+package tech.skagedal.javaaoc.year2021;
 
 import java.util.stream.Stream;
-import tech.skagedal.javaaoc.tools.Streams;
-import tech.skagedal.javaaoc.tools.Tuple2;
+import tech.skagedal.javaaoc.Year2021Day;
 
-public class Year2021_Day02 extends Year2021Day {
+public class Day02 extends Year2021Day {
     public long part1() {
         final var position = getLines()
             .map(Command::fromString)

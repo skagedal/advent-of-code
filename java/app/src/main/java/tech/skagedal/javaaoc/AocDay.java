@@ -31,6 +31,7 @@ public class AocDay {
     }
 
     protected Stream<String> readLines(String filename) {
+        System.out.println(this.getClass().getName());
         final var path = findData().resolve(yearDirectoryName).resolve(filename);
         try {
             return Files.newBufferedReader(path).lines();

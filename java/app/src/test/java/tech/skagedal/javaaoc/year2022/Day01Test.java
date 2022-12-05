@@ -1,11 +1,11 @@
-package tech.skagedal.javaaoc;
+package tech.skagedal.javaaoc.year2022;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class Year2022_Day01Test {
-    private final Year2022_Day01 day = new Year2022_Day01();
+class Day01Test {
+    private final Day01 day = new Day01();
 
     @Test
     void part1() {

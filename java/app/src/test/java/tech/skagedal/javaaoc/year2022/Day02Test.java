@@ -1,11 +1,11 @@
-package tech.skagedal.javaaoc;
+package tech.skagedal.javaaoc.year2022;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class Year2022_Day02Test {
-    private final Year2022_Day02 day = new Year2022_Day02();
+class Day02Test {
+    private final Day02 day = new Day02();
 
     @Test
     void part1() {
@@ -23,11 +23,11 @@ class Year2022_Day02Test {
 
     @Test
     void testScoring() {
-        assertEquals(8, new Year2022_Day02.Round(Year2022_Day02.Move.ROCK, Year2022_Day02.Move.PAPER).getScore());
-        assertEquals(1, new Year2022_Day02.Round(Year2022_Day02.Move.PAPER, Year2022_Day02.Move.ROCK).getScore());
-        assertEquals(6, new Year2022_Day02.Round(Year2022_Day02.Move.SCISSORS, Year2022_Day02.Move.SCISSORS).getScore());
+        assertEquals(8, new Day02.Round(Day02.Move.ROCK, Day02.Move.PAPER).getScore());
+        assertEquals(1, new Day02.Round(Day02.Move.PAPER, Day02.Move.ROCK).getScore());
+        assertEquals(6, new Day02.Round(Day02.Move.SCISSORS, Day02.Move.SCISSORS).getScore());
 
-        assertEquals(3, new Year2022_Day02.Round(Year2022_Day02.Move.ROCK, Year2022_Day02.Move.SCISSORS).getScore());
+        assertEquals(3, new Day02.Round(Day02.Move.ROCK, Day02.Move.SCISSORS).getScore());
 
         assetScore(4, "A X");
         assetScore(8, "A Y");
@@ -41,7 +41,7 @@ class Year2022_Day02Test {
     }
 
     private static void assetScore(int expectedScore, String line) {
-        final var round = Year2022_Day02.Round.fromLine(line);
+        final var round = Day02.Round.fromLine(line);
         final var score = round.getScore();
         assertEquals(expectedScore, score,
             String.format("Line was %s - your move is %s, worth %d points. Their move was %s, so outcome was %d. Total score was %d.",

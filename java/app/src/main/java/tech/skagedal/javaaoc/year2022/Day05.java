@@ -1,15 +1,14 @@
-package tech.skagedal.javaaoc;
+package tech.skagedal.javaaoc.year2022;
 
-import com.google.common.collect.Range;
 import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Stack;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.Year2022Day;
 import tech.skagedal.javaaoc.tools.Streams;
-import tech.skagedal.javaaoc.tools.Tuple2;
 
-public class Year2022_Day05 extends Year2022Day {
+public class Day05 extends Year2022Day {
     public String part1() {
         final var lists = Streams.splitting(getLines(), String::isBlank).toList();
         final var initialCargo = lists.get(0);

@@ -1,8 +1,9 @@
-package tech.skagedal.javaaoc;
+package tech.skagedal.javaaoc.year2022;
 
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.Year2022Day;
 
-public class Year2022_Day02 extends Year2022Day {
+public class Day02 extends Year2022Day {
     public long part1() {
         return getLines()
             .map(Round::fromLine)
