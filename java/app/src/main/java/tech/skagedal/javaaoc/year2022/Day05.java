@@ -56,14 +56,6 @@ public class Day05 extends AocDay {
             return total.toString();
         }
 
-        public void perform(String line) {
-            perform(line, Day05::moveOneByOne);
-        }
-
-        public void addMultiMove(String line) {
-            perform(line, Day05::moveAllTogether);
-        }
-
         public void perform(String line, Mover mover) {
             final var results = pattern.matcher(line).results().toList();
 
