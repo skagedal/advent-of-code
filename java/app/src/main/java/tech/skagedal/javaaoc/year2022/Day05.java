@@ -3,38 +3,36 @@ package tech.skagedal.javaaoc.year2022;
 import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Stack;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 
 public class Day05 extends AocDay {
     public String part1() {
-        final var lists = Streams.splitting(readLines(), String::isBlank).toList();
-        final var initialCargo = lists.get(0);
-        final var moves = lists.get(1);
-
         var cargo = new Cargo();
-        Collections.reverse(initialCargo);
-        initialCargo.stream().skip(1).forEach(cargo::addInitialCargoLine);
-        moves.stream().forEach(cargo::addMove);
-        return cargo.topLine();
+        return solvePart(cargo, cargo::addMove);
     }
 
     public String part2() {
+        var cargo = new Cargo();
+        return solvePart(cargo, cargo::addMultiMove);
+    }
+
+    private String solvePart(Cargo cargo, Consumer<String> moveProcessor) {
         final var lists = Streams.splitting(readLines(), String::isBlank).toList();
         final var initialCargo = lists.get(0);
         final var moves = lists.get(1);
 
-        var cargo = new Cargo();
         Collections.reverse(initialCargo);
         initialCargo.stream().skip(1).forEach(cargo::addInitialCargoLine);
-        moves.stream().forEach(cargo::addMultiMove);
+        moves.forEach(moveProcessor);
         return cargo.topLine();
     }
 
     static class Cargo {
         Stack<String>[] stacks = (Stack<String>[])Array.newInstance(Stack.class, 9);
-        private static Pattern pattern = Pattern.compile("\\d+");
+        private static final Pattern pattern = Pattern.compile("\\d+");
 
         Cargo() {
             for (var i = 0; i < stacks.length; i++) {
