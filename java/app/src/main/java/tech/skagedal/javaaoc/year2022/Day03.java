@@ -3,14 +3,13 @@ package tech.skagedal.javaaoc.year2022;
 import com.google.common.collect.Sets;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import tech.skagedal.javaaoc.Year2022Day;
 import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Tuple2;
 
 public class Day03 extends Year2022Day {
     public long part1() {
-        return getLines()
+        return readLines()
             .map(Util::splitStringInHalf)
             .map(tuple -> Sets.intersection(toSet(tuple.value1()), toSet(tuple.value2())))
             .map(Util::singleElementOfSet)
@@ -19,7 +18,7 @@ public class Day03 extends Year2022Day {
     }
 
     public long part2() {
-        return Streams.splittingFixedSize(getLines().map(this::toSet), 3)
+        return Streams.splittingFixedSize(readLines().map(this::toSet), 3)
             .map(list -> list.stream().reduce(Sets::intersection).get())
             .map(Util::singleElementOfSet)
             .mapToLong(this::getPriority)
@@ -36,10 +35,6 @@ public class Day03 extends Year2022Day {
         if (character > 'A' && character <= 'Z')
             return (character - 'A') + 27;
         throw new IllegalArgumentException("Illegal character: " + character);
-    }
-
-    private Stream<String> getLines() {
-        return readLines("day03_input.txt");
     }
 }
 

@@ -2,12 +2,11 @@ package tech.skagedal.javaaoc.year2021;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 import tech.skagedal.javaaoc.Year2021Day;
 
 public class Day03 extends Year2021Day {
     public long part1() {
-        final var occurrences = getLines()
+        final var occurrences = readLines()
             .map(Occurrences::fromLine)
             .reduce(Occurrences::plus)
             .orElseThrow();
@@ -51,9 +50,5 @@ public class Day03 extends Year2021Day {
             }
             return sum;
         }
-    }
-
-    private Stream<String> getLines() {
-        return readLines("day03_input.txt");
     }
 }

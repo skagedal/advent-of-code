@@ -1,11 +1,10 @@
 package tech.skagedal.javaaoc.year2021;
 
-import java.util.stream.Stream;
 import tech.skagedal.javaaoc.Year2021Day;
 
 public class Day02 extends Year2021Day {
     public long part1() {
-        final var position = getLines()
+        final var position = readLines()
             .map(Command::fromString)
             .reduce(Position.START, Position::move, Position::combine);
 
@@ -13,7 +12,7 @@ public class Day02 extends Year2021Day {
     }
 
     public long part2() {
-        final var positionWithAim = getLines()
+        final var positionWithAim = readLines()
             .map(Command::fromString)
             .reduce(PositionWithAim.START, PositionWithAim::move, PositionWithAim::combine);
 
@@ -77,9 +76,5 @@ public class Day02 extends Year2021Day {
             return new PositionWithAim(horizontal + p.horizontal, depth + p.depth, aim + p.aim);
         }
 
-    }
-
-    private Stream<String> getLines() {
-        return readLines("day02_input.txt");
     }
 }

@@ -29,10 +29,6 @@ public class Day01 extends Year2021Day {
     }
 
     private Stream<Long> getLongs() {
-        return getLines().map(Long::valueOf);
-    }
-
-    private Stream<String> getLines() {
-        return readLines("day01_input.txt");
+        return readLines().map(Long::valueOf);
     }
 }

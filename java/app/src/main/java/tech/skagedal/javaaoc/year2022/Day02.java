@@ -1,18 +1,17 @@
 package tech.skagedal.javaaoc.year2022;
 
-import java.util.stream.Stream;
 import tech.skagedal.javaaoc.Year2022Day;
 
 public class Day02 extends Year2022Day {
     public long part1() {
-        return getLines()
+        return readLines()
             .map(Round::fromLine)
             .mapToLong(Round::getScore)
             .sum();
     }
 
     public long part2() {
-        return getLines()
+        return readLines()
             .map(RoundWithOutcome::fromLine)
             .map(RoundWithOutcome::toRound)
             .mapToLong(Round::getScore)
@@ -85,9 +84,5 @@ public class Day02 extends Year2022Day {
                 };
             };
         }
-    }
-
-    private Stream<String> getLines() {
-        return readLines("day02_input.txt");
     }
 }

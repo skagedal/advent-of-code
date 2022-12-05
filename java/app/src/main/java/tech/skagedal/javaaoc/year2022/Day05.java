@@ -4,13 +4,12 @@ import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Stack;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import tech.skagedal.javaaoc.Year2022Day;
 import tech.skagedal.javaaoc.tools.Streams;
 
 public class Day05 extends Year2022Day {
     public String part1() {
-        final var lists = Streams.splitting(getLines(), String::isBlank).toList();
+        final var lists = Streams.splitting(readLines(), String::isBlank).toList();
         final var initialCargo = lists.get(0);
         final var moves = lists.get(1);
 
@@ -22,7 +21,7 @@ public class Day05 extends Year2022Day {
     }
 
     public String part2() {
-        final var lists = Streams.splitting(getLines(), String::isBlank).toList();
+        final var lists = Streams.splitting(readLines(), String::isBlank).toList();
         final var initialCargo = lists.get(0);
         final var moves = lists.get(1);
 
@@ -33,7 +32,7 @@ public class Day05 extends Year2022Day {
         return cargo.topLine();
     }
 
-    class Cargo {
+    static class Cargo {
         Stack<String>[] stacks = (Stack<String>[])Array.newInstance(Stack.class, 9);
         private static Pattern pattern = Pattern.compile("\\d+");
 
@@ -88,9 +87,5 @@ public class Day05 extends Year2022Day {
                 stacks[destination].push(stack.pop());
             }
         }
-    }
-
-    private Stream<String> getLines() {
-        return readLines("day05_input.txt");
     }
 }

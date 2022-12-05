@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class AocDay {
     private final String yearDirectoryName;
+    private static final Pattern fileNameFromFQCN = Pattern.compile("\\.([a-z0-9]+)\\.([a-zA-Z0-9]+)$");
 
     public AocDay(String yearDirectoryName) {
         this.yearDirectoryName = yearDirectoryName;
@@ -30,9 +32,19 @@ public class AocDay {
         return AocDay.findData(parent);
     }
 
-    protected Stream<String> readLines(String filename) {
-        System.out.println(this.getClass().getName());
-        final var path = findData().resolve(yearDirectoryName).resolve(filename);
+
+
+    protected Stream<String> readLines() {
+        final var match = fileNameFromFQCN.matcher(this.getClass().getName())
+            .results().findFirst().orElseThrow();
+        return readLines(
+            match.group(1).toLowerCase(),
+            match.group(2).toLowerCase() + "_input.txt"
+        );
+    }
+
+    private Stream<String> readLines(String yearDirectory, String filename) {
+        final var path = findData().resolve(yearDirectory).resolve(filename);
         try {
             return Files.newBufferedReader(path).lines();
         } catch (IOException e) {
