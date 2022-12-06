@@ -8,6 +8,7 @@ import java.util.Spliterators;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -56,6 +57,10 @@ public class Streams {
             .onClose(s1::close)
             .onClose(s2::close)
             .onClose(s3::close);
+    }
+
+    public static <T> Stream<Enumerated<T>> enumerated(Stream<T> s) {
+        return zip(IntStream.iterate(0, i -> i + 1).boxed(), s, Enumerated::new);
     }
 
     private static <T> Stream<T> sequentialStream(Spliterator<T> spliterator) {

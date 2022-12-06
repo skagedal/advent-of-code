@@ -1,7 +1,6 @@
 package tech.skagedal.javaaoc.year2022;
 
 import com.google.common.collect.Sets;
-import java.util.stream.IntStream;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Strings;
@@ -16,12 +15,10 @@ public class Day06 extends AocDay {
     }
 
     private int solveFunctional(int packetSize) {
-        return Streams.zip(
-                Streams.splittingFixedSizeOverlapping(readChars().boxed(), packetSize, packetSize - 1),
-                IntStream.iterate(0, i -> i + 1).boxed())
-            .filter(tuple -> Sets.newHashSet(tuple.value1()).size() == packetSize)
+        return Streams.enumerated(Streams.splittingFixedSizeOverlapping(readChars().boxed(), packetSize, packetSize - 1))
+            .filter(tuple -> Sets.newHashSet(tuple.value()).size() == packetSize)
             .findFirst().orElseThrow()
-            .value2() + packetSize;
+            .number() + packetSize;
     }
 
     private int solveImperative(int packetSize) {
