@@ -18,7 +18,7 @@ class Day04Test {
     void part2() {
         final var answer = new Day04().part2();
 
-        assertEquals(-1, answer);
+        assertEquals(23541, answer);
     }
 
     @Test

@@ -1,11 +1,11 @@
 package tech.skagedal.javaaoc.year2021;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 
@@ -25,16 +25,37 @@ public class Day04 extends AocDay {
                 }
             }
         }
-        System.out.printf("top value: %d\n", boards.get(0).getValue(0, 0));
-        return 0;
+        throw new IllegalStateException("no answer found");
+    }
+
+    // This is really ugly
+    public long part2() {
+        final var calledNumbers = readLines().findFirst()
+            .map(Day04::parseCalledNumbers)
+            .orElseThrow();
+        final var boards = new ArrayList<>(Streams.splitting(readLines().skip(2), String::isBlank)
+            .map(Board::parse).toList());
+        Board lastBingoBoard = null;
+        int lastNumber = 0;
+
+        for (var number : calledNumbers) {
+            for (var board : new ArrayList<>(boards)) {
+                board.mark(number);
+                if (board.isBingo()) {
+                    lastBingoBoard = board;
+                    lastNumber = number;
+                    boards.remove(board);
+                }
+            }
+        }
+        if (lastBingoBoard == null) {
+            throw new IllegalStateException("no answer found");
+        }
+        return lastBingoBoard.sumOfUnmarkedNumbers() * lastNumber;
     }
 
     private static List<Integer> parseCalledNumbers(String s) {
         return Arrays.stream(s.split(",")).map(Integer::parseInt).toList();
-    }
-
-    public long part2() {
-        return 0;
     }
 
     private static Pattern NUMBERS = Pattern.compile("\\d+");
