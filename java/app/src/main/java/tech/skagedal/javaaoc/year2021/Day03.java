@@ -1,6 +1,7 @@
 package tech.skagedal.javaaoc.year2021;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.function.Predicate;
 import tech.skagedal.javaaoc.aoc.AocDay;
 
@@ -17,7 +18,26 @@ public class Day03 extends AocDay {
     }
 
     public long part2() {
-        return 0;
+        final var occurrences = readLines()
+            .map(Occurrences::fromLine)
+            .toList();
+
+        long first = part2Rec(0, integer -> integer >= 0, occurrences);
+        long second = part2Rec(0, integer -> integer <= 0, occurrences);
+        System.out.printf("first (%d) * second (%d) == %d", first, second, first * second);
+        return first * second;
+    }
+
+    private long part2Rec(int digit, Predicate<Integer> predicate, List<Occurrences> occurrences) {
+        final var sum = occurrences.stream().reduce(Occurrences::plus).orElseThrow();
+        final var expected = sum.testDigit(digit, integer -> integer >= 0);
+        final var filtered = occurrences.stream().filter(occurrence ->
+            occurrence.testDigit(digit, predicate) == expected).toList();
+        if (filtered.size() == 1) {
+            return filtered.get(0).toRate(integer -> integer > 0);
+        } else {
+            return part2Rec(digit + 1, predicate, filtered);
+        }
     }
 
     record Occurrences(
@@ -49,6 +69,10 @@ public class Day03 extends AocDay {
                 }
             }
             return sum;
+        }
+
+        boolean testDigit(int digit, Predicate<Integer> predicate) {
+            return predicate.test(counts[digit]);
         }
     }
 }

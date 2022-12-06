@@ -13,11 +13,10 @@ class Day03Test {
         assertEquals(3882564, answer);
     }
 
-    @Disabled
     @Test
     void part2() {
         final var answer = new Day03().part2();
 
-        assertEquals(-1, answer);
+        assertEquals(3385170, answer);
     }
 }
