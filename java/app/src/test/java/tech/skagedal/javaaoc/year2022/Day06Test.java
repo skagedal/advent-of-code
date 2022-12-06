@@ -18,7 +18,7 @@ class Day06Test {
     void part2() {
         final var answer = day.part2();
 
-        assertEquals(-1, answer);
+        assertEquals(2315, answer);
     }
 
 }
