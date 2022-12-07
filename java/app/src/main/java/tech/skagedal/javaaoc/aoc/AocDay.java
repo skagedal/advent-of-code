@@ -18,7 +18,6 @@ public class AocDay {
     }
 
     private static Path findData(Path path) {
-        System.out.println("Looking in " + path.toString());
         final var data = path.resolve("Data");
         if (Files.exists(data)) {
             return data;

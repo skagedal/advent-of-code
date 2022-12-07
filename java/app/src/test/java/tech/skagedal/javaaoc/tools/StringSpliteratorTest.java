@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class StringSpliteratorTest {
@@ -20,9 +21,15 @@ class StringSpliteratorTest {
     @Test
     void check_characteristics() {
         final var simpleStream = Stream.of("One", "Two", "Three");
-        System.out.println(SpliteratorUtil.describeSpliterator(simpleStream.spliterator()));
+        assertEquals(
+            "ORDERED, SIZED, IMMUTABLE, SUBSIZED",
+            SpliteratorUtil.describeSpliterator(simpleStream.spliterator())
+        );
 
         final var infiniteStream = Stream.iterate(0, i -> i + 1);
-        System.out.println(SpliteratorUtil.describeSpliterator(infiniteStream.spliterator()));
+        assertEquals(
+            "ORDERED, IMMUTABLE",
+            SpliteratorUtil.describeSpliterator(infiniteStream.spliterator())
+        );
     }
 }

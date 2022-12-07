@@ -24,7 +24,6 @@ public class Day03 extends AocDay {
 
         long first = part2Rec(0, integer -> integer >= 0, occurrences);
         long second = part2Rec(0, integer -> integer <= 0, occurrences);
-        System.out.printf("first (%d) * second (%d) == %d", first, second, first * second);
         return first * second;
     }
 
