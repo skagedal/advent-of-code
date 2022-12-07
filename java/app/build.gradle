@@ -16,6 +16,22 @@ application {
     mainClass = 'tech.skagedal.javaaoc.App'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(19)
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += "--enable-preview"
+}
+tasks.withType(Test) {
+    jvmArgs += "--enable-preview"
+}
+tasks.withType(JavaExec) {
+    jvmArgs += "--enable-preview"
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

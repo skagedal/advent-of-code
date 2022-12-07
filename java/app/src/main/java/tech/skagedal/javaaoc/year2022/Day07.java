@@ -52,16 +52,17 @@ public class Day07 extends AocDay {
         final var root = new DirectoryNode("/");
 
         for (var line : lines) {
-            if (line instanceof CdCommand cd) {
-                switch (cd.relativeDirectory()) {
-                    case "/" -> currentPath.removeAllElements();
-                    case ".." -> currentPath.pop();
-                    default -> currentPath.push(cd.relativeDirectory());
+            switch (line) {
+                case CdCommand cd -> {
+                    switch (cd.relativeDirectory()) {
+                        case "/" -> currentPath.removeAllElements();
+                        case ".." -> currentPath.pop();
+                        default -> currentPath.push(cd.relativeDirectory());
+                    }
                 }
-            } else if (line instanceof DirectoryListing dir) {
-                root.addDirectory(currentPath, dir.directoryName());
-            } else if (line instanceof FileListing file) {
-                root.addFile(currentPath, file.fileName(), file.size());
+                case LsCommand ls -> {}
+                case DirectoryListing dir -> root.addDirectory(currentPath, dir.directoryName());
+                case FileListing file -> root.addFile(currentPath, file.fileName(), file.size());
             }
         }
         return root;
