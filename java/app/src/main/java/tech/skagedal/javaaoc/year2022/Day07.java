@@ -1,31 +1,26 @@
 package tech.skagedal.javaaoc.year2022;
 
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AocDay;
+import tech.skagedal.javaaoc.tools.Streams;
 
 public class Day07 extends AocDay {
     public long part1() {
-        final var tree = readTree();
-        final var sum = new AtomicLong(0);
-        tree.forEach(node -> {
-            if (node instanceof DirectoryNode dir) {
-                final var size = node.getSize();
-                if (size <= 100000) {
-                    sum.addAndGet(size);
-                }
-            }
-        });
-        return sum.get();
+        return readTree().depthFirstStream()
+            .filter(node -> node instanceof DirectoryNode)
+            .filter(node -> node.getSize() <= 100000)
+            .mapToLong(Node::getSize)
+            .sum();
     }
 
     public long part2() {
@@ -34,16 +29,12 @@ public class Day07 extends AocDay {
         final var targetUsed = 70000000 - 30000000;
         final var minimumToDelete = totalUsed - targetUsed;
 
-        final var currentlySmallest = new AtomicLong(Long.MAX_VALUE);
-        tree.forEach(node -> {
-            if (node instanceof DirectoryNode dir) {
-                final var size = node.getSize();
-                if (size >= minimumToDelete && size < currentlySmallest.get()) {
-                    currentlySmallest.set(size);
-                }
-            }
-        });
-        return currentlySmallest.get();
+        return tree.depthFirstStream()
+            .filter(node -> node instanceof DirectoryNode)
+            .filter(node -> node.getSize() >= minimumToDelete)
+            .mapToLong(Node::getSize)
+            .min()
+            .orElseThrow();
     }
 
     private Node readTree() {
@@ -105,8 +96,9 @@ public class Day07 extends AocDay {
     public interface Node {
         String getName();
         long getSize();
-        void forEach(Consumer<Node> consumer);
+        Stream<Node> depthFirstStream();
     }
+
     public static class FileNode implements Node {
         private final String name;
         private final long size;
@@ -127,19 +119,12 @@ public class Day07 extends AocDay {
         }
 
         @Override
-        public void forEach(Consumer<Node> consumer) {
-            consumer.accept(this);
-        }
-
-        @Override
-        public String toString() {
-            return "FileNode{" +
-                "name='" + name + '\'' +
-                ", size=" + size +
-                '}';
+        public Stream<Node> depthFirstStream() {
+            return Stream.of(this);
         }
     }
     public static class DirectoryNode implements Node {
+        private static final IdentityHashMap<Node, Long> cache = new IdentityHashMap<>();
         private final String name;
 
         Map<String, Node> children = new HashMap<>();
@@ -178,21 +163,21 @@ public class Day07 extends AocDay {
 
         @Override
         public long getSize() {
-            return children.values().stream().mapToLong(Node::getSize).sum();
+            Long value = cache.get(this);
+            if (value != null) {
+                return value;
+            }
+            final var computedValue = children.values().stream().mapToLong(Node::getSize).sum();
+            cache.put(this, computedValue);
+            return computedValue;
         }
 
         @Override
-        public void forEach(Consumer<Node> consumer) {
-            consumer.accept(this);
-            children.values().forEach(child -> child.forEach(consumer));
-        }
-
-        @Override
-        public String toString() {
-            return "DirectoryNode{" +
-                "name='" + name + '\'' +
-                ", children=" + children +
-                '}';
+        public Stream<Node> depthFirstStream() {
+            return Stream.concat(
+                Streams.fromIterator(children.values().iterator()).flatMap(Node::depthFirstStream),
+                Stream.of(this)
+            );
         }
     }
 }
