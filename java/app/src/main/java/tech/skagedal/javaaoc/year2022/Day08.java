@@ -35,11 +35,6 @@ public class Day08 extends AocDay {
         public boolean isVisible() {
             return visible;
         }
-
-        @Override
-        public String toString() {
-            return "" + height + (visible ? "!" : " ");
-        }
     }
 
     static class Forest {
