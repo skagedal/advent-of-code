@@ -3,8 +3,36 @@
  */
 package tech.skagedal.javaaoc.aoc;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+@Component
 public class App {
     public static void main(String[] args) {
         System.out.println("Run the test suite instead, it's more interesting.");
+
+        final var context = createApplicationContext();
+        if (context.getBean(App.class) instanceof App app) {
+            app.helloWorld();
+        } else {
+            System.err.println("Could not get App bean");
+        }
+    }
+
+    public void helloWorld() {
+        System.out.println("Hello, world!");
+    }
+
+    private static AnnotationConfigApplicationContext createApplicationContext() {
+        final var context = new AnnotationConfigApplicationContext(Config.class);
+        context.scan(App.class.getPackageName());
+        context.registerShutdownHook();
+        return context;
+    }
+
+    @Configuration
+    public static class Config {
+
     }
 }
