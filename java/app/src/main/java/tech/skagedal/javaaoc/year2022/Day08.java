@@ -56,7 +56,7 @@ public class Day08 extends AocDay {
         // Parsing
 
         static Forest read(Stream<String> lines) {
-            List<List<Tree>> trees = lines
+            final var trees = lines
                 .map(Forest::readLine)
                 .toList();
             return new Forest(trees, trees.size(), trees.get(0).size());
