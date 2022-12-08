@@ -1,5 +1,6 @@
 package tech.skagedal.javaaoc.year2022;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -15,7 +16,12 @@ public class Day08 extends AocDay {
     }
 
     public long part2() {
-        return 0;
+        final var forest = Forest.read(readLines());
+        return forest
+            .allCoordinates()
+            .mapToLong(forest::calculateScenicScore)
+            .max()
+            .orElseThrow();
     }
 
     static class Tree {
@@ -60,8 +66,8 @@ public class Day08 extends AocDay {
 
         void markVisible() {
             for (var row = 0; row < height; row++) {
-                markVisible(rowForwards(row));
-                markVisible(rowBackwards(row));
+                markVisible(rowForward(row));
+                markVisible(rowBackward(row));
             }
             for (var column = 0; column < width; column++) {
                 markVisible(columnForward(column));
@@ -69,57 +75,61 @@ public class Day08 extends AocDay {
             }
         }
 
-        private Stream<Coordinates> columnForward(int column) {
-            return columnForward(column, 0);
+        private Stream<Coordinates> allCoordinates() {
+            return IntStream.range(0, height).boxed().flatMap(this::rowForward);
         }
 
-        private Stream<Coordinates> columnForward(int column, int startRow) {
+        private Stream<Coordinates> columnForward(int column) {
+            return columnForward(new Coordinates(0, column));
+        }
+
+        private Stream<Coordinates> columnForward(Coordinates coordinates) {
             return IntStreams.zip(
-                IntStreams.rangeClosed(startRow, height - 1, 1),
-                IntStreams.always(column),
+                IntStreams.rangeClosed(coordinates.row, height - 1, 1),
+                IntStreams.always(coordinates.column()),
                 Coordinates::new
             );
         }
 
         private Stream<Coordinates> columnBackward(int column) {
-            return columnBackward(column, height - 1);
+            return columnBackward(new Coordinates(height - 1, column));
         }
 
-        private Stream<Coordinates> columnBackward(int column, int startRow) {
+        private Stream<Coordinates> columnBackward(Coordinates coordinates) {
             return IntStreams.zip(
-                IntStreams.rangeClosed(startRow, 0, -1),
-                IntStreams.always(column),
+                IntStreams.rangeClosed(coordinates.row(), 0, -1),
+                IntStreams.always(coordinates.column()),
                 Coordinates::new
             );
         }
 
-        private Stream<Coordinates> rowForwards(int row) {
-            return rowForward(row, 0);
+        private Stream<Coordinates> rowForward(int row) {
+            return rowForward(new Coordinates(row, 0));
         }
 
-        private Stream<Coordinates> rowForward(int row, int startColumn) {
+        private Stream<Coordinates> rowForward(Coordinates coordinates) {
             return IntStreams.zip(
-                IntStreams.always(row),
-                IntStreams.rangeClosed(startColumn, width - 1, 1),
+                IntStreams.always(coordinates.row()),
+                IntStreams.rangeClosed(coordinates.column(), width - 1, 1),
                 Coordinates::new
             );
         }
 
-        private Stream<Coordinates> rowBackwards(int row) {
-            return rowBackwards(row, width - 1);
+        private Stream<Coordinates> rowBackward(int row) {
+            return rowBackward(new Coordinates(row, width - 1));
         }
 
-        private Stream<Coordinates> rowBackwards(int row, int startColumn) {
+        private Stream<Coordinates> rowBackward(Coordinates coordinates) {
             return IntStreams.zip(
-                IntStreams.always(row),
-                IntStreams.rangeClosed(width - 1, 0, -1),
+                IntStreams.always(coordinates.row()),
+                IntStreams.rangeClosed(coordinates.column(), 0, -1),
                 Coordinates::new
             );
         }
 
         long countVisible() {
             return trees.stream()
-                .flatMap(treeRow -> treeRow.stream())
+                .flatMap(Collection::stream)
                 .filter(Tree::isVisible)
                 .count();
         }
@@ -152,9 +162,29 @@ public class Day08 extends AocDay {
             return trees.get(coordinates.row).get(coordinates.column);
         }
 
-        public void calculateScenicScore(Coordinates coordinates) {
+        public long calculateScenicScore(Coordinates coordinates) {
+            return Stream.of(
+                    rowForward(coordinates),
+                    rowBackward(coordinates),
+                    columnForward(coordinates),
+                    columnBackward(coordinates)
+                )
+                .mapToLong(row -> calculateSubScenicScore(row.map(this::getTree)))
+                .reduce(1, (a, b) -> a * b);
         }
 
+        private long calculateSubScenicScore(Stream<Tree> trees) {
+            var iter = trees.iterator();
+            final var height = iter.next().height;
+            var score = 0;
+            while (iter.hasNext()) {
+                score++;
+                if (iter.next().height >= height) {
+                    break;
+                }
+            }
+            return score;
+        }
     }
 
     record Coordinates(int row, int column) {}
