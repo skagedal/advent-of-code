@@ -2,11 +2,13 @@ package tech.skagedal.javaaoc.year2022;
 
 import com.google.common.collect.Sets;
 import java.util.Set;
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Strings;
 import tech.skagedal.javaaoc.tools.Tuple2;
 
+@AdventOfCode
 public class Day03 extends AocDay {
     public long part1() {
         return readLines()

@@ -1,10 +1,12 @@
 package tech.skagedal.javaaoc.year2022;
 
 import com.google.common.collect.Sets;
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Strings;
 
+@AdventOfCode
 public class Day06 extends AocDay {
     public long part1() {
         return solveFunctional(4);

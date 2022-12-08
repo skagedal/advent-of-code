@@ -14,7 +14,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'tech.skagedal.javaaoc.App'
+    mainClass = 'tech.skagedal.javaaoc.Main'
 }
 
 java {

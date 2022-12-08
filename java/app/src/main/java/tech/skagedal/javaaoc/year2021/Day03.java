@@ -3,8 +3,10 @@ package tech.skagedal.javaaoc.year2021;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Predicate;
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 
+@AdventOfCode
 public class Day03 extends AocDay {
     public long part1() {
         final var occurrences = readLines()

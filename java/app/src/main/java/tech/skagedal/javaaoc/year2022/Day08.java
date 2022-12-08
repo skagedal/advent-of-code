@@ -2,11 +2,12 @@ package tech.skagedal.javaaoc.year2022;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 
+@AdventOfCode
 public class Day08 extends AocDay {
     public long part1() {
         final var forest = Forest.read(readLines());

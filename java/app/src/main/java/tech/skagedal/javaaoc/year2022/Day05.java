@@ -4,9 +4,11 @@ import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Stack;
 import java.util.regex.Pattern;
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 
+@AdventOfCode
 public class Day05 extends AocDay {
     public String part1() {
         return solvePart(Day05::moveOneByOne);

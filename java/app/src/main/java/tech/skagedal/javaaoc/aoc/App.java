@@ -3,36 +3,44 @@
  */
 package tech.skagedal.javaaoc.aoc;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
 public class App {
-    public static void main(String[] args) {
-        System.out.println("Run the test suite instead, it's more interesting.");
+    private final List<Object> aocDays;
 
-        final var context = createApplicationContext();
-        if (context.getBean(App.class) instanceof App app) {
-            app.helloWorld();
-        } else {
-            System.err.println("Could not get App bean");
-        }
+    public App(ApplicationContext context) {
+        this.aocDays = new ArrayList<>(context.getBeansWithAnnotation(AdventOfCode.class).values());
     }
 
-    public void helloWorld() {
-        System.out.println("Hello, world!");
+    public void runAllDays() {
+        aocDays
+            .stream()
+            .sorted(Comparator.comparing(day -> day.getClass().getName()))
+            .forEach(this::runDay);
     }
 
-    private static AnnotationConfigApplicationContext createApplicationContext() {
-        final var context = new AnnotationConfigApplicationContext(Config.class);
-        context.scan(App.class.getPackageName());
-        context.registerShutdownHook();
-        return context;
-    }
-
-    @Configuration
-    public static class Config {
-
+    private void runDay(Object aocDay) {
+        final var klass = aocDay.getClass();
+        System.out.println("Day: " + klass.getName());
+        Arrays
+            .stream(klass.getDeclaredMethods())
+            .filter(method -> method.getName().matches("part[1-9]"))
+            .sorted(Comparator.comparing(Method::getName))
+            .forEach(method -> {
+                try {
+                    final var response = method.invoke(aocDay);
+                    System.out.printf("Response for %s: %s\n", method.getName(), response);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    System.err.println("ERROR invoking " + method.getName() + " for " + klass.getName());
+                }
+            });
     }
 }

@@ -1,7 +1,9 @@
 package tech.skagedal.javaaoc.year2021;
 
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 
+@AdventOfCode
 public class Day02 extends AocDay {
     public long part1() {
         final var position = readLines()

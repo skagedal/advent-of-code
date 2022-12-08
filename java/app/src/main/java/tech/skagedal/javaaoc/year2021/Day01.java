@@ -1,10 +1,12 @@
 package tech.skagedal.javaaoc.year2021;
 
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 import tech.skagedal.javaaoc.tools.Tuple2;
 
+@AdventOfCode
 public class Day01 extends AocDay {
     public long part1() {
         return Streams.splittingToTuple2Overlapping(getLongs())
