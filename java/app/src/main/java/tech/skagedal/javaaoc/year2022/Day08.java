@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AocDay;
-import tech.skagedal.javaaoc.tools.IntStreams;
 import tech.skagedal.javaaoc.tools.Streams;
 
 public class Day08 extends AocDay {
@@ -18,8 +17,8 @@ public class Day08 extends AocDay {
     public long part2() {
         final var forest = Forest.read(readLines());
         return forest
-            .allCoordinates()
-            .mapToLong(forest::calculateScenicScore)
+            .allPoints()
+            .mapToLong(forest::scenicScore)
             .max()
             .orElseThrow();
     }
@@ -53,6 +52,8 @@ public class Day08 extends AocDay {
             this.width = width;
         }
 
+        // Parsing
+
         static Forest read(Stream<String> lines) {
             List<List<Tree>> trees = lines
                 .map(Forest::readLine)
@@ -64,91 +65,20 @@ public class Day08 extends AocDay {
             return line.chars().map(i -> i - '0').mapToObj(Tree::new).toList();
         }
 
+        // Part 1
+
         void markVisible() {
             for (var row = 0; row < height; row++) {
-                markVisible(rowForward(row));
-                markVisible(rowBackward(row));
+                markVisible(pointsFrom(new Point(row, 0), Vector.ROW_FORWARD));
+                markVisible(pointsFrom(new Point(row, width - 1), Vector.ROW_BACKWARD));
             }
             for (var column = 0; column < width; column++) {
-                markVisible(columnForward(column));
-                markVisible(columnBackward(column));
+                markVisible(pointsFrom(new Point(0, column), Vector.COLUMN_FORWARD));
+                markVisible(pointsFrom(new Point(height - 1, column), Vector.COLUMN_BACKWARD));
             }
         }
 
-        private Stream<Coordinates> allCoordinates() {
-            return IntStream.range(0, height).boxed().flatMap(this::rowForward);
-        }
-
-        private Stream<Coordinates> columnForward(int column) {
-            return columnForward(new Coordinates(0, column));
-        }
-
-        private Stream<Coordinates> columnForward(Coordinates coordinates) {
-            return IntStreams.zip(
-                IntStreams.rangeClosed(coordinates.row, height - 1, 1),
-                IntStreams.always(coordinates.column()),
-                Coordinates::new
-            );
-        }
-
-        private Stream<Coordinates> columnBackward(int column) {
-            return columnBackward(new Coordinates(height - 1, column));
-        }
-
-        private Stream<Coordinates> columnBackward(Coordinates coordinates) {
-            return IntStreams.zip(
-                IntStreams.rangeClosed(coordinates.row(), 0, -1),
-                IntStreams.always(coordinates.column()),
-                Coordinates::new
-            );
-        }
-
-        private Stream<Coordinates> rowForward(int row) {
-            return rowForward(new Coordinates(row, 0));
-        }
-
-        private Stream<Coordinates> rowForward(Coordinates coordinates) {
-            return IntStreams.zip(
-                IntStreams.always(coordinates.row()),
-                IntStreams.rangeClosed(coordinates.column(), width - 1, 1),
-                Coordinates::new
-            );
-        }
-
-        private Stream<Coordinates> rowBackward(int row) {
-            return rowBackward(new Coordinates(row, width - 1));
-        }
-
-        private Stream<Coordinates> rowBackward(Coordinates coordinates) {
-            return IntStreams.zip(
-                IntStreams.always(coordinates.row()),
-                IntStreams.rangeClosed(coordinates.column(), 0, -1),
-                Coordinates::new
-            );
-        }
-
-        long countVisible() {
-            return trees.stream()
-                .flatMap(Collection::stream)
-                .filter(Tree::isVisible)
-                .count();
-        }
-
-        private void markVisible(IntStream rows, IntStream columns) {
-            final var rowIterator = rows.iterator();
-            final var columnIterator = columns.iterator();
-
-            var maxHeight = -1;
-            while (rowIterator.hasNext() && columnIterator.hasNext()) {
-                var tree = trees.get(rowIterator.next()).get(columnIterator.next());
-                if (tree.height > maxHeight) {
-                    tree.visible = true;
-                    maxHeight = tree.height;
-                }
-            }
-        }
-
-        private void markVisible(Stream<Coordinates> coordinates) {
+        private void markVisible(Stream<Point> coordinates) {
             var maxHeight = -1;
             for (var tree : Streams.toIterable(coordinates.map(this::getTree))) {
                 if (tree.height > maxHeight) {
@@ -158,22 +88,27 @@ public class Day08 extends AocDay {
             }
         }
 
-        private Tree getTree(Coordinates coordinates) {
-            return trees.get(coordinates.row).get(coordinates.column);
+        long countVisible() {
+            return trees.stream()
+                .flatMap(Collection::stream)
+                .filter(Tree::isVisible)
+                .count();
         }
 
-        public long calculateScenicScore(Coordinates coordinates) {
+        // Part 2
+
+        public long scenicScore(Point point) {
             return Stream.of(
-                    rowForward(coordinates),
-                    rowBackward(coordinates),
-                    columnForward(coordinates),
-                    columnBackward(coordinates)
+                    pointsFrom(point, Vector.ROW_FORWARD),
+                    pointsFrom(point, Vector.ROW_BACKWARD),
+                    pointsFrom(point, Vector.COLUMN_FORWARD),
+                    pointsFrom(point, Vector.COLUMN_BACKWARD)
                 )
-                .mapToLong(row -> calculateSubScenicScore(row.map(this::getTree)))
+                .mapToLong(row -> scenicScoreOneDirection(row.map(this::getTree)))
                 .reduce(1, (a, b) -> a * b);
         }
 
-        private long calculateSubScenicScore(Stream<Tree> trees) {
+        private long scenicScoreOneDirection(Stream<Tree> trees) {
             var iter = trees.iterator();
             final var height = iter.next().height;
             var score = 0;
@@ -185,7 +120,36 @@ public class Day08 extends AocDay {
             }
             return score;
         }
+
+        // Common helpers
+
+        private Stream<Point> allPoints() {
+            return pointsFrom(new Point(0, 0), Vector.COLUMN_FORWARD)
+                .flatMap(point -> pointsFrom(point, Vector.ROW_FORWARD));
+        }
+
+        private Stream<Point> pointsFrom(Point point, Vector delta) {
+            return Stream.iterate(point, this::isInBounds, delta::addTo);
+        }
+
+        private boolean isInBounds(Point point) {
+            return point.row() >= 0 && point.row() < height && point.column() >= 0 && point.column() < width;
+        }
+
+        private Tree getTree(Point point) {
+            return trees.get(point.row).get(point.column);
+        }
     }
 
-    record Coordinates(int row, int column) {}
+    record Point(int row, int column) { }
+    record Vector(int row, int column) {
+        static final Vector ROW_FORWARD = new Vector(0, 1);
+        static final Vector ROW_BACKWARD = new Vector(0, -1);
+        static final Vector COLUMN_FORWARD = new Vector(1, 0);
+        static final Vector COLUMN_BACKWARD = new Vector(-1, 0);
+
+        Point addTo(Point point) {
+            return new Point(point.row() + row, point.column() + column);
+        }
+    }
 }
