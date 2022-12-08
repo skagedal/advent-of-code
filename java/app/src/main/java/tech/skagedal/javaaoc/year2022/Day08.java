@@ -99,23 +99,17 @@ public class Day08 extends AocDay {
         // Part 2
 
         public long scenicScore(Point point) {
-            return Stream.of(
-                    pointsFrom(point, Vector.ROW_FORWARD),
-                    pointsFrom(point, Vector.ROW_BACKWARD),
-                    pointsFrom(point, Vector.COLUMN_FORWARD),
-                    pointsFrom(point, Vector.COLUMN_BACKWARD)
-                )
-                .mapToLong(row -> scenicScoreOneDirection(row.map(this::getTree)))
+            return Stream.of(Vector.ROW_FORWARD, Vector.ROW_BACKWARD, Vector.COLUMN_FORWARD, Vector.COLUMN_BACKWARD)
+                .mapToLong(direction -> scenicScoreOneDirection(point, direction))
                 .reduce(1, (a, b) -> a * b);
         }
 
-        private long scenicScoreOneDirection(Stream<Tree> trees) {
-            var iter = trees.iterator();
-            final var height = iter.next().height;
+        private long scenicScoreOneDirection(Point point, Vector direction) {
+            final var treeHeight = getTree(point).height;
             var score = 0;
-            while (iter.hasNext()) {
+            for (var tree : Streams.toIterable(pointsFrom(point, direction).skip(1).map(this::getTree))) {
                 score++;
-                if (iter.next().height >= height) {
+                if (tree.height >= treeHeight) {
                     break;
                 }
             }
@@ -129,8 +123,8 @@ public class Day08 extends AocDay {
                 .flatMap(point -> pointsFrom(point, Vector.ROW_FORWARD));
         }
 
-        private Stream<Point> pointsFrom(Point point, Vector delta) {
-            return Stream.iterate(point, this::isInBounds, delta::addTo);
+        private Stream<Point> pointsFrom(Point point, Vector direction) {
+            return Stream.iterate(point, this::isInBounds, direction::addTo);
         }
 
         private boolean isInBounds(Point point) {
