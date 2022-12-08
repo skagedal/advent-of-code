@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AocDay;
+import tech.skagedal.javaaoc.tools.IntStreams;
 
 public class Day08 extends AocDay {
     public long part1() {
@@ -59,22 +60,22 @@ public class Day08 extends AocDay {
         void markVisible() {
             for (var row = 0; row < height; row++) {
                 markVisible(
-                    IntStream.iterate(row, i -> i),
-                    IntStream.iterate(0, i -> i < width, i -> i + 1)
+                    IntStreams.always(row),
+                    IntStreams.rangeClosed(0, width - 1, 1)
                 );
                 markVisible(
-                    IntStream.iterate(row, i -> i),
-                    IntStream.iterate(width - 1, i -> i >= 0, i -> i - 1)
+                    IntStreams.always(row),
+                    IntStreams.rangeClosed(width - 1, 0, -1)
                 );
             }
             for (var column = 0; column < width; column++) {
                 markVisible(
-                    IntStream.iterate(0, i -> i < height, i -> i + 1),
-                    IntStream.iterate(column, i -> i)
+                    IntStreams.rangeClosed(0, height - 1, 1),
+                    IntStreams.always(column)
                 );
                 markVisible(
-                    IntStream.iterate(height - 1, i -> i >= 0, i -> i - 1),
-                    IntStream.iterate(column, i -> i)
+                    IntStreams.rangeClosed(height - 1, 0, -1),
+                    IntStreams.always(column)
                 );
             }
         }
