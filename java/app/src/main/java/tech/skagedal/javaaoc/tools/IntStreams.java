@@ -1,6 +1,7 @@
 package tech.skagedal.javaaoc.tools;
 
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class IntStreams {
     public static IntStream rangeClosed(int startInclusive, int endInclusive, int stride) {
@@ -16,5 +17,9 @@ public class IntStreams {
 
     public static IntStream always(int constant) {
         return IntStream.iterate(constant, i -> i);
+    }
+
+    public static <T> Stream<T> zip(IntStream stream1, IntStream stream2, BiIntFunction<T> combiner) {
+        return Streams.fromIterator(Iterators.zip(stream1.iterator(), stream2.iterator(), combiner));
     }
 }

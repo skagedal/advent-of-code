@@ -5,6 +5,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.IntStreams;
+import tech.skagedal.javaaoc.tools.Streams;
 
 public class Day08 extends AocDay {
     public long part1() {
@@ -59,25 +60,61 @@ public class Day08 extends AocDay {
 
         void markVisible() {
             for (var row = 0; row < height; row++) {
-                markVisible(
-                    IntStreams.always(row),
-                    IntStreams.rangeClosed(0, width - 1, 1)
-                );
-                markVisible(
-                    IntStreams.always(row),
-                    IntStreams.rangeClosed(width - 1, 0, -1)
-                );
+                markVisible(rowForwards(row));
+                markVisible(rowBackwards(row));
             }
             for (var column = 0; column < width; column++) {
-                markVisible(
-                    IntStreams.rangeClosed(0, height - 1, 1),
-                    IntStreams.always(column)
-                );
-                markVisible(
-                    IntStreams.rangeClosed(height - 1, 0, -1),
-                    IntStreams.always(column)
-                );
+                markVisible(columnForward(column));
+                markVisible(columnBackward(column));
             }
+        }
+
+        private Stream<Coordinates> columnForward(int column) {
+            return columnForward(column, 0);
+        }
+
+        private Stream<Coordinates> columnForward(int column, int startRow) {
+            return IntStreams.zip(
+                IntStreams.rangeClosed(startRow, height - 1, 1),
+                IntStreams.always(column),
+                Coordinates::new
+            );
+        }
+
+        private Stream<Coordinates> columnBackward(int column) {
+            return columnBackward(column, height - 1);
+        }
+
+        private Stream<Coordinates> columnBackward(int column, int startRow) {
+            return IntStreams.zip(
+                IntStreams.rangeClosed(startRow, 0, -1),
+                IntStreams.always(column),
+                Coordinates::new
+            );
+        }
+
+        private Stream<Coordinates> rowForwards(int row) {
+            return rowForward(row, 0);
+        }
+
+        private Stream<Coordinates> rowForward(int row, int startColumn) {
+            return IntStreams.zip(
+                IntStreams.always(row),
+                IntStreams.rangeClosed(startColumn, width - 1, 1),
+                Coordinates::new
+            );
+        }
+
+        private Stream<Coordinates> rowBackwards(int row) {
+            return rowBackwards(row, width - 1);
+        }
+
+        private Stream<Coordinates> rowBackwards(int row, int startColumn) {
+            return IntStreams.zip(
+                IntStreams.always(row),
+                IntStreams.rangeClosed(width - 1, 0, -1),
+                Coordinates::new
+            );
         }
 
         long countVisible() {
@@ -100,5 +137,25 @@ public class Day08 extends AocDay {
                 }
             }
         }
+
+        private void markVisible(Stream<Coordinates> coordinates) {
+            var maxHeight = -1;
+            for (var tree : Streams.toIterable(coordinates.map(this::getTree))) {
+                if (tree.height > maxHeight) {
+                    tree.visible = true;
+                    maxHeight = tree.height;
+                }
+            }
+        }
+
+        private Tree getTree(Coordinates coordinates) {
+            return trees.get(coordinates.row).get(coordinates.column);
+        }
+
+        public void calculateScenicScore(Coordinates coordinates) {
+        }
+
     }
+
+    record Coordinates(int row, int column) {}
 }
