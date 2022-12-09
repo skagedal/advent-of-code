@@ -1,6 +1,15 @@
 package tech.skagedal.javaaoc.tools.linear;
 
 public record Vector(int dx, int dy) {
-    public Point addTo(Point point) { return new Point(point.x() + dx, point.y() + dy);
+    public Point addTo(Point point) {
+        return point.plus(this);
+    }
+
+    public Vector minus(Vector v) {
+        return new Vector(dx - v.dx, dy - v.dy);
+    }
+
+    public boolean isNonZero() {
+        return dx != 0 || dy != 0;
     }
 }
