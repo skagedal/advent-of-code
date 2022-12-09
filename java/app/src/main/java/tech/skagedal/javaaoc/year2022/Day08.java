@@ -65,12 +65,12 @@ public class Day08 extends AocDay {
 
         void markVisible() {
             for (var row = 0; row < height; row++) {
-                markVisible(pointsFrom(new Point(row, 0), Vector.ROW_FORWARD));
-                markVisible(pointsFrom(new Point(row, width - 1), Vector.ROW_BACKWARD));
+                markVisible(pointsFrom(new Point(0, row), Vector.ROW_FORWARD));
+                markVisible(pointsFrom(new Point(width - 1, row), Vector.ROW_BACKWARD));
             }
             for (var column = 0; column < width; column++) {
-                markVisible(pointsFrom(new Point(0, column), Vector.COLUMN_FORWARD));
-                markVisible(pointsFrom(new Point(height - 1, column), Vector.COLUMN_BACKWARD));
+                markVisible(pointsFrom(new Point(column, 0), Vector.COLUMN_FORWARD));
+                markVisible(pointsFrom(new Point(column, height - 1), Vector.COLUMN_BACKWARD));
             }
         }
 
@@ -123,23 +123,23 @@ public class Day08 extends AocDay {
         }
 
         private boolean isInBounds(Point point) {
-            return point.row() >= 0 && point.row() < height && point.column() >= 0 && point.column() < width;
+            return point.y() >= 0 && point.y() < height && point.x() >= 0 && point.x() < width;
         }
 
         private Tree getTree(Point point) {
-            return trees.get(point.row).get(point.column);
+            return trees.get(point.y()).get(point.x());
         }
     }
 
-    record Point(int row, int column) { }
-    record Vector(int row, int column) {
-        static final Vector ROW_FORWARD = new Vector(0, 1);
-        static final Vector ROW_BACKWARD = new Vector(0, -1);
-        static final Vector COLUMN_FORWARD = new Vector(1, 0);
-        static final Vector COLUMN_BACKWARD = new Vector(-1, 0);
+    record Point(int x, int y) { }
+    record Vector(int dx, int dy) {
+        static final Vector ROW_FORWARD = new Vector(1, 0);
+        static final Vector ROW_BACKWARD = new Vector(-1, 0);
+        static final Vector COLUMN_FORWARD = new Vector(0, 1);
+        static final Vector COLUMN_BACKWARD = new Vector(0, -1);
 
         Point addTo(Point point) {
-            return new Point(point.row() + row, point.column() + column);
+            return new Point(point.x() + dx, point.y() + dy);
         }
     }
 }
