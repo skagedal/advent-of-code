@@ -17,18 +17,26 @@ import tech.skagedal.javaaoc.tools.linear.Vector;
 @AdventOfCode
 public class Day09 extends AocDay {
     public long part1() {
-        var head = new Point(0, 0);
-        var tail = new Point(0, 0);
-        var visitedLocations = Sets.newHashSet(tail);
+        return solveWithLength(2);
+    }
 
+    public long part2() {
+        return solveWithLength(10);
+    }
+
+    private long solveWithLength(int n) {
+        Point[] points  = Stream.generate(() -> Point.ZERO).limit(n).toArray(Point[]::new);
+        var visitedTailLocations = Sets.newHashSet(points[n - 1]);
         for (var move : Streams.toIterable(readLines().map(Day09::parse).flatMap(Day09::steps))) {
-            head = head.plus(move);
-            if (!touches(head, tail)) {
-                tail = tail.plus(clamped(head.minus(tail)));
-                visitedLocations.add(tail);
+            points[0] = points[0].plus(move);
+            for (var i = 1; i < n; i++) {
+                if(!touches(points[i], points[i-1])) {
+                    points[i] = points[i].plus(clamped(points[i-1].minus(points[i])));
+                }
             }
+            visitedTailLocations.add(points[n-1]);
         }
-        return visitedLocations.size();
+        return visitedTailLocations.size();
     }
 
     private static Stream<Vector> steps(Vector vector) {
@@ -39,10 +47,6 @@ public class Day09 extends AocDay {
             remaining.set(v.minus(diff));
             return diff;
         }).takeWhile(Vector::isNonZero);
-    }
-
-    public long part2() {
-        return 0;
     }
 
     private static final Pattern VECTOR_PATTERN = Pattern.compile("^([LURD])\\s(\\d+)$");
