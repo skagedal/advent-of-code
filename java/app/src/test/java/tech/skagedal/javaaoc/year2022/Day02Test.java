@@ -5,22 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class Day02Test {
-    private final Day02 day = new Day02();
-
-    @Test
-    void part1() {
-        final var answer = day.part1();
-
-        assertEquals(9759, answer);;
-    }
-
-    @Test
-    void part2() {
-        final var answer = day.part2();
-
-        assertEquals(12429, answer);
-    }
-
     @Test
     void testScoring() {
         assertEquals(8, new Day02.Round(Day02.Move.ROCK, Day02.Move.PAPER).getScore());

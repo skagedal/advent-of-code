@@ -8,20 +8,6 @@ import org.junit.jupiter.api.Test;
 
 class Day04Test {
     @Test
-    void part1() {
-        final var answer = new Day04().part1();
-
-        assertEquals(63424, answer);
-    }
-
-    @Test
-    void part2() {
-        final var answer = new Day04().part2();
-
-        assertEquals(23541, answer);
-    }
-
-    @Test
     void parseBoard() {
         var lines = """
             22 13 17 11  0
