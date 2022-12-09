@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
+import tech.skagedal.javaaoc.tools.linear.Point;
+import tech.skagedal.javaaoc.tools.linear.Vector;
 
 @AdventOfCode
 public class Day08 extends AocDay {
@@ -65,12 +67,12 @@ public class Day08 extends AocDay {
 
         void markVisible() {
             for (var row = 0; row < height; row++) {
-                markVisible(pointsFrom(new Point(0, row), Vector.ROW_FORWARD));
-                markVisible(pointsFrom(new Point(width - 1, row), Vector.ROW_BACKWARD));
+                markVisible(pointsFrom(new Point(0, row), ROW_FORWARD));
+                markVisible(pointsFrom(new Point(width - 1, row), ROW_BACKWARD));
             }
             for (var column = 0; column < width; column++) {
-                markVisible(pointsFrom(new Point(column, 0), Vector.COLUMN_FORWARD));
-                markVisible(pointsFrom(new Point(column, height - 1), Vector.COLUMN_BACKWARD));
+                markVisible(pointsFrom(new Point(column, 0), COLUMN_FORWARD));
+                markVisible(pointsFrom(new Point(column, height - 1), COLUMN_BACKWARD));
             }
         }
 
@@ -94,7 +96,7 @@ public class Day08 extends AocDay {
         // Part 2
 
         public long scenicScore(Point point) {
-            return Stream.of(Vector.ROW_FORWARD, Vector.ROW_BACKWARD, Vector.COLUMN_FORWARD, Vector.COLUMN_BACKWARD)
+            return Stream.of(ROW_FORWARD, ROW_BACKWARD, COLUMN_FORWARD, COLUMN_BACKWARD)
                 .mapToLong(direction -> scenicScoreOneDirection(point, direction))
                 .reduce(1, (a, b) -> a * b);
         }
@@ -114,8 +116,8 @@ public class Day08 extends AocDay {
         // Common helpers
 
         private Stream<Point> allPoints() {
-            return pointsFrom(new Point(0, 0), Vector.COLUMN_FORWARD)
-                .flatMap(point -> pointsFrom(point, Vector.ROW_FORWARD));
+            return pointsFrom(new Point(0, 0), COLUMN_FORWARD)
+                .flatMap(point -> pointsFrom(point, ROW_FORWARD));
         }
 
         private Stream<Point> pointsFrom(Point point, Vector direction) {
@@ -131,15 +133,10 @@ public class Day08 extends AocDay {
         }
     }
 
-    record Point(int x, int y) { }
-    record Vector(int dx, int dy) {
-        static final Vector ROW_FORWARD = new Vector(1, 0);
-        static final Vector ROW_BACKWARD = new Vector(-1, 0);
-        static final Vector COLUMN_FORWARD = new Vector(0, 1);
-        static final Vector COLUMN_BACKWARD = new Vector(0, -1);
+    private static final Vector ROW_FORWARD = new Vector(1, 0);
+    private static final Vector ROW_BACKWARD = new Vector(-1, 0);
+    private static final Vector COLUMN_FORWARD = new Vector(0, 1);
+    private static final Vector COLUMN_BACKWARD = new Vector(0, -1);
 
-        Point addTo(Point point) {
-            return new Point(point.x() + dx, point.y() + dy);
-        }
-    }
+
 }
