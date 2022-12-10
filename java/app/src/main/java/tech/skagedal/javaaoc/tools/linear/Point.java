@@ -1,5 +1,7 @@
 package tech.skagedal.javaaoc.tools.linear;
 
+import java.util.stream.Stream;
+
 public record Point(int x, int y) {
     public static final Point ZERO = new Point(0, 0);
 

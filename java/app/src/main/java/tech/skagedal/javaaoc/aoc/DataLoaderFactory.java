@@ -43,7 +43,7 @@ public class DataLoaderFactory {
         try {
             return Files.newBufferedReader(answersPath(day)).lines().filter(Predicate.not(String::isBlank));
         } catch (IOException exception) {
-            throw new RuntimeException(exception);
+            return Stream.of();
         }
     }
 
