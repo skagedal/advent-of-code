@@ -14,7 +14,14 @@ public class DataLoaderFactory {
     private Path dataPath = findData();
 
     public DataLoader getDataLoader(AdventOfCodeDay day) {
-        final var path = inputPath(day);
+        return dataLoaderForPath(inputPath(day));
+    }
+
+    public DataLoader getExampleDataLoader(AdventOfCodeDay day) {
+        return dataLoaderForPath(exampleInputPath(day));
+    }
+
+    private static DataLoader dataLoaderForPath(Path path) {
         return new DataLoader() {
             @Override
             public Stream<String> readLines() {
@@ -50,6 +57,11 @@ public class DataLoaderFactory {
     private Path inputPath(AdventOfCodeDay day) {
         return yearPath(day)
             .resolve(String.format("day%02d_input.txt", day.day()));
+    }
+
+    private Path exampleInputPath(AdventOfCodeDay day) {
+        return yearPath(day)
+            .resolve(String.format("day%02d_example_input.txt", day.day()));
     }
 
     private Path answersPath(AdventOfCodeDay day) {

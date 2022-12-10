@@ -16,4 +16,8 @@ public class AocDay {
     protected IntStream readChars() {
         return dataLoader.readChars();
     }
+
+    protected Stream<String> readExampleLines() {
+        return dataLoaderFactory.getExampleDataLoader(AdventOfCodeDay.fromObject(this)).readLines();
+    }
 }
