@@ -2,9 +2,11 @@ package tech.skagedal.javaaoc.year2022;
 
 import com.google.common.collect.Range;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
 
+@AdventOfCode
 public class Day10 extends AocDay {
 
     public long part1() {
