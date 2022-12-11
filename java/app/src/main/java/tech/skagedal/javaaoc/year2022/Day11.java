@@ -12,9 +12,15 @@ import tech.skagedal.javaaoc.tools.Streams;
 
 @AdventOfCode
 public class Day11 extends AocDay {
-    public  long part1() {
+    public long part1() {
         Game game = new Game(readLines(), 20);
         return game.run(worry -> worry / 3);
+    }
+
+    public long part2() {
+        Game game = new Game(readLines(), 10000);
+        final var worryModulo = game.monkeys.stream().mapToLong(Monkey::getDivisor).reduce(1, (a, b) -> a * b);
+        return game.run(worry -> worry % worryModulo);
     }
 
     interface WorryManager {
@@ -44,9 +50,14 @@ public class Day11 extends AocDay {
         }
 
         private void printRoundInfo(int round) {
-            System.out.printf("\nAfter round %d, the monkeys are holding:\n", round);
+            System.out.printf("== After round %d ==\n", round);
+            System.out.println("Monkeys are holding:");
             for (var monkey : monkeys) {
                 System.out.printf("Monkey %d: %s\n", monkey.num, monkey.items);
+            }
+            System.out.println();
+            for (var monkey : monkeys) {
+                System.out.printf("Monkey %d inspected items %d times.\n", monkey.num, monkey.inspectedItems);
             }
             System.out.println();
         }
@@ -70,11 +81,11 @@ public class Day11 extends AocDay {
                     // final var finalWorry = oppedWorry / 3;
                     System.out.printf("    Monkey gets bored with item. Worry level is managed to be %d.\n", finalWorry);
                     long newMonkey;
-                    if (finalWorry % monkey.divisibleBy == 0) {
-                        System.out.printf("    Current worry level is divisible by %d.\n", monkey.divisibleBy);
+                    if (finalWorry % monkey.divisor == 0) {
+                        System.out.printf("    Current worry level is divisible by %d.\n", monkey.divisor);
                         newMonkey = monkey.ifTrueMonkey;
                     } else {
-                        System.out.printf("    Current worry level is not divisible by %d.\n", monkey.divisibleBy);
+                        System.out.printf("    Current worry level is not divisible by %d.\n", monkey.divisor);
                         newMonkey = monkey.ifFalseMonkey;
                     }
                     System.out.printf("    Item with worry level %d is thrown to monkey %d.\n", finalWorry, newMonkey);
@@ -94,23 +105,27 @@ public class Day11 extends AocDay {
         final List<Long> items;
         final Op op;
         final Operand operand;
-        final long divisibleBy;
+        final long divisor;
         final long ifTrueMonkey;
         final long ifFalseMonkey;
         long inspectedItems = 0;
 
-        public Monkey(long num, List<Long> items, Op op, Operand operand, long divisibleBy, long ifTrueMonkey, long ifFalseMonkey) {
+        public Monkey(long num, List<Long> items, Op op, Operand operand, long divisor, long ifTrueMonkey, long ifFalseMonkey) {
             this.num = num;
             this.items = new ArrayList<>(items);
             this.op = op;
             this.operand = operand;
-            this.divisibleBy = divisibleBy;
+            this.divisor = divisor;
             this.ifTrueMonkey = ifTrueMonkey;
             this.ifFalseMonkey = ifFalseMonkey;
         }
 
         public long getInspectedItems() {
             return inspectedItems;
+        }
+
+        public long getDivisor() {
+            return divisor;
         }
 
         static Pattern NUMBER = Pattern.compile("\\d+");
@@ -146,7 +161,7 @@ public class Day11 extends AocDay {
                    ", items=" + items +
                    ", op=" + op +
                    ", operand=" + operand +
-                   ", divisibleBy=" + divisibleBy +
+                   ", divisibleBy=" + divisor +
                    ", ifTrueMonkey=" + ifTrueMonkey +
                    ", ifFalseMonkey=" + ifFalseMonkey +
                    ", inspectedItems=" + inspectedItems +
@@ -172,6 +187,6 @@ public class Day11 extends AocDay {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Day11().part1());
+        System.out.println(new Day11().part2());
     }
 }
