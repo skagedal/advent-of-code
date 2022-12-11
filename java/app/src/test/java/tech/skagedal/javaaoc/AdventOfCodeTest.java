@@ -1,7 +1,6 @@
 package tech.skagedal.javaaoc;
 
 import java.util.Comparator;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicContainer;
@@ -19,6 +18,7 @@ public class AdventOfCodeTest {
     @TestFactory
     Stream<DynamicNode> adventOfCodeTests() {
         final var context = Main.createApplicationContext();
+
         return context
             .getBeanFactory()
             .getBeansWithAnnotation(AdventOfCode.class)
