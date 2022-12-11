@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -69,5 +70,9 @@ public class Streams {
 
     private static <T> Stream<T> sequentialStream(Spliterator<T> spliterator) {
         return StreamSupport.stream(spliterator, false);
+    }
+
+    public static <T> Stream<T> make(Consumer<StreamMaker<T>> maker) {
+        Thread.startVirtualThread()
     }
 }
