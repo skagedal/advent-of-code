@@ -13,17 +13,28 @@ import tech.skagedal.javaaoc.tools.Streams;
 @AdventOfCode
 public class Day11 extends AocDay {
     public  long part1() {
-        var game = new Game();
-        return game.run();
+        Game game = new Game(readLines(), 20);
+        return game.run(worry -> worry / 3);
+    }
+
+    interface WorryManager {
+        long managedWorry(long worry);
     }
 
     private class Game {
-        List<Monkey> monkeys = readMonkeys().toList();
+        private final List<Monkey> monkeys;
+        private final int rounds;
 
-        long run() {
-            for (var i = 0; i < 20; i++) {
-                round();
-                roundInfo(i + 1);
+
+        private Game(Stream<String> lines, int rounds) {
+            this.monkeys = readMonkeys(lines).toList();
+            this.rounds = rounds;
+        }
+
+        long run(WorryManager worryManager) {
+            for (var i = 0; i < rounds; i++) {
+                round(worryManager);
+                printRoundInfo(i + 1);
             }
 
             System.out.println(monkeys);
@@ -32,7 +43,7 @@ public class Day11 extends AocDay {
                 .limit(2).mapToLong(Monkey::getInspectedItems).reduce(1, (a, b) -> a * b);
         }
 
-        private void roundInfo(int round) {
+        private void printRoundInfo(int round) {
             System.out.printf("\nAfter round %d, the monkeys are holding:\n", round);
             for (var monkey : monkeys) {
                 System.out.printf("Monkey %d: %s\n", monkey.num, monkey.items);
@@ -40,13 +51,13 @@ public class Day11 extends AocDay {
             System.out.println();
         }
 
-        void round() {
+        void round(WorryManager worryManager) {
             for (var monkey : monkeys) {
                 System.out.printf("Monkey %d:\n", monkey.num);
                 for (var currentLevel : monkey.items) {
                     System.out.printf("  Monkey inspects an item with worry level of %d\n", currentLevel);
                     monkey.inspectedItems++;
-                    final int operand = switch (monkey.operand) {
+                    final long operand = switch (monkey.operand) {
                         case Operand.Old old -> currentLevel;
                         case Operand.Val val -> val.value;
                     };
@@ -55,9 +66,10 @@ public class Day11 extends AocDay {
                         case TIMES -> currentLevel * operand;
                     };
                     System.out.printf("    It is %s with %s (%d) to %d.\n", monkey.op, monkey.operand, operand, oppedWorry);
-                    final var finalWorry = oppedWorry / 3;
-                    System.out.printf("    Monkey gets bored with item. Worry level is diveded by 3 to %d.\n", finalWorry);
-                    int newMonkey;
+                    final var finalWorry = worryManager.managedWorry(oppedWorry);
+                    // final var finalWorry = oppedWorry / 3;
+                    System.out.printf("    Monkey gets bored with item. Worry level is managed to be %d.\n", finalWorry);
+                    long newMonkey;
                     if (finalWorry % monkey.divisibleBy == 0) {
                         System.out.printf("    Current worry level is divisible by %d.\n", monkey.divisibleBy);
                         newMonkey = monkey.ifTrueMonkey;
@@ -66,28 +78,28 @@ public class Day11 extends AocDay {
                         newMonkey = monkey.ifFalseMonkey;
                     }
                     System.out.printf("    Item with worry level %d is thrown to monkey %d.\n", finalWorry, newMonkey);
-                    monkeys.get(newMonkey).items.add(finalWorry);
+                    monkeys.get((int)newMonkey).items.add(finalWorry);
                 }
                 monkey.items.clear(); // Has thrown all its items
             }
         }
     }
 
-    private Stream<Monkey> readMonkeys() {
-        return Streams.splitting(readLines(), String::isBlank).map(Monkey::parse);
+    private Stream<Monkey> readMonkeys(Stream<String> lines) {
+        return Streams.splitting(lines, String::isBlank).map(Monkey::parse);
     }
 
     private static class Monkey {
-        final int num;
-        final List<Integer> items;
+        final long num;
+        final List<Long> items;
         final Op op;
         final Operand operand;
-        final int divisibleBy;
-        final int ifTrueMonkey;
-        final int ifFalseMonkey;
-        int inspectedItems = 0;
+        final long divisibleBy;
+        final long ifTrueMonkey;
+        final long ifFalseMonkey;
+        long inspectedItems = 0;
 
-        public Monkey(int num, List<Integer> items, Op op, Operand operand, int divisibleBy, int ifTrueMonkey, int ifFalseMonkey) {
+        public Monkey(long num, List<Long> items, Op op, Operand operand, long divisibleBy, long ifTrueMonkey, long ifFalseMonkey) {
             this.num = num;
             this.items = new ArrayList<>(items);
             this.op = op;
@@ -97,7 +109,7 @@ public class Day11 extends AocDay {
             this.ifFalseMonkey = ifFalseMonkey;
         }
 
-        public int getInspectedItems() {
+        public long getInspectedItems() {
             return inspectedItems;
         }
 
@@ -119,12 +131,12 @@ public class Day11 extends AocDay {
             return new Monkey(monkeyNumber, items, op, operand, divisibleBy, ifTrueMonkey, ifFalseMonkey);
         }
 
-        private static int number(String string) {
+        private static long number(String string) {
             return numbers(string).findFirst().orElseThrow();
         }
 
-        private static Stream<Integer> numbers(String string) {
-            return NUMBER.matcher(string).results().map(MatchResult::group).map(Integer::parseInt);
+        private static Stream<Long> numbers(String string) {
+            return NUMBER.matcher(string).results().map(MatchResult::group).map(Long::parseLong);
         }
 
         @Override
@@ -156,7 +168,7 @@ public class Day11 extends AocDay {
 
     sealed interface Operand {
         record Old() implements Operand {}
-        record Val(int value) implements Operand {}
+        record Val(long value) implements Operand {}
     }
 
     public static void main(String[] args) {
