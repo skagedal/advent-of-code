@@ -17,7 +17,7 @@ public class Day11 extends AocDay {
         return game.run(worry -> worry / 3);
     }
 
-    public long part2() {
+    public long part2Disabled() {
         Game game = new Game(readLines(), 10000);
         final var worryModulo = game.monkeys.stream().mapToLong(Monkey::getDivisor).reduce(1, (a, b) -> a * b);
         return game.run(worry -> worry % worryModulo);
@@ -184,9 +184,5 @@ public class Day11 extends AocDay {
     sealed interface Operand {
         record Old() implements Operand {}
         record Val(long value) implements Operand {}
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new Day11().part2());
     }
 }
