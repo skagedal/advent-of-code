@@ -18,21 +18,21 @@ public class Day12 extends AocDay {
     public boolean shouldLog = false;
 
     public long part1() {
-        return solveProperly(readLines(), square -> square.distance instanceof Distance.Start);
+        return solve(readLines(), square -> square.squareType == SquareType.START);
     }
 
     public long part2() {
-        return solveProperly(readLines(), square -> square.height == Square.LOWEST_HEIGHT);
+        return solve(readLines(), square -> square.height == Square.LOWEST_HEIGHT);
     }
 
-    public long solveProperly(Stream<String> lines, Predicate<Square> isStartingPoint) {
+    public long solve(Stream<String> lines, Predicate<Square> isStartingPoint) {
         // Read the grid.
         final var grid = Grid.fromLines(lines, Square::from);
         // We need to do graph sorting.
         final var remainingNodes = grid.allPoints().collect(Collectors.toCollection(HashSet::new));
         // First find the nodes that are have distance 0.
         final var endNodes = grid.allPoints()
-            .filter(point -> grid.get(point).distance instanceof Distance.Known known && known.steps() == 0)
+            .filter(point -> grid.get(point).squareType() == SquareType.END)
             .collect(Collectors.toSet());
         final Stack<Set<Point>> stack = new Stack<>();
 
@@ -40,10 +40,10 @@ public class Day12 extends AocDay {
         remainingNodes.removeAll(endNodes);
 
         // When we find the set that contains our Start node, then that's the distance.
-        return solveProperly(grid, remainingNodes, stack, isStartingPoint);
+        return solve(grid, remainingNodes, stack, isStartingPoint);
     }
 
-    private long solveProperly(Grid<Square> grid, HashSet<Point> remaining, Stack<Set<Point>> stack, Predicate<Square> isStartingPoint) {
+    private long solve(Grid<Square> grid, HashSet<Point> remaining, Stack<Set<Point>> stack, Predicate<Square> isStartingPoint) {
         // Then for each iteration, find the nodes that lead into the previous set.
         // Remove them from the full set.
 
@@ -65,7 +65,7 @@ public class Day12 extends AocDay {
 
         remaining.removeAll(newSet);
         stack.push(newSet);
-        return solveProperly(grid, remaining, stack, isStartingPoint);
+        return solve(grid, remaining, stack, isStartingPoint);
     }
 
     private boolean hasEdgeTo(Grid<Square> grid, Point p1, Point p2) {
@@ -73,17 +73,13 @@ public class Day12 extends AocDay {
          && grid.get(p2).height <= grid.get(p1).height + 1;
     }
 
-    private static class Square {
+    private enum SquareType {
+        START, END, NORMAL
+    }
 
+    private record Square(int height, SquareType squareType) {
         private static final int LOWEST_HEIGHT = 'a';
         private static final int HEIGHEST_HEIGHT = 'z';
-        int height;
-        Distance distance;
-        public Square(int height, Distance distance) {
-            assert height >= LOWEST_HEIGHT && height <= HEIGHEST_HEIGHT;
-            this.height = height;
-            this.distance = distance;
-        }
 
         static Square from(int integer) {
             return fromIntWithStartHeight(LOWEST_HEIGHT).apply(integer);
@@ -91,23 +87,11 @@ public class Day12 extends AocDay {
 
         public static IntFunction<Square> fromIntWithStartHeight(int startHeight) {
             return integer -> switch (integer) {
-                case 'S' -> new Square(startHeight, Distance.START);
-                case 'E' -> new Square(HEIGHEST_HEIGHT, new Distance.Known(0));
-                default -> new Square(integer, Distance.UNKNOWN);
+                case 'S' -> new Square(startHeight, SquareType.START);
+                case 'E' -> new Square(HEIGHEST_HEIGHT, SquareType.END);
+                default -> new Square(integer, SquareType.NORMAL);
             };
         }
-    }
-
-
-    private sealed interface Distance {
-        Distance START = new Start();
-
-        Distance UNKNOWN = new Unknown();
-        Distance UNREACHABLE = new Unreachable();
-        record Start() implements Distance {}
-        record Unknown() implements Distance {}
-        record Known(long steps) implements Distance {}
-        record Unreachable() implements Distance {}
     }
 
     private static void printState(Grid<Square> grid, Stack<Set<Point>> stack, Set<Point> last, Set<?> previous) {
