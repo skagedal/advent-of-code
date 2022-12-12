@@ -7,6 +7,7 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AocDay;
+import tech.skagedal.javaaoc.tools.format.Term;
 import tech.skagedal.javaaoc.tools.linear.Grid;
 import tech.skagedal.javaaoc.tools.linear.Point;
 
@@ -41,10 +42,8 @@ public class Day12 extends AocDay {
 
         grid.printGrid(p -> {
             final var s = grid.get(p);
-            final var startAnsi = p.equals(point)
-                ? "\u001b[42m" :
-                (stack.contains(p) ? "\u001b[43m" : "");
-            final var stopAnsi = "\u001b[0m";
+            final var startAnsi = p.equals(point) ? Term.FG_GREEN : (stack.contains(p) ? Term.FG_YELLOW : "");
+            final var stopAnsi = Term.RESET;
             return startAnsi + switch (s.distance) {
                 case Distance.Known known -> String.format("%02d", known.steps());
                 case Distance.Unknown unknown -> "--";
