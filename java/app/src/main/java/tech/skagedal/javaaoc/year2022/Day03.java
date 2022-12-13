@@ -4,9 +4,9 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
-import tech.skagedal.javaaoc.tools.Streams;
-import tech.skagedal.javaaoc.tools.Strings;
-import tech.skagedal.javaaoc.tools.Tuple2;
+import tech.skagedal.javaaoc.tools.streamsetc.Streams;
+import tech.skagedal.javaaoc.tools.string.Strings;
+import tech.skagedal.javaaoc.tools.function.Tuple2;
 
 @AdventOfCode
 public class Day03 extends AocDay {

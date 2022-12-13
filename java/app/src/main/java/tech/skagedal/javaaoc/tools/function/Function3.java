@@ -1,4 +1,4 @@
-package tech.skagedal.javaaoc.tools;
+package tech.skagedal.javaaoc.tools.function;
 
 @FunctionalInterface
 public interface Function3<T1, T2, T3, R> {

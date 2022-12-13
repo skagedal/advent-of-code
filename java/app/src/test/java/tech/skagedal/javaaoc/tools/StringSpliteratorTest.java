@@ -5,8 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import tech.skagedal.javaaoc.tools.streamsetc.SpliteratorUtil;
+import tech.skagedal.javaaoc.tools.string.StringSpliterator;
 
 class StringSpliteratorTest {
     @Test

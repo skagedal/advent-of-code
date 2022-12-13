@@ -1,11 +1,9 @@
-package tech.skagedal.javaaoc.tools;
+package tech.skagedal.javaaoc.tools.streamsetc;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import tech.skagedal.javaaoc.tools.function.Function3;
 
 public class Zip3Spliterator<T1, T2, T3, R> implements Spliterator<R> {
     private final Spliterator<T1> t1Spliterator;

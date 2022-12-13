@@ -1,4 +1,4 @@
-package tech.skagedal.javaaoc.tools;
+package tech.skagedal.javaaoc.tools.streamsetc;
 
 import com.google.common.base.Functions;
 import java.util.Iterator;
@@ -11,6 +11,9 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import tech.skagedal.javaaoc.tools.function.Tuple2;
+import tech.skagedal.javaaoc.tools.function.Tuple3;
+import tech.skagedal.javaaoc.tools.function.Function3;
 
 public class Streams {
     public static <T> Stream<List<T>> splitting(Stream<T> stream, Predicate<T> isPivot) {

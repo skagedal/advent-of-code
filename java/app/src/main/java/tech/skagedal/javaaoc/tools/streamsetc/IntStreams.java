@@ -1,7 +1,8 @@
-package tech.skagedal.javaaoc.tools;
+package tech.skagedal.javaaoc.tools.streamsetc;
 
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.tools.function.BiIntFunction;
 
 public class IntStreams {
     public static IntStream rangeClosed(int startInclusive, int endInclusive, int stride) {

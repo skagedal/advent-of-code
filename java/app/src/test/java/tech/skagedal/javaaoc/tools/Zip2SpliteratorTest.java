@@ -3,9 +3,10 @@ package tech.skagedal.javaaoc.tools;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.Spliterator;
 import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.Test;
+import tech.skagedal.javaaoc.tools.function.Tuple2;
+import tech.skagedal.javaaoc.tools.streamsetc.Zip2Spliterator;
 
 class Zip2SpliteratorTest {
     @Test

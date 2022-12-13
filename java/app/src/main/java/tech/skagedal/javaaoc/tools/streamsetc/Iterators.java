@@ -1,4 +1,4 @@
-package tech.skagedal.javaaoc.tools;
+package tech.skagedal.javaaoc.tools.streamsetc;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import tech.skagedal.javaaoc.tools.function.BiIntFunction;
 
 public class Iterators {
     public static <T, U> Iterator<List<U>> splitting(Iterator<T> iterator, Predicate<T> isPivot, Function<T, U> mapper) {

@@ -1,4 +1,4 @@
-package tech.skagedal.javaaoc.tools;
+package tech.skagedal.javaaoc.tools.streamsetc;
 
 import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicBoolean;

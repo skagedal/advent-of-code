@@ -1,4 +1,4 @@
-package tech.skagedal.javaaoc.tools;
+package tech.skagedal.javaaoc.tools.string;
 
 import java.util.Set;
 import java.util.stream.Collectors;

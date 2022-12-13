@@ -3,7 +3,7 @@ package tech.skagedal.javaaoc.year2022;
 import com.google.common.collect.Range;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
-import tech.skagedal.javaaoc.tools.Tuple2;
+import tech.skagedal.javaaoc.tools.function.Tuple2;
 
 @AdventOfCode
 public class Day04 extends AocDay {

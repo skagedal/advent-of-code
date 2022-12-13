@@ -6,7 +6,7 @@ import java.util.Stack;
 import java.util.regex.Pattern;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
-import tech.skagedal.javaaoc.tools.Streams;
+import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 @AdventOfCode
 public class Day05 extends AocDay {

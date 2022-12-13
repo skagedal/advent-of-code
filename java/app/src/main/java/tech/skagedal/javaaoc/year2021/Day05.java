@@ -3,10 +3,9 @@ package tech.skagedal.javaaoc.year2021;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
-import tech.skagedal.javaaoc.tools.Streams;
-import tech.skagedal.javaaoc.tools.Tuple2;
+import tech.skagedal.javaaoc.tools.streamsetc.Streams;
+import tech.skagedal.javaaoc.tools.function.Tuple2;
 import tech.skagedal.javaaoc.tools.linear.Point;
 import tech.skagedal.javaaoc.tools.regex.Patterns;
 

@@ -3,8 +3,8 @@ package tech.skagedal.javaaoc.year2022;
 import com.google.common.collect.Sets;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
-import tech.skagedal.javaaoc.tools.Streams;
-import tech.skagedal.javaaoc.tools.Strings;
+import tech.skagedal.javaaoc.tools.streamsetc.Streams;
+import tech.skagedal.javaaoc.tools.string.Strings;
 
 @AdventOfCode
 public class Day06 extends AocDay {

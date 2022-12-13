@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.Test;
+import tech.skagedal.javaaoc.tools.function.Tuple3;
+import tech.skagedal.javaaoc.tools.streamsetc.Zip3Spliterator;
 
 class Zip3SpliteratorTest {
     @Test
