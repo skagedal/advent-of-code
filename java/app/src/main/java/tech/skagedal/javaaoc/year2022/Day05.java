@@ -2,10 +2,13 @@ package tech.skagedal.javaaoc.year2022;
 
 import java.lang.reflect.Array;
 import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
+import tech.skagedal.javaaoc.tools.streamsetc.Lists;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 @AdventOfCode
@@ -31,21 +34,15 @@ public class Day05 extends AocDay {
     }
 
     static class Cargo {
-        Stack<String>[] stacks = (Stack<String>[])Array.newInstance(Stack.class, 9);
+        private final List<Stack<String>> stacks = Lists.generate(9, Stack::new);
         private static final Pattern pattern = Pattern.compile("\\d+");
 
-        Cargo() {
-            for (var i = 0; i < stacks.length; i++) {
-                stacks[i] = new Stack<>();
-            }
-        }
-
         void addInitialCargoLine(String line) {
-            for (var i = 0; i < stacks.length; i++) {
-                int beginIndex = 1 + i * 4;
-                String box = line.substring(beginIndex, beginIndex + 1);
+            for (final var enumeratedStack : Streams.toIterable(Streams.enumerated(stacks.stream()))) {
+                final var beginIndex = 1 + enumeratedStack.number() * 4;
+                final var box = line.substring(beginIndex, beginIndex + 1);
                 if (!box.isBlank()) {
-                    stacks[i].push(box);
+                    enumeratedStack.value().push(box);
                 }
             }
         }
@@ -65,7 +62,7 @@ public class Day05 extends AocDay {
             final var source =  Integer.parseInt(results.get(1).group()) - 1;
             final var destination = Integer.parseInt(results.get(2).group()) - 1;
 
-            mover.move(count, stacks[source], stacks[destination]);
+            mover.move(count, stacks.get(source), stacks.get(destination));
         }
     }
 
