@@ -21,7 +21,7 @@ public class Day03 extends AocDay {
 
     public long part2() {
         return Streams.splittingFixedSize(readLines().map(Strings::toSet), 3)
-            .map(list -> list.stream().reduce(Sets::intersection).get())
+            .map(list -> list.stream().reduce(Sets::intersection).orElseThrow())
             .map(Day03::singleElementOfSet)
             .mapToLong(this::getPriority)
             .sum();
@@ -38,7 +38,7 @@ public class Day03 extends AocDay {
     static Tuple2<String, String> splitStringInHalf(String line) {
         return new Tuple2<>(
             line.substring(0, line.length() / 2),
-            line.substring(line.length() / 2, line.length())
+            line.substring(line.length() / 2)
         );
     }
 
