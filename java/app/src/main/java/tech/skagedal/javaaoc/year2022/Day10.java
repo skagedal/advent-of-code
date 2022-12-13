@@ -21,6 +21,7 @@ public class Day10 {
         final var device = new Device();
         device.process(context.lines().map(Day10::parse));
         System.out.println(device.frameBuffer.toString());
+        // TODO: Continue on the AOC font parser
         return "BZPAJELK";
     }
 
