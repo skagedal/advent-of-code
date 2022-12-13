@@ -18,9 +18,14 @@ import tech.skagedal.javaaoc.tools.regex.Patterns;
 @AdventOfCode
 public class Day05 {
     public long part1(AdventContext context) {
+        Stream<Line> lines = context.lines().map(Line::parse).filter(Line::isStraight);
+        return findOverlappingPoints(lines);
+    }
+
+    private static long findOverlappingPoints(Stream<Line> lines) {
         final var map = new HashMap<Point, Integer>();
-        for (var pair : iterate(context.lines().map(Line::parse).filter(Line::isStraight))) {
-            for (var p : iterate(straightLine(pair.a(), pair.b()))) {
+        for (var line : iterate(lines)) {
+            for (var p : iterate(line.points())) {
                 map.put(p, map.getOrDefault(p, 0) + 1);
             }
         }
@@ -40,6 +45,13 @@ public class Day05 {
 
         boolean isStraight() {
             return a.x() == b.x() || a.y() == b.y();
+        }
+
+        // Note that this only handles straight lines or lines at 45 degrees
+        Stream<Point> points() {
+            final var length = Math.max(Math.abs(a.x() - b.x()), Math.abs(a.y() - b.y()));
+            final var diff = b.minus(a).dividedBy(length);
+            return IntStream.rangeClosed(0, length).mapToObj(i -> a.plus(diff.times(i)));
         }
     }
 

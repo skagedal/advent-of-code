@@ -12,4 +12,12 @@ public record Vector(int dx, int dy) {
     public boolean isNonZero() {
         return dx != 0 || dy != 0;
     }
+
+    public Vector dividedBy(int n) {
+        return new Vector(dx / n, dy / n);
+    }
+
+    public Vector times(int n) {
+        return new Vector(dx * n, dy * n);
+    }
 }
