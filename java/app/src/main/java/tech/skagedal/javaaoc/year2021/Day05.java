@@ -18,16 +18,17 @@ import tech.skagedal.javaaoc.tools.regex.Patterns;
 @AdventOfCode
 public class Day05 {
     public long part1(AdventContext context) {
-        Stream<Line> lines = context.lines().map(Line::parse).filter(Line::isStraight);
-        return findOverlappingPoints(lines);
+        return findOverlappingPoints(context.lines().map(Line::parse).filter(Line::isStraight));
+    }
+
+    public long part2(AdventContext context) {
+        return findOverlappingPoints(context.lines().map(Line::parse));
     }
 
     private static long findOverlappingPoints(Stream<Line> lines) {
         final var map = new HashMap<Point, Integer>();
-        for (var line : iterate(lines)) {
-            for (var p : iterate(line.points())) {
-                map.put(p, map.getOrDefault(p, 0) + 1);
-            }
+        for (var p : iterate(lines.flatMap(Line::points))) {
+            map.put(p, map.getOrDefault(p, 0) + 1);
         }
         return map.values().stream().filter(i -> i > 1).count();
     }
