@@ -1,11 +1,9 @@
 package tech.skagedal.javaaoc.year2022;
 
-import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Lists;

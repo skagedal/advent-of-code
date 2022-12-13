@@ -5,19 +5,19 @@ import java.util.stream.Stream;
 
 public class AocDay {
     private DataLoaderFactory dataLoaderFactory = new DataLoaderFactory();
-    private DataLoader dataLoader = dataLoaderFactory.getDataLoader(
+    private AdventContext adventContext = dataLoaderFactory.getDataLoader(
         AdventOfCodeDay.fromObject(this)
     );
 
     protected Stream<String> readLines() {
-        return dataLoader.readLines();
+        return adventContext.lines();
     }
 
     protected IntStream readChars() {
-        return dataLoader.readChars();
+        return adventContext.readChars();
     }
 
     protected Stream<String> readExampleLines() {
-        return dataLoaderFactory.getExampleDataLoader(AdventOfCodeDay.fromObject(this)).readLines();
+        return dataLoaderFactory.getExampleDataLoader(AdventOfCodeDay.fromObject(this)).lines();
     }
 }

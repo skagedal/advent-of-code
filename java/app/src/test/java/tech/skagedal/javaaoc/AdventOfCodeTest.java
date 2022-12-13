@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeDay;
 import tech.skagedal.javaaoc.aoc.AdventOfCodePart;
@@ -36,7 +37,11 @@ public class AdventOfCodeTest {
                 .map(part -> DynamicTest.dynamicTest(
                     String.format("Part %d", part.number()),
                     () -> {
-                        final var answer = part.method().invoke(object).toString();
+                        final var method = part.method();
+                        final var answer =
+                            (method.getParameterCount() == 1)
+                                ? method.invoke(object, createContext(object)).toString()
+                                : method.invoke(object).toString();
                         if (part.number() - 1 < answers.size()) {
                             final var expectedAnswer = answers.get(part.number() - 1);
                             Assertions.assertEquals(
@@ -49,6 +54,10 @@ public class AdventOfCodeTest {
                     }
                 ))
         );
+    }
+
+    private AdventContext createContext(Object object) {
+        return dataLoaderFactory.getDataLoader(AdventOfCodeDay.fromObject(object));
     }
 
 }

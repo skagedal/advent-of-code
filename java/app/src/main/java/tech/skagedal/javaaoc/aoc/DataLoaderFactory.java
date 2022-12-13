@@ -13,18 +13,18 @@ import tech.skagedal.javaaoc.tools.sneaky.Checked;
 public class DataLoaderFactory {
     private Path dataPath = findData();
 
-    public DataLoader getDataLoader(AdventOfCodeDay day) {
+    public AdventContext getDataLoader(AdventOfCodeDay day) {
         return dataLoaderForPath(inputPath(day));
     }
 
-    public DataLoader getExampleDataLoader(AdventOfCodeDay day) {
+    public AdventContext getExampleDataLoader(AdventOfCodeDay day) {
         return dataLoaderForPath(exampleInputPath(day));
     }
 
-    private static DataLoader dataLoaderForPath(Path path) {
-        return new DataLoader() {
+    private static AdventContext dataLoaderForPath(Path path) {
+        return new AdventContext() {
             @Override
-            public Stream<String> readLines() {
+            public Stream<String> lines() {
                 try {
                     return Files.newBufferedReader(path).lines();
                 } catch (IOException e) {
