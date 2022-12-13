@@ -2,22 +2,24 @@ package tech.skagedal.javaaoc.year2022;
 
 import com.google.common.collect.Range;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
+import tech.skagedal.javaaoc.aoc.AdventOfCodeDay;
+import tech.skagedal.javaaoc.aoc.DataLoaderFactory;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 @AdventOfCode
-public class Day10 extends AocDay {
+public class Day10 {
 
-    public long part1() {
+    public long part1(AdventContext context) {
         final var device = new Device();
-        device.process(readLines().map(Day10::parse));
+        device.process(context.lines().map(Day10::parse));
         return device.signalStrengthSum;
     }
 
-    public String part2() {
+    public String part2(AdventContext context) {
         final var device = new Device();
-        device.process(readLines().map(Day10::parse));
+        device.process(context.lines().map(Day10::parse));
         System.out.println(device.frameBuffer.toString());
         return "BZPAJELK";
     }
@@ -78,6 +80,7 @@ public class Day10 extends AocDay {
     }
 
     public static void main(String[] args) {
-        System.out.println("Answer: " + new Day10().part2());
+        Day10 day = new Day10();
+        System.out.println("Answer: " + day.part2(new DataLoaderFactory().getExampleDataLoader(AdventOfCodeDay.fromObject(day))));
     }
 }

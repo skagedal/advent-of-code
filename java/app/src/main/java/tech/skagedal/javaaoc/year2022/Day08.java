@@ -3,22 +3,22 @@ package tech.skagedal.javaaoc.year2022;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.linear.Point;
 import tech.skagedal.javaaoc.tools.linear.Vector;
 
 @AdventOfCode
-public class Day08 extends AocDay {
-    public long part1() {
-        final var forest = Forest.read(readLines());
+public class Day08 {
+    public long part1(AdventContext context) {
+        final var forest = Forest.read(context.lines());
         forest.markVisible();
         return forest.countVisible();
     }
 
-    public long part2() {
-        final var forest = Forest.read(readLines());
+    public long part2(AdventContext context) {
+        final var forest = Forest.read(context.lines());
         return forest
             .allPoints()
             .mapToLong(forest::scenicScore)

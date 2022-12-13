@@ -10,22 +10,22 @@ import java.util.function.Function;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 @AdventOfCode
-public class Day07 extends AocDay {
-    public long part1() {
-        return readTree().depthFirstStream()
+public class Day07 {
+    public long part1(AdventContext context) {
+        return readTree(context).depthFirstStream()
             .filter(node -> node instanceof DirectoryNode)
             .filter(node -> node.getSize() <= 100000)
             .mapToLong(Node::getSize)
             .sum();
     }
 
-    public long part2() {
-        final var tree = readTree();
+    public long part2(AdventContext context) {
+        final var tree = readTree(context);
         final var totalUsed = tree.getSize();
         final var targetUsed = 70000000 - 30000000;
         final var minimumToDelete = totalUsed - targetUsed;
@@ -38,8 +38,8 @@ public class Day07 extends AocDay {
             .orElseThrow();
     }
 
-    private Node readTree() {
-        final Iterable<Line> lines = () -> readLines().map(Day07::parseLine).iterator();
+    private Node readTree(AdventContext context) {
+        final Iterable<Line> lines = () -> context.lines().map(Day07::parseLine).iterator();
         final Stack<String> currentPath = new Stack<>();
         final var root = new DirectoryNode("/");
 

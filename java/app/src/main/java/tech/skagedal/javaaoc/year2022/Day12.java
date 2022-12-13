@@ -7,22 +7,22 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.format.Term;
 import tech.skagedal.javaaoc.tools.linear.Grid;
 import tech.skagedal.javaaoc.tools.linear.Point;
 
 @AdventOfCode
-public class Day12 extends AocDay {
+public class Day12 {
     public boolean shouldLog = false;
 
-    public long part1() {
-        return solve(readLines(), square -> square.squareType == SquareType.START);
+    public long part1(AdventContext context) {
+        return solve(context.lines(), square -> square.squareType == SquareType.START);
     }
 
-    public long part2() {
-        return solve(readLines(), square -> square.height == Square.LOWEST_HEIGHT);
+    public long part2(AdventContext context) {
+        return solve(context.lines(), square -> square.height == Square.LOWEST_HEIGHT);
     }
 
     public long solve(Stream<String> lines, Predicate<Square> isStartingPoint) {

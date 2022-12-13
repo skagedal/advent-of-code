@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import tech.skagedal.javaaoc.aoc.AdventContext;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.math.Longs;

@@ -3,17 +3,17 @@ package tech.skagedal.javaaoc.year2021;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import tech.skagedal.javaaoc.aoc.AocDay;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.function.Tuple2;
 import tech.skagedal.javaaoc.tools.linear.Point;
 import tech.skagedal.javaaoc.tools.regex.Patterns;
 
 // @AdventOfCode
-public class Day05 extends AocDay {
-    public long part1() {
+public class Day05 {
+    public long part1(AdventContext context) {
         final var map = new HashMap<Point, Integer>();
-        for (var pair : Streams.toIterable(readLines().map(Day05::parse))) {
+        for (var pair : Streams.toIterable(context.lines().map(Day05::parse))) {
             for (var p : Streams.toIterable(straightLine(pair.value1(), pair.value2()))) {
 
             }

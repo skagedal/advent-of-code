@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 @AdventOfCode
-public class Day04 extends AocDay {
-    public long part1() {
-        final var calledNumbers = readLines().findFirst()
+public class Day04 {
+    public long part1(AdventContext context) {
+        final var calledNumbers = context.lines().findFirst()
             .map(Day04::parseCalledNumbers)
             .orElseThrow();
-        final var boards = Streams.splitting(readLines().skip(2), String::isBlank)
+        final var boards = Streams.splitting(context.lines().skip(2), String::isBlank)
             .map(Board::parse).toList();
 
         for (var number : calledNumbers) {
@@ -31,11 +31,11 @@ public class Day04 extends AocDay {
     }
 
     // This is really ugly
-    public long part2() {
-        final var calledNumbers = readLines().findFirst()
+    public long part2(AdventContext context) {
+        final var calledNumbers = context.lines().findFirst()
             .map(Day04::parseCalledNumbers)
             .orElseThrow();
-        final var boards = new ArrayList<>(Streams.splitting(readLines().skip(2), String::isBlank)
+        final var boards = new ArrayList<>(Streams.splitting(context.lines().skip(2), String::isBlank)
             .map(Board::parse).toList());
         Board lastBingoBoard = null;
         int lastNumber = 0;

@@ -1,19 +1,19 @@
 package tech.skagedal.javaaoc.year2022;
 
-import tech.skagedal.javaaoc.aoc.AocDay;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 
 @AdventOfCode
-public class Day02 extends AocDay {
-    public long part1() {
-        return readLines()
+public class Day02 {
+    public long part1(AdventContext context) {
+        return context.lines()
             .map(Round::fromLine)
             .mapToLong(Round::getScore)
             .sum();
     }
 
-    public long part2() {
-        return readLines()
+    public long part2(AdventContext context) {
+        return context.lines()
             .map(RoundWithOutcome::fromLine)
             .map(RoundWithOutcome::toRound)
             .mapToLong(Round::getScore)

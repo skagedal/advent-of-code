@@ -7,18 +7,18 @@ import java.util.function.Predicate;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.math.Longs;
 
 @AdventOfCode
-public class Day13 extends AocDay {
+public class Day13 {
     // Part 1
 
-    public long part1() {
+    public long part1(AdventContext context) {
         return Streams.enumerated(
-                Streams.splitting(readLines(), String::isBlank)
+                Streams.splitting(context.lines(), String::isBlank)
                     .map(list -> list.stream().map(Day13::parseLine).toList())
                     .map(Packet.ListPacket::new))
             .filter(enumeratedListPacket -> Streams.isSorted(enumeratedListPacket.value().packets.stream()))
@@ -32,12 +32,10 @@ public class Day13 extends AocDay {
     private static final Packet DIVIDER_PACKET_2 = list(list(intx(6)));
     private static final List<Packet> DIVIDER_PACKETS = List.of(DIVIDER_PACKET_1, DIVIDER_PACKET_2);
 
-    public long part2() {
-        Stream<String> lines = readLines();
-
+    public long part2(AdventContext context) {
         return Streams.enumerated(
             Stream.concat(
-                lines
+                context.lines()
                     .filter(Predicate.not(String::isBlank))
                     .map(Day13::parseLine),
                 DIVIDER_PACKETS.stream()

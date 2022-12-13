@@ -2,16 +2,16 @@ package tech.skagedal.javaaoc.year2022;
 
 import com.google.common.collect.Sets;
 import java.util.Set;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.string.Strings;
 import tech.skagedal.javaaoc.tools.function.Tuple2;
 
 @AdventOfCode
-public class Day03 extends AocDay {
-    public long part1() {
-        return readLines()
+public class Day03 {
+    public long part1(AdventContext context) {
+        return context.lines()
             .map(Day03::splitStringInHalf)
             .map(tuple -> Sets.intersection(Strings.toSet(tuple.value1()), Strings.toSet(tuple.value2())))
             .map(Day03::singleElementOfSet)
@@ -19,8 +19,8 @@ public class Day03 extends AocDay {
             .sum();
     }
 
-    public long part2() {
-        return Streams.splittingFixedSize(readLines().map(Strings::toSet), 3)
+    public long part2(AdventContext context) {
+        return Streams.splittingFixedSize(context.lines().map(Strings::toSet), 3)
             .map(list -> list.stream().reduce(Sets::intersection).orElseThrow())
             .map(Day03::singleElementOfSet)
             .mapToLong(this::getPriority)

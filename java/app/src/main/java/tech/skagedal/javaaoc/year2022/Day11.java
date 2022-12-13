@@ -6,19 +6,20 @@ import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 @AdventOfCode
-public class Day11 extends AocDay {
-    public long part1() {
-        Game game = new Game(readLines(), 20);
+public class Day11 {
+    public long part1(AdventContext context) {
+        Game game = new Game(context.lines(), 20);
         return game.run(worry -> worry / 3);
     }
 
-    public long part2Disabled() {
-        Game game = new Game(readLines(), 10000);
+    // TODO: Disabled as it takes a long time to calculate
+    public long part2Disabled(AdventContext context) {
+        Game game = new Game(context.lines(), 10000);
         final var worryModulo = game.monkeys.stream().mapToLong(Monkey::getDivisor).reduce(1, (a, b) -> a * b);
         return game.run(worry -> worry % worryModulo);
     }

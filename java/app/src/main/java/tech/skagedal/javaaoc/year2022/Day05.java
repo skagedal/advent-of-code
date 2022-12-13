@@ -4,23 +4,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Lists;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 @AdventOfCode
-public class Day05 extends AocDay {
-    public String part1() {
-        return solvePart(Day05::moveOneByOne);
+public class Day05 {
+    public String part1(AdventContext context) {
+        return solvePart(context.lines(), Day05::moveOneByOne);
     }
 
-    public String part2() {
-        return solvePart(Day05::moveAllTogether);
+    public String part2(AdventContext context) {
+        return solvePart(context.lines(), Day05::moveAllTogether);
     }
 
-    private String solvePart(Mover mover) {
-        final var lists = Streams.splitting(readLines(), String::isBlank).toList();
+    private String solvePart(Stream<String> lines, Mover mover) {
+        final var lists = Streams.splitting(lines, String::isBlank).toList();
         final var initialCargoDescription = lists.get(0);
         final var moves = lists.get(1);
 

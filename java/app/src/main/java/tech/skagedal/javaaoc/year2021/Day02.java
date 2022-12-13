@@ -1,20 +1,20 @@
 package tech.skagedal.javaaoc.year2021;
 
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 
 @AdventOfCode
-public class Day02 extends AocDay {
-    public long part1() {
-        final var position = readLines()
+public class Day02 {
+    public long part1(AdventContext context) {
+        final var position = context.lines()
             .map(Command::fromString)
             .reduce(Position.START, Position::move, Position::combine);
 
         return position.horizontal() * position.depth();
     }
 
-    public long part2() {
-        final var positionWithAim = readLines()
+    public long part2(AdventContext context) {
+        final var positionWithAim = context.lines()
             .map(Command::fromString)
             .reduce(PositionWithAim.START, PositionWithAim::move, PositionWithAim::combine);
 

@@ -33,7 +33,7 @@ public class DataLoaderFactory {
             }
 
             @Override
-            public IntStream readChars() {
+            public IntStream chars() {
                 try {
                     BufferedReader reader = Files.newBufferedReader(path);
                     return IntStream

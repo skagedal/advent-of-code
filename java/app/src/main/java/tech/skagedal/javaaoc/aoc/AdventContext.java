@@ -5,5 +5,5 @@ import java.util.stream.Stream;
 
 public interface AdventContext {
     Stream<String> lines();
-    IntStream readChars();
+    IntStream chars();
 }

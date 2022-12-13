@@ -4,26 +4,26 @@ import com.google.common.collect.Sets;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.linear.Point;
 import tech.skagedal.javaaoc.tools.linear.Vector;
 
 @AdventOfCode
-public class Day09 extends AocDay {
-    public long part1() {
-        return solveWithLength(2);
+public class Day09 {
+    public long part1(AdventContext context) {
+        return solveWithLength(context, 2);
     }
 
-    public long part2() {
-        return solveWithLength(10);
+    public long part2(AdventContext context) {
+        return solveWithLength(context, 10);
     }
 
-    private long solveWithLength(int n) {
+    private long solveWithLength(AdventContext context, int n) {
         Point[] points  = Stream.generate(() -> Point.ZERO).limit(n).toArray(Point[]::new);
         var visitedTailLocations = Sets.newHashSet(points[n - 1]);
-        for (var move : Streams.toIterable(readLines().map(Day09::parse).flatMap(Day09::steps))) {
+        for (var move : Streams.toIterable(context.lines().map(Day09::parse).flatMap(Day09::steps))) {
             points[0] = points[0].plus(move);
             for (var i = 1; i < n; i++) {
                 if(!touches(points[i], points[i-1])) {

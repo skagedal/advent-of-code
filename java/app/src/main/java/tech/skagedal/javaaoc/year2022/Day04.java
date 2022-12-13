@@ -1,20 +1,20 @@
 package tech.skagedal.javaaoc.year2022;
 
 import com.google.common.collect.Range;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AocDay;
 
 @AdventOfCode
-public class Day04 extends AocDay {
-    public long part1() {
-        return readLines()
+public class Day04 {
+    public long part1(AdventContext context) {
+        return context.lines()
             .map(RangePair::fromString)
             .filter(RangePair::oneEnclosesTheOther)
             .count();
     }
 
-    public long part2() {
-        return readLines()
+    public long part2(AdventContext context) {
+        return context.lines()
             .map(RangePair::fromString)
             .filter(RangePair::connected)
             .count();
