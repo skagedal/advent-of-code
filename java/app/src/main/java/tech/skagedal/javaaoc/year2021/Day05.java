@@ -19,8 +19,8 @@ import tech.skagedal.javaaoc.tools.regex.Patterns;
 public class Day05 {
     public long part1(AdventContext context) {
         final var map = new HashMap<Point, Integer>();
-        for (var pair : iterate(context.lines().map(Day05::parse))) {
-            for (var p : iterate(straightLine(pair.value1(), pair.value2()))) {
+        for (var pair : iterate(context.lines().map(Line::parse).filter(Line::isStraight))) {
+            for (var p : iterate(straightLine(pair.a(), pair.b()))) {
                 map.put(p, map.getOrDefault(p, 0) + 1);
             }
         }
@@ -28,12 +28,19 @@ public class Day05 {
     }
 
     private static final Pattern PATTERN = Pattern.compile("^(\\d+),(\\d+) -> (\\d+),(\\d+)$");
-    private static Tuple2<Point, Point> parse(String line) {
-        final var match = Patterns.match(PATTERN, line);
-        return new Tuple2<>(
-            new Point(Integer.parseInt(match.group(1)), Integer.parseInt(match.group(2))),
-            new Point(Integer.parseInt(match.group(3)), Integer.parseInt(match.group(4)))
-        );
+
+    private record Line(Point a, Point b) {
+        static Line parse(String line) {
+            final var match = Patterns.match(PATTERN, line);
+            return new Line(
+                new Point(Integer.parseInt(match.group(1)), Integer.parseInt(match.group(2))),
+                new Point(Integer.parseInt(match.group(3)), Integer.parseInt(match.group(4)))
+            );
+        }
+
+        boolean isStraight() {
+            return a.x() == b.x() || a.y() == b.y();
+        }
     }
 
     private static Stream<Point> straightLine(Point p1, Point p2) {
