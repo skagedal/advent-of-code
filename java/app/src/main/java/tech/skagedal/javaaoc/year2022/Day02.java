@@ -21,7 +21,6 @@ public class Day02 extends AocDay {
     }
 
     public record Round(Move opponentsMove, Move yourMove) {
-
         public long getScore() {
             return yourMove.score + (((yourMove.score - opponentsMove.score) + 4) % 3) * 3;
         }
