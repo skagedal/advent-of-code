@@ -67,6 +67,12 @@ public class Streams {
         return zip(IntStream.iterate(0, i -> i + 1).boxed(), s, Enumerated::new);
     }
 
+    public static <T extends Comparable<T>> boolean isSorted(Stream<T> stream) {
+        return Streams.splittingToTuple2Overlapping(stream).allMatch(tuple ->
+            tuple.value1().compareTo(tuple.value2()) <= 0);
+    }
+
+
     private static <T> Stream<T> sequentialStream(Spliterator<T> spliterator) {
         return StreamSupport.stream(spliterator, false);
     }

@@ -10,22 +10,27 @@ import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.tools.Streams;
+import tech.skagedal.javaaoc.tools.math.Longs;
 
 @AdventOfCode
 public class Day13 extends AocDay {
-    private static final Packet DIVIDER_PACKET_1 = list(list(intx(2)));
-    private static final Packet DIVIDER_PACKET_2 = list(list(intx(6)));
-    private static final List<Packet> DIVIDER_PACKETS = List.of(DIVIDER_PACKET_1, DIVIDER_PACKET_2);
+    // Part 1
 
     public long part1() {
         return Streams.enumerated(
                 Streams.splitting(readLines(), String::isBlank)
                     .map(list -> list.stream().map(Day13::parseLine).toList())
                     .map(Packet.ListPacket::new))
-            .filter(elist -> isSorted(elist.value().packets))
+            .filter(enumeratedListPacket -> Streams.isSorted(enumeratedListPacket.value().packets.stream()))
             .mapToLong(elist -> elist.number() + 1)
             .sum();
     }
+
+    // Part 2
+
+    private static final Packet DIVIDER_PACKET_1 = list(list(intx(2)));
+    private static final Packet DIVIDER_PACKET_2 = list(list(intx(6)));
+    private static final List<Packet> DIVIDER_PACKETS = List.of(DIVIDER_PACKET_1, DIVIDER_PACKET_2);
 
     public long part2() {
         Stream<String> lines = readLines();
@@ -37,24 +42,19 @@ public class Day13 extends AocDay {
                     .map(Day13::parseLine),
                 DIVIDER_PACKETS.stream()
             ).sorted())
-            .filter(elist -> DIVIDER_PACKETS.contains(elist.value()))
-            .mapToLong(elist -> elist.number() + 1)
-            .reduce(1, (a, b) -> a * b);
+            .filter(enumeratedPacket -> DIVIDER_PACKETS.contains(enumeratedPacket.value()))
+            .mapToLong(enumeratedPacket -> enumeratedPacket.number() + 1)
+            .reduce(1, Longs::multiply);
     }
 
-    private static boolean isSorted(List<Packet> packets) {
-        return packets.stream().sorted().toList().equals(packets);
-    }
+    // Parsing
 
     private static final Pattern TOKENS = Pattern.compile("\\[|[0-9]+|]");
 
     public static Packet parseLine(String line) {
-        return parseLine(TOKENS.matcher(line).results().map(MatchResult::group).iterator());
-    }
-
-    private static Packet parseLine(Iterator<String> tokens) {
-        final var token = tokens.next();
-        return parseToken(token, tokens);
+        final var iterator = TOKENS.matcher(line).results().map(MatchResult::group).iterator();
+        final var firstToken = iterator.next();
+        return parseToken(firstToken, iterator);
     }
 
     private static Packet parseToken(String token, Iterator<String> tokens) {
@@ -76,6 +76,8 @@ public class Day13 extends AocDay {
         throw new IllegalStateException("Unexpected end");
     }
 
+    // Data structure
+
     public sealed interface Packet extends Comparable<Packet> {
         record IntegerPacket(int i) implements Packet {
             @Override
@@ -96,16 +98,10 @@ public class Day13 extends AocDay {
                         final var left = packets.iterator();
                         final var right = lp.packets.iterator();
                         while (left.hasNext() || right.hasNext()) {
-                            if (!left.hasNext()) {
-                                yield -1;
-                            }
-                            if (!right.hasNext()) {
-                                yield 1;
-                            }
+                            if (!left.hasNext()) yield -1;
+                            if (!right.hasNext()) yield 1;
                             final var compared = left.next().compareTo(right.next());
-                            if (compared != 0) {
-                                yield compared;
-                            }
+                            if (compared != 0) yield compared;
                         }
                         yield 0;
                     }
@@ -113,6 +109,8 @@ public class Day13 extends AocDay {
             }
         }
     }
+
+    // Data construction helpers
 
     public static Day13.Packet list(Day13.Packet... packets) {
         return new Day13.Packet.ListPacket(List.of(packets));
