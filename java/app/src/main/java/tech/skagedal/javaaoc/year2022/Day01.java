@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import tech.skagedal.javaaoc.aoc.AocDay;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.tools.Longs;
 import tech.skagedal.javaaoc.tools.Streams;
+import tech.skagedal.javaaoc.tools.math.Longs;
 
 @AdventOfCode
 public class Day01 extends AocDay {
     public long part1() {
-        return Streams.splitting(readLines().map(Longs::parseOptional), Optional::isEmpty, Optional::get)
+        return Streams.splitting(readLines().map(tech.skagedal.javaaoc.tools.math.Longs::parseOptional), Optional::isEmpty, Optional::get)
             .mapToLong(this::sumLongs)
             .max()
             .orElseThrow();
