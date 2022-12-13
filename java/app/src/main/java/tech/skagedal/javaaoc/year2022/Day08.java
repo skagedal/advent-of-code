@@ -78,7 +78,7 @@ public class Day08 {
 
         private void markVisible(Stream<Point> coordinates) {
             var maxHeight = -1;
-            for (var tree : Streams.toIterable(coordinates.map(this::getTree))) {
+            for (var tree : Streams.iterate(coordinates.map(this::getTree))) {
                 if (tree.height > maxHeight) {
                     tree.visible = true;
                     maxHeight = tree.height;
@@ -104,7 +104,7 @@ public class Day08 {
         private long scenicScoreOneDirection(Point point, Vector direction) {
             final var treeHeight = getTree(point).height;
             var score = 0;
-            for (var tree : Streams.toIterable(pointsFrom(point, direction).skip(1).map(this::getTree))) {
+            for (var tree : Streams.iterate(pointsFrom(point, direction).skip(1).map(this::getTree))) {
                 score++;
                 if (tree.height >= treeHeight) {
                     break;

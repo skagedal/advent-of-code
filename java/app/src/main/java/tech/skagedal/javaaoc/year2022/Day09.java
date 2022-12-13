@@ -23,7 +23,7 @@ public class Day09 {
     private long solveWithLength(AdventContext context, int n) {
         Point[] points  = Stream.generate(() -> Point.ZERO).limit(n).toArray(Point[]::new);
         var visitedTailLocations = Sets.newHashSet(points[n - 1]);
-        for (var move : Streams.toIterable(context.lines().map(Day09::parse).flatMap(Day09::steps))) {
+        for (var move : Streams.iterate(context.lines().map(Day09::parse).flatMap(Day09::steps))) {
             points[0] = points[0].plus(move);
             for (var i = 1; i < n; i++) {
                 if(!touches(points[i], points[i-1])) {

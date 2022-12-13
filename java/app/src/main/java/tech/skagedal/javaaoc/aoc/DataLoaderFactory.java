@@ -17,7 +17,7 @@ public class DataLoaderFactory {
         return dataLoaderForPath(inputPath(day));
     }
 
-    public AdventContext getExampleDataLoader(AdventOfCodeDay day) {
+    public AdventContext getExampleDataContext(AdventOfCodeDay day) {
         return dataLoaderForPath(exampleInputPath(day));
     }
 

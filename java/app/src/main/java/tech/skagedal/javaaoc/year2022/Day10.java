@@ -32,7 +32,7 @@ public class Day10 {
         StringBuilder frameBuffer = new StringBuilder();
 
         void process(Stream<Instruction> instructions) {
-            for (var instruction : Streams.toIterable(instructions)) {
+            for (var instruction : Streams.iterate(instructions)) {
                 switch (instruction) {
                     case Instruction.Noop noop -> {
                         emit(currentCycle++, currentX);
@@ -82,6 +82,6 @@ public class Day10 {
 
     public static void main(String[] args) {
         Day10 day = new Day10();
-        System.out.println("Answer: " + day.part2(new DataLoaderFactory().getExampleDataLoader(AdventOfCodeDay.fromObject(day))));
+        System.out.println("Answer: " + day.part2(new DataLoaderFactory().getExampleDataContext(AdventOfCodeDay.fromObject(day))));
     }
 }

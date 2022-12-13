@@ -37,7 +37,7 @@ public class Day05 {
         private static final Pattern pattern = Pattern.compile("\\d+");
 
         void addInitialCargoLine(String line) {
-            for (final var enumeratedStack : Streams.toIterable(Streams.enumerated(stacks.stream()))) {
+            for (final var enumeratedStack : Streams.iterate(Streams.enumerated(stacks.stream()))) {
                 final var beginIndex = 1 + enumeratedStack.number() * 4;
                 final var box = line.substring(beginIndex, beginIndex + 1);
                 if (!box.isBlank()) {
