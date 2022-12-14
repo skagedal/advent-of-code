@@ -1,30 +1,42 @@
 package tech.skagedal.javaaoc.tools.streamsetc;
 
 import java.util.Iterator;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 public class YieldChannelIterator<T> implements Iterator<T> {
     private final Consumer<YieldChannel<T>> generator;
-    private final BlockingQueue<Optional<T>> queue = new LinkedBlockingQueue<>(1);
+    private final BlockingQueue<Event<T>> queue = new LinkedBlockingQueue<>(1);
     private final YieldChannel<T> yieldChannel = value -> {
         try {
-            queue.put(Optional.of(value));
+            queue.put(new Event.Value<>(value));
         } catch (InterruptedException e) {
+            // Not sure what to do here
             throw new RuntimeException(e);
         }
     };
     private final Thread thread;
-    private Optional<T> next;
+    private Event<T> next;
+
+    private sealed interface Event<T> {
+        record Value<T>(T value) implements Event<T> {}
+        record Exception<T>(RuntimeException exception) implements Event<T> {}
+        record End<T>() implements Event<T> {}
+    }
 
     public YieldChannelIterator(Consumer<YieldChannel<T>> generator) {
         this.generator = generator;
+        // TODO: I wouldn't expect the thread to be started already here
         this.thread = Thread.startVirtualThread(() -> {
-            generator.accept(yieldChannel);
             try {
-                queue.put(Optional.empty());
+                try {
+                    generator.accept(yieldChannel);
+                    queue.put(new Event.End<>());
+                } catch (RuntimeException exception) {
+                    queue.put(new Event.Exception<>(exception));
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -36,7 +48,7 @@ public class YieldChannelIterator<T> implements Iterator<T> {
         if (next == null) {
             next = fetchNext();
         }
-        return !next.isEmpty();
+        return !(next instanceof Event.End<T>);
     }
 
     @Override
@@ -44,16 +56,20 @@ public class YieldChannelIterator<T> implements Iterator<T> {
         if (next == null) {
             next = fetchNext();
         }
-        final var result = next.get();
+        final var returnValue = switch (next) {
+            case Event.Value<T> value -> value.value;
+            case Event.Exception<T> exception -> throw exception.exception;
+            case Event.End<T> end -> throw new NoSuchElementException();
+        };
         next = null;
-        return result;
+        return returnValue;
     }
 
-    private Optional<T> fetchNext() {
+    private Event<T> fetchNext() {
         try {
             return queue.take();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            return new Event.End<>();
         }
     }
 }
