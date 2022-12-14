@@ -3,8 +3,11 @@ package tech.skagedal.javaaoc.tools;
 import com.google.common.base.Functions;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -72,7 +75,52 @@ public class Streams {
         return StreamSupport.stream(spliterator, false);
     }
 
-    public static <T> Stream<T> make(Consumer<StreamMaker<T>> maker) {
-        Thread.startVirtualThread()
+    public static <T> Stream<T> make(Consumer<YieldChannel<T>> maker) {
+        BlockingQueue<Optional<T>> queue = new LinkedBlockingQueue<>(1);
+        final YieldChannel<T> yieldChannel = value -> {
+            try {
+                queue.put(Optional.of(value));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        };
+        Thread.startVirtualThread(() -> {
+            maker.accept(yieldChannel);
+            try {
+                queue.put(Optional.empty());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return Streams.fromIterator(new Iterator<T>() {
+            private Optional<T> next;
+
+            @Override
+            public boolean hasNext() {
+                if (next == null) {
+                    next = fetchNext();
+                }
+                return !next.isEmpty();
+            }
+
+            @Override
+            public T next() {
+                if (next == null) {
+                    next = fetchNext();
+                }
+                final var result = next.get();
+                next = null;
+                return result;
+            }
+
+            private Optional<T> fetchNext() {
+                try {
+                    return queue.take();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 }
