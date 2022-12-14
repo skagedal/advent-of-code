@@ -17,7 +17,7 @@ public class YieldChannelIterator<T> implements Iterator<T> {
             throw new RuntimeException(e);
         }
     };
-    private final Thread thread;
+    private Thread thread;
     private Event<T> next;
 
     private sealed interface Event<T> {
@@ -28,19 +28,6 @@ public class YieldChannelIterator<T> implements Iterator<T> {
 
     public YieldChannelIterator(Consumer<YieldChannel<T>> generator) {
         this.generator = generator;
-        // TODO: I wouldn't expect the thread to be started already here
-        this.thread = Thread.startVirtualThread(() -> {
-            try {
-                try {
-                    generator.accept(yieldChannel);
-                    queue.put(new Event.End<>());
-                } catch (RuntimeException exception) {
-                    queue.put(new Event.Exception<>(exception));
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 
     @Override
@@ -66,10 +53,26 @@ public class YieldChannelIterator<T> implements Iterator<T> {
     }
 
     private Event<T> fetchNext() {
+        if (thread == null) {
+            thread = Thread.startVirtualThread(this::startGenerator);
+        }
         try {
             return queue.take();
         } catch (InterruptedException e) {
             return new Event.End<>();
+        }
+    }
+
+    private void startGenerator() {
+        try {
+            try {
+                generator.accept(yieldChannel);
+                queue.put(new Event.End<>());
+            } catch (RuntimeException exception) {
+                queue.put(new Event.Exception<>(exception));
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

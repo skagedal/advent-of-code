@@ -3,11 +3,8 @@ package tech.skagedal.javaaoc.tools.streamsetc;
 import com.google.common.base.Functions;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -15,9 +12,9 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import tech.skagedal.javaaoc.tools.function.Function3;
 import tech.skagedal.javaaoc.tools.function.Tuple2;
 import tech.skagedal.javaaoc.tools.function.Tuple3;
-import tech.skagedal.javaaoc.tools.function.Function3;
 
 public class Streams {
     public static <T> Stream<List<T>> splitting(Stream<T> stream, Predicate<T> isPivot) {
@@ -78,7 +75,6 @@ public class Streams {
         return Streams.splittingToTuple2Overlapping(stream).allMatch(tuple ->
             tuple.value1().compareTo(tuple.value2()) <= 0);
     }
-
 
     private static <T> Stream<T> sequentialStream(Spliterator<T> spliterator) {
         return StreamSupport.stream(spliterator, false);
