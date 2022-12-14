@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import tech.skagedal.javaaoc.tools.YieldChannel;
 import tech.skagedal.javaaoc.tools.function.Tuple2;
 import tech.skagedal.javaaoc.tools.function.Tuple3;
 import tech.skagedal.javaaoc.tools.function.Function3;

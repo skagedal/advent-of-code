@@ -1,6 +1,7 @@
 package tech.skagedal.javaaoc.euler;
 
-import tech.skagedal.javaaoc.tools.Streams;
+
+import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 public class EulerProblem1 {
     public long part1() {
