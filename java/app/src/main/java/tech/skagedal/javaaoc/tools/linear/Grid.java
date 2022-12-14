@@ -5,18 +5,28 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.year2022.Day08;
 
 public class Grid<T> {
     private final List<List<T>> grid;
+    private final int startX;
+    private final int startY;
     private final int height;
     private final int width;
 
     public Grid(List<List<T>> grid) {
+        this(grid, 0, 0, grid.get(0).size(), grid.size());
+    }
+
+    private Grid(List<List<T>> grid, int startX, int startY, int width, int height) {
         this.grid = grid;
-        this.height = grid.size();
-        this.width = grid.get(0).size();
+        this.startX = startX;
+        this.startY = startY;
+        this.width = width;
+        this.height = height;
         for (var line : grid) {
             if (line.size() != width) {
                 throw new IllegalArgumentException("One line did not have the same width as the others");
@@ -24,11 +34,34 @@ public class Grid<T> {
         }
     }
 
+    /**
+     * Takes a stream of strings where each string represents a row and each character a column of that row.
+     */
     public static <T> Grid<T> fromLines(Stream<String> lines, IntFunction<T> mapper) {
         return new Grid<T>(lines.map(line -> line.chars().mapToObj(mapper).toList()).toList());
     }
 
+    public static <T> Grid<T> fromBounds(int startX, int endX, int startY, int endY, Function<Point, T> mapper) {
+        final var grid = IntStream.rangeClosed(startY, endY)
+            .boxed()
+            .map(y -> IntStream.rangeClosed(startX, endX).mapToObj(x -> mapper.apply(new Point(x, y))).toList())
+            .toList();
+        return new Grid<>(grid, startX, startY, endX - startX + 1, endY - startY + 1);
+    }
 
+    public static <T> Grid<T> enclosing(Stream<Point> points, Function<Point, T> mapper) {
+        int startX = Integer.MAX_VALUE;
+        int endX = Integer.MIN_VALUE;
+        int startY = Integer.MAX_VALUE;
+        int endY = Integer.MIN_VALUE;
+        for (var point : Streams.iterate(points)) {
+            startX = Math.min(startX, point.x());
+            endX = Math.max(endX, point.x());
+            startY = Math.min(startY, point.y());
+            endY = Math.max(endY, point.y());
+        }
+        return fromBounds(startX, endX, startY, endY, mapper);
+    }
     public T get(Point point) {
         return grid.get(point.y()).get(point.x());
     }
@@ -38,7 +71,7 @@ public class Grid<T> {
     }
 
     private Stream<Stream<Point>> allPointsInLines() {
-        return pointsFrom(new Point(0, 0), COLUMN_FORWARD)
+        return pointsFrom(new Point(startX, startY), COLUMN_FORWARD)
             .map(point -> pointsFrom(point, ROW_FORWARD));
     }
 
@@ -47,7 +80,9 @@ public class Grid<T> {
     }
 
     public boolean isInBounds(Point point) {
-        return point.y() >= 0 && point.y() < height && point.x() >= 0 && point.x() < width;
+        return
+            point.y() >= startY && point.y() < (startY + height) &&
+                point.x() >= startX && point.x() < (startX + width);
     }
 
     public Stream<T> all() {
