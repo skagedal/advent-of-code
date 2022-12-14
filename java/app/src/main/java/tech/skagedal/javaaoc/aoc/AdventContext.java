@@ -20,4 +20,8 @@ public interface AdventContext {
 
     Stream<String> lines();
     IntStream chars();
+
+    default boolean explain() {
+        return false;
+    }
 }

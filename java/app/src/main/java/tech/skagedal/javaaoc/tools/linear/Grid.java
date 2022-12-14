@@ -63,7 +63,7 @@ public class Grid<T> {
         return fromBounds(startX, endX, startY, endY, mapper);
     }
     public T get(Point point) {
-        return grid.get(point.y()).get(point.x());
+        return grid.get(point.y() - startY).get(point.x() - startX);
     }
 
     public Stream<Point> allPoints() {
