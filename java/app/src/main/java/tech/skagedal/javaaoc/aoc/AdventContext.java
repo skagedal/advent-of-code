@@ -29,4 +29,7 @@ public interface AdventContext {
     default boolean explain() {
         return false;
     }
+    default String line() {
+        return lines().findFirst().orElseThrow();
+    }
 }
