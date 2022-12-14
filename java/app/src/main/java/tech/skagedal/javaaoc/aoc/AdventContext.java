@@ -15,6 +15,11 @@ public interface AdventContext {
             public IntStream chars() {
                 return str.chars();
             }
+
+            @Override
+            public boolean explain() {
+                return true;
+            }
         };
     }
 

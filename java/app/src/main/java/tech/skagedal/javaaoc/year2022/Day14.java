@@ -1,5 +1,6 @@
 package tech.skagedal.javaaoc.year2022;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
@@ -15,7 +16,21 @@ public class Day14 {
     public static final List<Vector> POSSIBLE_PATHS = List.of(new Vector(0, 1), new Vector(-1, 1), new Vector(1, 1));
 
     public long part1(AdventContext context) {
+        return solve(context, context.lines().map(RockPath::fromString).toList());
+    }
+
+    public long part2(AdventContext context) {
         List<RockPath> rockPaths = context.lines().map(RockPath::fromString).toList();
+        final var bottomY = rockPaths.stream().flatMap(rp -> rp.points().stream())
+            .max(Comparator.comparing(Point::y)).orElseThrow().y() + 2;
+        final var extraPath = new RockPath(List.of(
+            new Point(SAND_ORIGIN.x() - bottomY, bottomY),
+            new Point(SAND_ORIGIN.x() + bottomY, bottomY)
+        ));
+        return solve(context, Stream.concat(rockPaths.stream(), Stream.of(extraPath)).toList());
+    }
+
+    private int solve(AdventContext context, List<RockPath> rockPaths) {
         final var grid = Grid.enclosing(
             Stream.concat(
                 rockPaths.stream().flatMap(rp -> rp.points().stream()),
@@ -32,7 +47,7 @@ public class Day14 {
         while (tryProduceSand(grid)) {
             sandUnits++;
             if (context.explain()) {
-                System.out.printf("After %d units of sand:\n", sandUnits);
+                System.out.printf("\n== After %d units of sand: ==\n", sandUnits);
                 printGrid(grid);
             }
         }
@@ -40,7 +55,7 @@ public class Day14 {
     }
 
     private boolean tryProduceSand(Grid<Box<Contents>> grid) {
-        var point = SAND_ORIGIN;
+        var point = SAND_ORIGIN.plus(new Vector(0, -1));
         while(true) {
             final var nextPoint = next(grid, point);
             if (!grid.isInBounds(nextPoint)) {
@@ -59,7 +74,7 @@ public class Day14 {
         for (var delta : POSSIBLE_PATHS) {
             final var nextPoint = point.plus(delta);
             if (!grid.isInBounds(nextPoint)) {
-                // Falling of into the void
+                // Falling off into the void
                 return nextPoint;
             }
             final var contents = grid.get(nextPoint).getValue();
@@ -71,7 +86,11 @@ public class Day14 {
     }
 
     private static void printGrid(Grid<Box<Contents>> grid) {
-        grid.printGrid(p -> p.equals(SAND_ORIGIN) ? "+" : grid.get(p).getValue().toString());
+        grid.printGrid(p -> switch (grid.get(p).getValue()) {
+            case EMPTY -> p.equals(SAND_ORIGIN) ? "+" : ".";
+            case ROCK -> "#";
+            case SAND -> "o";
+        });
     }
 
     record RockPath(List<Point> points) {
@@ -119,6 +138,6 @@ public class Day14 {
             498,4 -> 498,6 -> 496,6
             503,4 -> 502,4 -> 502,9 -> 494,9
             """;
-        System.out.println(new Day14().part1(AdventContext.fromString(code)));
+        System.out.println(new Day14().part2(AdventContext.fromString(code)));
     }
 }
