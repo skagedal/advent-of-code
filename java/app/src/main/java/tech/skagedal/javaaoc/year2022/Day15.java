@@ -1,8 +1,10 @@
 package tech.skagedal.javaaoc.year2022;
 
 import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
 import com.google.common.collect.TreeRangeSet;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
@@ -27,17 +29,14 @@ public class Day15 {
         this.part2SearchSize = part2SearchSize;
     }
 
-    
+
     public long part1(AdventContext context) {
         final var pairs = context.lines().map(SensorBeaconPair::fromLine).toList();
 
         // TODO: This could be way quicker, using same method as in part 2
-
         // Scan the line, starting at the X position where some sensor could at most reach.
         final var leftmost = pairs.stream().mapToLong(SensorBeaconPair::leftmostReach).min().orElseThrow();
         final var rightmost = pairs.stream().mapToLong(SensorBeaconPair::rightmostReach).max().orElseThrow();
-
-        System.out.printf("%d to %d (%d points)\n", leftmost, rightmost, rightmost - leftmost);
 
         final var pointStart = new Point((int) leftmost, part1LineY);
         final var pointEnd = new Point((int) rightmost, part1LineY);
@@ -57,36 +56,21 @@ public class Day15 {
             .sorted(Comparator.comparing(Sensor::range).reversed())
             .toList();
 
-        System.out.printf("We have %d sensors.\n", sensors.size());
-        System.out.printf("Sorted by range:\n");
-        for (var sensor : Streams.iterate(sensors.stream())) {
-            System.out.printf("- %d\n", sensor.range());
-        }
-
-        final var fullLine = Range.<Long>closed(0L, (long)part2SearchSize);
+        final var fullWidth = Range.closed(0L, (long)part2SearchSize);
         for (var y = 0; y <= part2SearchSize; y++) {
-            final var rangeSet = TreeRangeSet.<Long>create();
-            final var lineNum = y;
-            sensors.stream()
-                .map(sensor -> sensor.rangeForLine(lineNum))
-                .flatMap(Optional::stream)
-                .forEach(rangeSet::add);
-            if (rangeSet.encloses(fullLine)) {
-//                System.out.printf("Not line %d...\n", y);
-            } else {
-                // TODO: This could be way cleaner / simpler / faster
-                System.out.printf("Line %d!\n", y);
-                System.out.println(rangeSet.asRanges());
-                final var distressSignalPoint = new Point(0, y).interpolateTo(new Point(part2SearchSize, y))
-                    .filter(point -> sensors.stream().noneMatch(sensor -> sensor.reaches(point)))
-                    .findFirst();
-                if (distressSignalPoint.isPresent()) {
-                    final var answer = distressSignalPoint.get();
-                    return answer.x() * 4000000L + answer.y();
-                }
+            final var rangeSet = buildSensorRangeSetForLine(sensors, y);
+            if (!rangeSet.encloses(fullWidth)) {
+                final var x = rangeSet.asRanges().iterator().next().upperEndpoint();
+                return x * 4000000L + y;
             }
         }
         return 0;
+    }
+
+    private RangeSet<Long> buildSensorRangeSetForLine(List<Sensor> sensors, long lineNum) {
+        return TreeRangeSet.create(Streams.iterate(sensors.stream()
+            .map(sensor -> sensor.rangeForLine(lineNum))
+            .flatMap(Optional::stream)));
     }
 
     record Sensor(Point sensor, int range) {
@@ -94,19 +78,13 @@ public class Day15 {
             return new Sensor(sensorBeaconPair.sensor(), sensorBeaconPair.range());
         }
 
-        boolean reaches(Point point) {
-            return sensor.manhattanDistanceTo(point) <= range;
-        }
-
         Optional<Range<Long>> rangeForLine(long y) {
-            // if y is the same line as this sensor
-            //   then the range will be x - range to x + range
             final var distanceInY = Math.abs(y - sensor.y());
             final var width = range - distanceInY;
             if (width < 0) {
                 return Optional.empty();
             } else {
-                return Optional.of(Range.closed(sensor.x() - width, sensor.x() + width));
+                return Optional.of(Range.closedOpen(sensor.x() - width, sensor.x() + width + 1));
             }
         }
     }
@@ -156,7 +134,6 @@ public class Day15 {
                 Sensor at x=14, y=3: closest beacon is at x=15, y=3
                 Sensor at x=20, y=1: closest beacon is at x=15, y=3"""
         )));
-
 
         System.out.println("== REAL: ==");
         AdventOfCodeRunner.run(new Day15());
