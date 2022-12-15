@@ -38,6 +38,7 @@ public class DataLoaderFactory {
                     BufferedReader reader = Files.newBufferedReader(path);
                     return IntStream
                         .generate(Checked.intSupplier(reader::read))
+                        .takeWhile(integer -> integer != -1)
                         .onClose(Checked.runnable(reader::close));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
