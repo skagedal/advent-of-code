@@ -3,14 +3,13 @@ package tech.skagedal.javaaoc.year2022;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeSet;
 import com.google.common.collect.TreeRangeSet;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.LongStream;
+import java.util.Set;
+import java.util.stream.Collectors;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
-import tech.skagedal.javaaoc.tools.function.Tuple2;
 import tech.skagedal.javaaoc.tools.linear.Point;
 import tech.skagedal.javaaoc.tools.math.Longs;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
@@ -30,23 +29,24 @@ public class Day15 {
         this.part1LineY = part1LineY;
         this.part2SearchSize = part2SearchSize;
     }
-    
+
     public long part1(AdventContext context) {
-        final var pairs = context.lines().map(SensorBeaconPair::fromLine).toList();
+        final var sensorBeaconPairs = context.lines().map(SensorBeaconPair::fromLine).toList();
 
-        // TODO: This could be way quicker, using same method as in part 2
-        // Scan the line, starting at the X position where some sensor could at most reach.
-        final var leftmost = pairs.stream().mapToLong(SensorBeaconPair::leftmostReach).min().orElseThrow();
-        final var rightmost = pairs.stream().mapToLong(SensorBeaconPair::rightmostReach).max().orElseThrow();
+        final var sensors = sensorBeaconPairs.stream()
+            .map(Sensor::fromSensorBeaconPair)
+            .toList();
 
-        final var pointStart = new Point((int) leftmost, part1LineY);
-        final var pointEnd = new Point((int) rightmost, part1LineY);
+        final var beacons = sensorBeaconPairs.stream().map(SensorBeaconPair::beacon).collect(Collectors.toSet());
 
-        return pointStart.interpolateTo(pointEnd)
-            .filter(point ->
-                pairs.stream().noneMatch(sensor -> sensor.beacon().equals(point)) &&
-                    pairs.stream().anyMatch(sensor -> sensor.reaches(point))
-            )
+        return buildSensorRangeSetForLine(sensors, part1LineY).asRanges().stream()
+            .mapToLong(range -> range.upperEndpoint() - range.lowerEndpoint() - beaconsInRange(beacons, range, part1LineY))
+            .sum();
+    }
+
+    private static long beaconsInRange(Set<Point> beacons, Range<Long> range, int y) {
+        return beacons.stream()
+            .filter(beacon -> beacon.y() == y && range.contains((long)beacon.x()))
             .count();
     }
 
@@ -54,7 +54,6 @@ public class Day15 {
         final var sensors = context.lines()
             .map(SensorBeaconPair::fromLine)
             .map(Sensor::fromSensorBeaconPair)
-            .sorted(Comparator.comparing(Sensor::range).reversed())
             .toList();
 
         final var fullWidth = Range.closed(0L, (long)part2SearchSize);
@@ -103,18 +102,6 @@ public class Day15 {
 
         int range() {
             return sensor.manhattanDistanceTo(beacon);
-        }
-
-        int leftmostReach() {
-            return sensor.x() - range();
-        }
-
-        int rightmostReach() {
-            return sensor.x() + range();
-        }
-
-        boolean reaches(Point point) {
-            return sensor.manhattanDistanceTo(point) <= range();
         }
     }
 
