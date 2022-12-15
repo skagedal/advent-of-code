@@ -73,7 +73,7 @@ public class DataLoaderFactory {
         return dataPath
             .resolve(String.format("year%04d", day.year()));
     }
-    
+
     private static Path findData() {
         return Paths.get(System.getProperty("user.home")).resolve(".aoc").resolve("data");
     }
