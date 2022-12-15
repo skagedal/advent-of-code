@@ -6,9 +6,11 @@ import com.google.common.collect.TreeRangeSet;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.LongStream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
+import tech.skagedal.javaaoc.tools.function.Tuple2;
 import tech.skagedal.javaaoc.tools.linear.Point;
 import tech.skagedal.javaaoc.tools.math.Longs;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
@@ -28,8 +30,7 @@ public class Day15 {
         this.part1LineY = part1LineY;
         this.part2SearchSize = part2SearchSize;
     }
-
-
+    
     public long part1(AdventContext context) {
         final var pairs = context.lines().map(SensorBeaconPair::fromLine).toList();
 
@@ -60,6 +61,8 @@ public class Day15 {
         for (var y = 0; y <= part2SearchSize; y++) {
             final var rangeSet = buildSensorRangeSetForLine(sensors, y);
             if (!rangeSet.encloses(fullWidth)) {
+                // We take the x that comes first after the first range - that's a bit of cheating as there could be
+                // ranges that live completely outside of our fullWidth here, but it's ok for our data :)
                 final var x = rangeSet.asRanges().iterator().next().upperEndpoint();
                 return x * 4000000L + y;
             }
