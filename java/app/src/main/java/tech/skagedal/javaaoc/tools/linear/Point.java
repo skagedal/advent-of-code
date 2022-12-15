@@ -11,6 +11,8 @@ public record Point(int x, int y) {
 
     public static final Point ZERO = new Point(0, 0);
 
+    // Parsing
+
     /**
      * Finds all points of the format XX,YY in the string
      */
@@ -29,12 +31,18 @@ public record Point(int x, int y) {
         );
     }
 
+    // Basic operations
+
     public Point plus(Vector vector) {
         return new Point(x + vector.dx(), y + vector.dy());
     }
 
     public Vector minus(Point p) {
         return new Vector(x - p.x, y - p.y);
+    }
+
+    public int manhattanDistanceTo(Point p) {
+        return Math.abs(x - p.x) + Math.abs(y - p.y);
     }
 
     // Note that this only handles straight lines or lines at 45 degrees

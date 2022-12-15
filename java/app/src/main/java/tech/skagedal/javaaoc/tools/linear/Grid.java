@@ -34,6 +34,10 @@ public class Grid<T> {
         }
     }
 
+    public Size getSize() {
+        return new Size(width, height);
+    }
+
     /**
      * Takes a stream of strings where each string represents a row and each character a column of that row.
      */
@@ -50,6 +54,7 @@ public class Grid<T> {
     }
 
     public static <T> Grid<T> enclosing(Stream<Point> points, Function<Point, T> mapper) {
+        // TODO: Use Rectangle.enclosing
         int startX = Integer.MAX_VALUE;
         int endX = Integer.MIN_VALUE;
         int startY = Integer.MAX_VALUE;

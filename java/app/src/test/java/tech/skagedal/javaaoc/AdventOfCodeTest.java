@@ -31,7 +31,7 @@ public class AdventOfCodeTest {
         final var answers = dataLoaderFactory.loadAnswers(day).toList();
 
         return DynamicContainer.dynamicContainer(
-            String.format("%04d-%02d", day.year(), day.day()),
+            describe(day),
             day.parts().stream()
                 .sorted(Comparator.comparing(AdventOfCodePart::number))
                 .map(part -> DynamicTest.dynamicTest(
@@ -54,6 +54,14 @@ public class AdventOfCodeTest {
                     }
                 ))
         );
+    }
+
+    private static String describe(AdventOfCodeDay day) {
+        String yearAndDay = String.format("%04d-%02d", day.year(), day.day());
+        if (!day.description().isBlank()) {
+            return yearAndDay + ": " + day.description();
+        }
+        return yearAndDay;
     }
 
     private AdventContext createContext(Object object) {

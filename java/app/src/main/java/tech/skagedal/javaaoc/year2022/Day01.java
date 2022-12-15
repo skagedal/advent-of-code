@@ -8,7 +8,9 @@ import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.math.Longs;
 
-@AdventOfCode
+@AdventOfCode(
+    description = "Calorie Counting"
+)
 public class Day01 {
     public long part1(AdventContext context) {
         return Streams.splitting(context.lines().map(Longs::parseOptional), Optional::isEmpty, Optional::get)
