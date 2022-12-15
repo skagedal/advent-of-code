@@ -11,7 +11,7 @@ for year in $(seq 2015 2021); do
         if test -f "$day_file"; then
             echo "$day_file already exists - skipping"
         else
-            curl "https://adventofcode.com/$year/day/$day/input" -H "$COOKIE" -o $day_file
+            curl -s -S -f "https://adventofcode.com/$year/day/$day/input" -H "$COOKIE" -o $day_file
             echo "Downloaded $day_file"
             sleep 2
         fi
