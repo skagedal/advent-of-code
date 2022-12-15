@@ -73,22 +73,8 @@ public class DataLoaderFactory {
         return dataPath
             .resolve(String.format("year%04d", day.year()));
     }
-
-
+    
     private static Path findData() {
-        return DataLoaderFactory.findData(Paths.get("").toAbsolutePath());
+        return Paths.get(System.getProperty("user.home")).resolve(".aoc").resolve("data");
     }
-
-    private static Path findData(Path path) {
-        final var data = path.resolve("Data");
-        if (Files.exists(data)) {
-            return data;
-        }
-        final var parent = path.getParent();
-        if (parent == null) {
-            throw new RuntimeException("Could not find Data dir");
-        }
-        return DataLoaderFactory.findData(parent);
-    }
-
 }
