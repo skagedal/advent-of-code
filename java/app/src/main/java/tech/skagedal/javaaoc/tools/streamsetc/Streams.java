@@ -83,4 +83,14 @@ public class Streams {
     public static <T> Stream<T> make(Consumer<YieldChannel<T>> maker) {
         return Streams.fromIterator(new YieldChannelIterator<>(maker));
     }
+
+    public static <T, R> Stream<R> accumulate(Stream<T> base, R seed, BiFunction<R, T, R> accumulator) {
+        return Streams.make(channel -> {
+           var accumulated = seed;
+           for (var value : iterate(base)) {
+               accumulated = accumulator.apply(accumulated, value);
+               channel.yield(accumulated);
+           }
+        });
+    }
 }

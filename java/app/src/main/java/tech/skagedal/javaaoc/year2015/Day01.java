@@ -14,22 +14,18 @@ public class Day01 {
     }
 
     public long part2(AdventContext context) {
-        var i = 0;
-        for (var j : Streams.iterate(Streams.enumerated(getIntStream(context).boxed()))) {
-            i += j.value();
-            if (i == -1) {
-                return j.number() + 1;
-            }
-        }
-        throw new IllegalStateException("No answer");
+        return Streams.enumerated(Streams.accumulate(getIntStream(context).boxed(), 0, Integer::sum))
+            .filter(enumerated -> enumerated.value() == -1)
+            .findFirst().orElseThrow()
+            .number() + 1;
     }
 
     private static IntStream getIntStream(AdventContext context) {
         return context.chars()
-            .map(i -> switch (i) {
+            .map(character -> switch (character) {
                 case '(' -> 1;
                 case ')' -> -1;
-                default -> 0;
+                default -> throw new IllegalArgumentException("Expected only ( and ) in stream");
             });
     }
 }
