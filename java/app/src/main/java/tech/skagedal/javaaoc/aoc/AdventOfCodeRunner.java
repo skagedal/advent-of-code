@@ -17,6 +17,18 @@ public class AdventOfCodeRunner {
         }
     }
 
+    public static void example(Object object, String data) {
+        final var day = AdventOfCodeDay.fromObject(object);
+        for (final var part : day.parts()) {
+            try {
+                AdventContext context = AdventContext.fromString(data);
+                System.out.println(part.method().invoke(object, context));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     public static void run(Object object) {
         final var day = AdventOfCodeDay.fromObject(object);
         for (final var part : day.parts()) {
