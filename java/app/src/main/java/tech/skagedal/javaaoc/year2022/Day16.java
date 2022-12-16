@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +21,7 @@ import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.tools.math.Longs;
+import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.string.Strings;
 
 @AdventOfCode(
@@ -39,22 +41,47 @@ public class Day16 {
         final var startValve = graph.vertexSet().stream().filter(v -> v.id().equals("AA")).findFirst().orElseThrow();
 
         final var finder = new PressureFinderV2(graph);
-        return finder.maxPressure(startValve, 30, interestingValves);
+        final var solution = finder.maxPressure(startValve, 30, interestingValves);
+        System.out.println(solution.path().toStream().toList());
+        return solution.pressure();
+    }
+
+    public long part2(AdventContext context) {
+        Graph<Valve, DefaultEdge> graph = createValveGraph(readValves(context));
+
+        final var shortestPaths = new FloydWarshallShortestPaths<>(graph);
+
+        final var interestingValves = graph.vertexSet().stream()
+            .sorted(Comparator.comparing(Valve::flowRate).reversed())
+            .takeWhile(v -> v.flowRate > 0)
+            .toList();
+
+        final var startValve = graph.vertexSet().stream().filter(v -> v.id().equals("AA")).findFirst().orElseThrow();
+
+        final var finder = new PressureFinderV2(graph);
+        final var solution = finder.maxPressure(startValve, 26, interestingValves);
+        System.out.println(solution.path().toStream().toList());
+
+        // Now, here comes the elephant.
+        final var claimedValves = solution.path().toStream().collect(Collectors.toSet());
+        final var elephantSolution = finder.maxPressure(startValve, 26, interestingValves.stream().filter(v -> !claimedValves.contains(v)).toList());
+
+        return solution.pressure() + elephantSolution.pressure();
     }
 
     static class PressureFinderV2 {
         private final Graph<Valve, DefaultEdge> graph;
         private final FloydWarshallShortestPaths<Valve, DefaultEdge> shortestPaths;
-        private final Map<String, Long> cache = new HashMap<>();
+        private final Map<String, Solution> cache = new HashMap<>();
 
         PressureFinderV2(Graph<Valve, DefaultEdge> graph) {
             this.graph = graph;
             this.shortestPaths = new FloydWarshallShortestPaths<>(graph);
         }
 
-        long maxPressure(Valve valve, long minutes, List<Valve> relevantValves) {
+        Solution maxPressure(Valve valve, long minutes, List<Valve> relevantValves) {
             if (minutes < 1) {
-                return 0;
+                return Solution.NONE;
             }
 
             final var cacheKey = String.format("%s-%d-%s", valve.id, minutes, relevantValves.stream().map(Valve::id).collect(Collectors.joining()));
@@ -64,19 +91,42 @@ public class Day16 {
             }
 
             final var best = relevantValves.stream()
-                .mapToLong(nextValve -> {
+                .map(nextValve -> {
                     final var distance = shortestPaths.getPath(valve, nextValve).getLength();
-                    final var valveScore = Long.max(0, (minutes - distance - 1) * nextValve.flowRate);
-                    final var restScore = maxPressure(nextValve, minutes - distance - 1, relevantValves.stream().filter(v -> v != nextValve).toList());
-                    return valveScore + restScore;
+                    final var flowTime = minutes - distance - 1;
+                    if (flowTime > 0) {
+                        final var valveScore = flowTime * nextValve.flowRate();
+                        final var restSolution = maxPressure(nextValve, flowTime, relevantValves.stream().filter(v -> v != nextValve).toList());
+                        return new Solution(valveScore + restSolution.pressure(), new Lst.Cons<>(nextValve, restSolution.path()));
+                    } else {
+                        return Solution.NONE;
+                    }
                 })
-                .max()
-                .orElse(0);
+                .max(Comparator.comparing(Solution::pressure))
+                .orElse(Solution.NONE);
 
             cache.put(cacheKey, best);
             return best;
         }
     }
+
+    record Solution(long pressure, Lst<Valve> path) {
+        final static Solution NONE = new Solution(0, new Lst.Nil<>());
+    }
+    sealed interface Lst<T> {
+        default Stream<T> toStream() {
+            return Streams.make(channel -> {
+                var lst = this;
+                while (lst instanceof Lst.Cons<T> cons) {
+                    channel.yield(cons.head);
+                    lst = cons.tail;
+                }
+            });
+        }
+        record Nil<T>() implements Lst<T> {}
+        record Cons<T>(T head, Lst<T> tail) implements Lst<T> {}
+    }
+
 
     private static Graph<Valve, DefaultEdge> createValveGraph(Map<String, Valve> valveSpec) {
         Graph<Valve, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
