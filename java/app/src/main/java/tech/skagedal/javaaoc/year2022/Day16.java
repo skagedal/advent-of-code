@@ -11,25 +11,93 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.springframework.expression.EvaluationContext;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.shortestpath.FloydWarshallShortestPaths;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultUndirectedGraph;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.tools.math.Longs;
-import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 import tech.skagedal.javaaoc.tools.string.Strings;
 
 @AdventOfCode(
     description = "Proboscidea Volcanium"
 )
 public class Day16 {
+    public long part1(AdventContext context) {
+        Graph<Valve, DefaultEdge> graph = createValveGraph(readValves(context));
+
+        final var shortestPaths = new FloydWarshallShortestPaths<>(graph);
+
+        final var interestingValves = graph.vertexSet().stream()
+            .sorted(Comparator.comparing(Valve::flowRate).reversed())
+            .takeWhile(v -> v.flowRate > 0)
+            .toList();
+
+        final var startValve = graph.vertexSet().stream().filter(v -> v.id().equals("AA")).findFirst().orElseThrow();
+
+        final var finder = new PressureFinderV2(graph);
+        return finder.maxPressure(startValve, 30, interestingValves);
+    }
+
+    static class PressureFinderV2 {
+        private final Graph<Valve, DefaultEdge> graph;
+        private final FloydWarshallShortestPaths<Valve, DefaultEdge> shortestPaths;
+        private final Map<String, Long> cache = new HashMap<>();
+
+        PressureFinderV2(Graph<Valve, DefaultEdge> graph) {
+            this.graph = graph;
+            this.shortestPaths = new FloydWarshallShortestPaths<>(graph);
+        }
+
+        long maxPressure(Valve valve, long minutes, List<Valve> relevantValves) {
+            if (minutes < 1) {
+                return 0;
+            }
+
+            final var cacheKey = String.format("%s-%d-%s", valve.id, minutes, relevantValves.stream().map(Valve::id).collect(Collectors.joining()));
+            final var cachedValue = cache.get(cacheKey);
+            if (cachedValue != null) {
+                return cachedValue;
+            }
+
+            final var best = relevantValves.stream()
+                .mapToLong(nextValve -> {
+                    final var distance = shortestPaths.getPath(valve, nextValve).getLength();
+                    final var valveScore = Long.max(0, (minutes - distance - 1) * nextValve.flowRate);
+                    final var restScore = maxPressure(nextValve, minutes - distance - 1, relevantValves.stream().filter(v -> v != nextValve).toList());
+                    return valveScore + restScore;
+                })
+                .max()
+                .orElse(0);
+
+            cache.put(cacheKey, best);
+            return best;
+        }
+    }
+
+    private static Graph<Valve, DefaultEdge> createValveGraph(Map<String, Valve> valveSpec) {
+        Graph<Valve, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        for (var spec : valveSpec.values()) {
+            graph.addVertex(spec);
+        }
+        for (var spec : valveSpec.values()) {
+            for (var target : spec.tunnels) {
+                graph.addEdge(spec, valveSpec.get(target));
+            }
+        }
+        return graph;
+    }
+
     public long part1z(AdventContext context) {
         final var valves = readValves(context);
         final var finder = new PressureFinder(valves, context.explain());
         return finder.maxPressure(valves.get("AA"), 30, Set.of());
     }
 
-    public long part2(AdventContext context) {
+    public long part2z(AdventContext context) {
         final var valves = readValves(context);
         final var finder = new PressureFinder(valves, context.explain());
         return finder.maxPressureWithElephant(valves.get("AA"), valves.get("AA"), 26, Set.of(), Set.of("AA"), Set.of("AA"));
@@ -207,20 +275,33 @@ public class Day16 {
             final var flowRate = Longs.inString(s).findFirst().orElseThrow();
             return new Valve(valves.get(0), flowRate, valves.subList(1, valves.size()));
         }
+
+        @Override
+        public String toString() {
+            return id;
+        }
     }
 
     public static void main(String[] args) {
-//        AdventOfCodeRunner.example(new Day16(), """
-//            Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
-//            Valve BB has flow rate=13; tunnels lead to valves CC, AA
-//            Valve CC has flow rate=2; tunnels lead to valves DD, BB
-//            Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
-//            Valve EE has flow rate=3; tunnels lead to valves FF, DD
-//            Valve FF has flow rate=0; tunnels lead to valves EE, GG
-//            Valve GG has flow rate=0; tunnels lead to valves FF, HH
-//            Valve HH has flow rate=22; tunnel leads to valve GG
-//            Valve II has flow rate=0; tunnels lead to valves AA, JJ
-//            Valve JJ has flow rate=21; tunnel leads to valve II""");
+//        runExample();
+        runMain();
+    }
+
+    private static void runExample() {
+        AdventOfCodeRunner.example(new Day16(), """
+            Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
+            Valve BB has flow rate=13; tunnels lead to valves CC, AA
+            Valve CC has flow rate=2; tunnels lead to valves DD, BB
+            Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
+            Valve EE has flow rate=3; tunnels lead to valves FF, DD
+            Valve FF has flow rate=0; tunnels lead to valves EE, GG
+            Valve GG has flow rate=0; tunnels lead to valves FF, HH
+            Valve HH has flow rate=22; tunnel leads to valve GG
+            Valve II has flow rate=0; tunnels lead to valves AA, JJ
+            Valve JJ has flow rate=21; tunnel leads to valve II""");
+    }
+
+    private static void runMain() {
         AdventOfCodeRunner.run(new Day16());
     }
 }
