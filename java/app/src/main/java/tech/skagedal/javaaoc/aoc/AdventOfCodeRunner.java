@@ -1,6 +1,7 @@
 package tech.skagedal.javaaoc.aoc;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import tech.skagedal.javaaoc.year2022.Day15;
 
 public class AdventOfCodeRunner {
@@ -34,7 +35,10 @@ public class AdventOfCodeRunner {
         for (final var part : day.parts()) {
             try {
                 AdventContext context = factory.getDataLoader(day);
-                System.out.println(part.method().invoke(object, context));
+                final var before = System.nanoTime();
+                final var result = part.method().invoke(object, context).toString();
+                final var duration = Duration.ofNanos(System.nanoTime() - before);
+                System.out.printf("%s-%02d part %d: %s - took %s\n", day.year(), day.day(), part.number(), result, duration);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }

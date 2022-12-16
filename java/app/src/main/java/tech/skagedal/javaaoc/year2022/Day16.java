@@ -12,24 +12,38 @@ import java.util.stream.Collectors;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
+import tech.skagedal.javaaoc.tools.function.Tuple2;
 import tech.skagedal.javaaoc.tools.math.Longs;
 import tech.skagedal.javaaoc.tools.string.Strings;
 
-@AdventOfCode
+@AdventOfCode(
+    description = "Proboscidea Volcanium"
+)
 public class Day16 {
     Map<String, Long> cache = new HashMap<>();
+    boolean explain = false;
 
     public long part1(AdventContext context) {
         cache.clear();
-        final var valves = context.lines().map(Valve::fromString).collect(Collectors.toMap(
-            Valve::id,
-            Function.identity()
-        ));
+        explain = context.explain();
+        final var valves = readValves(context);
         return maxPressure(valves.get("AA"), valves, 30, Set.of());
     }
 
+    public long part2disabled(AdventContext context) {
+        cache.clear();
+        return 0;
+    }
+
+    private static Map<String, Valve> readValves(AdventContext context) {
+        return context.lines().map(Valve::fromString).collect(Collectors.toMap(
+            Valve::id,
+            Function.identity()
+        ));
+    }
+
     long maxPressure(Valve valve, Map<String, Valve> valves, int minutes, Set<String> openValves) {
-        System.out.printf("== Considering valve %s at %d minutes left ==\n", valve.id, minutes);
+        if (explain) System.out.printf("== Considering valve %s at %d minutes left ==\n", valve.id, minutes);
         if (minutes == 0) {
             return 0;
         }
@@ -44,13 +58,13 @@ public class Day16 {
         Map<String, Long> scoreOptions = new HashMap<>();
 
         if (valve.flowRate == 0) {
-            System.out.printf("[%s] No point in opening, no flow\n", id);
+            if (explain) System.out.printf("[%s] No point in opening, no flow\n", id);
         } else if (openValves.contains(valve.id)) {
-            System.out.printf("[%s] Already open\n", id);
+            if (explain) System.out.printf("[%s] Already open\n", id);
         } else {
-            System.out.printf("[%s] We could open this vault. It takes one minute to open.\n", id);
+            if (explain) System.out.printf("[%s] We could open this vault. It takes one minute to open.\n", id);
             long scoreForOpening = (minutes - 1) * valve.flowRate;
-            System.out.printf("[%s] So the score for just this would be %d\n", id, scoreForOpening);
+            if (explain) System.out.printf("[%s] So the score for just this would be %d\n", id, scoreForOpening);
             long scoreForRest = maxPressure(valve, valves, minutes - 1, Sets.union(openValves, Set.of(valve.id)));
             scoreOptions.put(valve.id, scoreForOpening + scoreForRest);
         }
@@ -61,7 +75,7 @@ public class Day16 {
         }
 
         final var maxOption = scoreOptions.entrySet().stream().max(Comparator.comparing(Map.Entry::getValue)).orElseThrow();
-        System.out.printf("[%s] We chose option %s, worth %d\n", id, maxOption.getKey(), maxOption.getValue());
+        if (explain) System.out.printf("[%s] We chose option %s, worth %d\n", id, maxOption.getKey(), maxOption.getValue());
         cache.put(cacheKey, maxOption.getValue());
         return maxOption.getValue();
     }
@@ -76,17 +90,17 @@ public class Day16 {
     }
 
     public static void main(String[] args) {
-        AdventOfCodeRunner.example(new Day16(), """
-            Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
-            Valve BB has flow rate=13; tunnels lead to valves CC, AA
-            Valve CC has flow rate=2; tunnels lead to valves DD, BB
-            Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
-            Valve EE has flow rate=3; tunnels lead to valves FF, DD
-            Valve FF has flow rate=0; tunnels lead to valves EE, GG
-            Valve GG has flow rate=0; tunnels lead to valves FF, HH
-            Valve HH has flow rate=22; tunnel leads to valve GG
-            Valve II has flow rate=0; tunnels lead to valves AA, JJ
-            Valve JJ has flow rate=21; tunnel leads to valve II""");
+//        AdventOfCodeRunner.example(new Day16(), """
+//            Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
+//            Valve BB has flow rate=13; tunnels lead to valves CC, AA
+//            Valve CC has flow rate=2; tunnels lead to valves DD, BB
+//            Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
+//            Valve EE has flow rate=3; tunnels lead to valves FF, DD
+//            Valve FF has flow rate=0; tunnels lead to valves EE, GG
+//            Valve GG has flow rate=0; tunnels lead to valves FF, HH
+//            Valve HH has flow rate=22; tunnel leads to valve GG
+//            Valve II has flow rate=0; tunnels lead to valves AA, JJ
+//            Valve JJ has flow rate=21; tunnel leads to valve II""");
         AdventOfCodeRunner.run(new Day16());
     }
 }
