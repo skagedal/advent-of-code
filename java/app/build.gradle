@@ -9,6 +9,7 @@ repositories {
 dependencies {
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'org.jgrapht:jgrapht-core:1.5.1'
+    implementation 'commons-codec:commons-codec:1.15'
     implementation 'org.springframework:spring-context:6.0.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
