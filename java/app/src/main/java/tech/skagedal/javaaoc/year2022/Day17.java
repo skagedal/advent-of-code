@@ -9,7 +9,9 @@ import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 
-@AdventOfCode
+@AdventOfCode(
+    description = "Pyroclastic Flow"
+)
 public class Day17 {
     public long part1(AdventContext context) {
         return new Game(context.line(), context.explain(), 2022).run();
