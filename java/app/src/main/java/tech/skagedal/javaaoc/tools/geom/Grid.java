@@ -1,4 +1,4 @@
-package tech.skagedal.javaaoc.tools.linear;
+package tech.skagedal.javaaoc.tools.geom;
 
 import com.google.common.base.Functions;
 import java.util.Collection;
@@ -7,8 +7,6 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import tech.skagedal.javaaoc.tools.streamsetc.Streams;
-import tech.skagedal.javaaoc.year2022.Day08;
 
 public class Grid<T> {
     private final List<List<T>> grid;

@@ -8,7 +8,7 @@ import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeDay;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.aoc.DataLoaderFactory;
-import tech.skagedal.javaaoc.tools.linear.Point3D;
+import tech.skagedal.javaaoc.tools.geom.Point3D;
 import tech.skagedal.javaaoc.tools.visualize.VisualizeDay18;
 
 @AdventOfCode(

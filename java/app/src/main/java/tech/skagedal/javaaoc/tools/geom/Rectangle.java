@@ -1,4 +1,4 @@
-package tech.skagedal.javaaoc.tools.linear;
+package tech.skagedal.javaaoc.tools.geom;
 
 import static tech.skagedal.javaaoc.tools.streamsetc.Streams.iterate;
 

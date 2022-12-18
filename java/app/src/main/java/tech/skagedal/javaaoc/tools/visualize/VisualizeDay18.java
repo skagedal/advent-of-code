@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import tech.skagedal.javaaoc.tools.linear.Point3D;
+import tech.skagedal.javaaoc.tools.geom.Point3D;
 
 /**
  * Writes to an .obj file that can be visualized with e.g. https://3dviewer.net/

@@ -6,8 +6,8 @@ import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
-import tech.skagedal.javaaoc.tools.linear.Point;
-import tech.skagedal.javaaoc.tools.linear.Vector;
+import tech.skagedal.javaaoc.tools.geom.Point;
+import tech.skagedal.javaaoc.tools.geom.Vector;
 
 @AdventOfCode
 public class Day08 {

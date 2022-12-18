@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
-import tech.skagedal.javaaoc.tools.linear.Point;
+import tech.skagedal.javaaoc.tools.geom.Point;
 import tech.skagedal.javaaoc.tools.math.Longs;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 

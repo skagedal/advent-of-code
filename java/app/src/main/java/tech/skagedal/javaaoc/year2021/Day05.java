@@ -4,15 +4,11 @@ import static tech.skagedal.javaaoc.tools.streamsetc.Streams.iterate;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
-import tech.skagedal.javaaoc.tools.streamsetc.IntStreams;
-import tech.skagedal.javaaoc.tools.streamsetc.Streams;
-import tech.skagedal.javaaoc.tools.function.Tuple2;
-import tech.skagedal.javaaoc.tools.linear.Point;
+import tech.skagedal.javaaoc.tools.geom.Point;
 import tech.skagedal.javaaoc.tools.regex.Patterns;
 
 @AdventOfCode

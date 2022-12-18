@@ -1,6 +1,5 @@
-package tech.skagedal.javaaoc.tools.linear;
+package tech.skagedal.javaaoc.tools.geom;
 
-import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;

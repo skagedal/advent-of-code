@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.tools.linear.Grid;
-import tech.skagedal.javaaoc.tools.linear.Point;
-import tech.skagedal.javaaoc.tools.linear.Vector;
+import tech.skagedal.javaaoc.tools.geom.Grid;
+import tech.skagedal.javaaoc.tools.geom.Point;
+import tech.skagedal.javaaoc.tools.geom.Vector;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
 @AdventOfCode

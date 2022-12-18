@@ -1,10 +1,8 @@
-package tech.skagedal.javaaoc.tools.linear;
+package tech.skagedal.javaaoc.tools.geom;
 
-import java.util.Vector;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import tech.skagedal.javaaoc.year2022.Day18;
 
 public record Point3D(int x, int y, int z) {
     private static final Pattern pattern = Pattern.compile("(\\d+),(\\d+),(\\d+)");
