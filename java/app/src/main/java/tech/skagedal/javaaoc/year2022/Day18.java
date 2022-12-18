@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import tech.skagedal.javaaoc.aoc.AdventContext;
+import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeDay;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.aoc.DataLoaderFactory;
 import tech.skagedal.javaaoc.tools.linear.Point3D;
 import tech.skagedal.javaaoc.tools.visualize.VisualizeDay18;
 
+@AdventOfCode(
+    description = "Boiling Boulders"
+)
 public class Day18 {
     public long part1(AdventContext context) {
         final var points = context.lines()
@@ -35,7 +39,19 @@ public class Day18 {
         return points.stream().mapToInt(ac -> ac.unconnected).sum();
     }
 
-    class AdjacentCounted {
+    public long part2(AdventContext context) {
+        final var points = context.lines().map(Point3D::parseString);
+
+        // Get enclosing grid
+        // Put all the points in it
+        // For each face of the grid, mark the lines until the rock
+        // The unmarked points are the solid rock
+        // Run the part 1 algorithm on those
+
+        return 0;
+    }
+
+    static class AdjacentCounted {
         private final Point3D point;
         private int unconnected = 6;
 
