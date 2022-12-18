@@ -54,18 +54,11 @@ public class Grid<T> {
     }
 
     public static <T> Grid<T> enclosing(Stream<Point> points, Function<Point, T> mapper) {
-        // TODO: Use Rectangle.enclosing
-        int startX = Integer.MAX_VALUE;
-        int endX = Integer.MIN_VALUE;
-        int startY = Integer.MAX_VALUE;
-        int endY = Integer.MIN_VALUE;
-        for (var point : Streams.iterate(points)) {
-            startX = Math.min(startX, point.x());
-            endX = Math.max(endX, point.x());
-            startY = Math.min(startY, point.y());
-            endY = Math.max(endY, point.y());
-        }
-        return fromBounds(startX, endX, startY, endY, mapper);
+        final var rect = Rectangle.enclosing(points);
+        final var origin = rect.origin();
+        final var end = origin.plus(rect.size().toVector());
+
+        return fromBounds(origin.x(), end.x() - 1, origin.y(), end.y()  - 1, mapper);
     }
     public T get(Point point) {
         return grid.get(point.y() - startY).get(point.x() - startX);
