@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import tech.skagedal.javaaoc.aoc.AdventContext;
+import tech.skagedal.javaaoc.aoc.AdventOfCodeDay;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
+import tech.skagedal.javaaoc.aoc.DataLoaderFactory;
 import tech.skagedal.javaaoc.tools.linear.Point3D;
+import tech.skagedal.javaaoc.tools.visualize.VisualizeDay18;
 
 public class Day18 {
     public long part1(AdventContext context) {
@@ -41,9 +44,19 @@ public class Day18 {
         }
     }
 
+    private static void visualize(AdventContext context) {
+        final var points = context.lines().map(Point3D::parseString).toList();
+
+        VisualizeDay18.writeObjFile(points);
+    }
+
     public static void main(String[] args) {
+        final var dayObj = new Day18();
+        final var day = AdventOfCodeDay.fromObject(dayObj);
+        final var context = new DataLoaderFactory().getDataLoader(day);
+        visualize(context);
 //        runExample();
-        AdventOfCodeRunner.run(new Day18());
+//        AdventOfCodeRunner.run(new Day18());
     }
 
     private static void runExample() {
