@@ -12,8 +12,8 @@ import tech.skagedal.javaaoc.tools.geom.Point3D;
  * Writes to an .obj file that can be visualized with e.g. https://3dviewer.net/
  */
 public class VisualizeDay18 {
-    public static void writeObjFile(List<Point3D> points) {
-        final var path = Paths.get(System.getProperty("user.home")).resolve("Desktop").resolve("out.obj");
+    public static void writeObjFile(List<Point3D> points, String filename) {
+        final var path = Paths.get(System.getProperty("user.home")).resolve("Desktop").resolve(filename);
         try (var writer = Files.newBufferedWriter(path)) {
             writeToWriter(points, writer);
         } catch (IOException exception) {

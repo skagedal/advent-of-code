@@ -33,4 +33,11 @@ public record Point3D(int x, int y, int z) {
         );
     }
 
+    public Point3D plus(Vector3D vector) {
+        return new Point3D(
+            x + vector.dx(),
+            y + vector.dy(),
+            z + vector.dz()
+        );
+    }
 }

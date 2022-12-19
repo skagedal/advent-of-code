@@ -2,13 +2,17 @@ package tech.skagedal.javaaoc.year2022;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeDay;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.aoc.DataLoaderFactory;
+import tech.skagedal.javaaoc.tools.geom.Grid3D;
 import tech.skagedal.javaaoc.tools.geom.Point3D;
+import tech.skagedal.javaaoc.tools.geom.Rectangle3D;
 import tech.skagedal.javaaoc.tools.visualize.VisualizeDay18;
 
 @AdventOfCode(
@@ -16,8 +20,48 @@ import tech.skagedal.javaaoc.tools.visualize.VisualizeDay18;
 )
 public class Day18 {
     public long part1(AdventContext context) {
-        final var points = context.lines()
-            .map(Point3D::parseString)
+        return numberOfSurfaces(context.lines().map(Point3D::parseString));
+    }
+
+    public long part2(AdventContext context) {
+        System.out.println("Reading points...");
+        final var points = context.lines().map(Point3D::parseString).collect(Collectors.toSet());
+
+        System.out.printf("Number of initial points: %d\n", points.size());
+
+        // Enclosing rect
+        System.out.printf("Initial enclosing rect: %s\n", Rectangle3D.enclosing(points.stream()));
+
+        // Get enclosing grid
+        System.out.println("Getting enclosing grid...");
+        final var grid = Grid3D.enclosing(points.stream(), p -> new AtomicBoolean(false));
+
+        System.out.println("Flood filling...");
+        grid.flood(grid.getOrigin(), (p, ab) -> {
+            if (ab.get()) return false;
+            if (points.contains(p)) return false;
+            ab.set(true);
+            return true;
+        });
+
+        System.out.println("Finding the solid rock...");
+
+        // The unmarked points are the solid rock
+        final var solidRockPoints = grid.allPoints()
+            .filter(p -> !grid.get(p).get())
+            .toList();
+
+        System.out.printf("Number of solid points: %d\n", solidRockPoints.size());
+        System.out.printf("Solid rock enclosing rect: %s\n", Rectangle3D.enclosing(solidRockPoints.stream()));
+
+        VisualizeDay18.writeObjFile(solidRockPoints, "solidrock.obj");
+        // Run the part 1 algorithm on those
+
+        return numberOfSurfaces(solidRockPoints.stream());
+    }
+
+    private static int numberOfSurfaces(Stream<Point3D> point3DStream) {
+        final var points = point3DStream
             .sorted(Comparator.comparing(Point3D::x))
             .map(AdjacentCounted::new)
             .collect(Collectors.toCollection(ArrayList::new));
@@ -39,18 +83,6 @@ public class Day18 {
         return points.stream().mapToInt(ac -> ac.unconnected).sum();
     }
 
-    public long part2(AdventContext context) {
-        final var points = context.lines().map(Point3D::parseString);
-
-        // Get enclosing grid
-        // Put all the points in it
-        // For each face of the grid, mark the lines until the rock
-        // The unmarked points are the solid rock
-        // Run the part 1 algorithm on those
-
-        return 0;
-    }
-
     static class AdjacentCounted {
         private final Point3D point;
         private int unconnected = 6;
@@ -63,7 +95,7 @@ public class Day18 {
     private static void visualize(AdventContext context) {
         final var points = context.lines().map(Point3D::parseString).toList();
 
-        VisualizeDay18.writeObjFile(points);
+        VisualizeDay18.writeObjFile(points, "out.obj");
     }
 
     public static void main(String[] args) {
