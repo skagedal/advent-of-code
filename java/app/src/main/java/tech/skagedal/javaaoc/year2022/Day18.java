@@ -7,12 +7,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.aoc.AdventOfCodeDay;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
-import tech.skagedal.javaaoc.aoc.DataLoaderFactory;
 import tech.skagedal.javaaoc.tools.geom.Grid3D;
 import tech.skagedal.javaaoc.tools.geom.Point3D;
-import tech.skagedal.javaaoc.tools.geom.Rectangle3D;
 import tech.skagedal.javaaoc.tools.visualize.VisualizeDay18;
 
 @AdventOfCode(
@@ -24,39 +21,20 @@ public class Day18 {
     }
 
     public long part2(AdventContext context) {
-        System.out.println("Reading points...");
         final var points = context.lines().map(Point3D::parseString).collect(Collectors.toSet());
-        VisualizeDay18.writeObjFile(points, "hollowrock.obj");
-
-        System.out.printf("Number of initial points: %d\n", points.size());
-
-        // Enclosing rect
-        System.out.printf("Initial enclosing rect: %s\n", Rectangle3D.enclosing(points.stream()));
-
-        // Get enclosing grid
-        System.out.println("Getting enclosing grid...");
         final var grid = Grid3D.enclosing(points.stream(), 1, p -> new AtomicBoolean(false));
 
-        System.out.println("Flood filling...");
-        grid.flood(grid.getOrigin(), (p, ab) -> {
-            if (ab.get()) return false;
+        grid.flood(grid.getOrigin(), (p, isThisCubeletSet) -> {
+            if (isThisCubeletSet.get()) return false;
             if (points.contains(p)) return false;
-            ab.set(true);
+            isThisCubeletSet.set(true);
             return true;
         });
-
-        System.out.println("Finding the solid rock...");
 
         // The unmarked points are the solid rock
         final var solidRockPoints = grid.allPoints()
             .filter(p -> !grid.get(p).get())
             .toList();
-
-        System.out.printf("Number of solid points: %d\n", solidRockPoints.size());
-        System.out.printf("Solid rock enclosing rect: %s\n", Rectangle3D.enclosing(solidRockPoints.stream()));
-
-        VisualizeDay18.writeObjFile(solidRockPoints, "solidrock.obj");
-        // Run the part 1 algorithm on those
 
         return numberOfSurfaces(solidRockPoints.stream());
     }
@@ -100,12 +78,7 @@ public class Day18 {
     }
 
     public static void main(String[] args) {
-        final var dayObj = new Day18();
-        final var day = AdventOfCodeDay.fromObject(dayObj);
-        final var context = new DataLoaderFactory().getDataLoader(day);
-        visualize(context);
-//        runExample();
-//        AdventOfCodeRunner.run(new Day18());
+        runExample();
     }
 
     private static void runExample() {
