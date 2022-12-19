@@ -26,6 +26,7 @@ public class Day18 {
     public long part2(AdventContext context) {
         System.out.println("Reading points...");
         final var points = context.lines().map(Point3D::parseString).collect(Collectors.toSet());
+        VisualizeDay18.writeObjFile(points, "hollowrock.obj");
 
         System.out.printf("Number of initial points: %d\n", points.size());
 
@@ -34,7 +35,7 @@ public class Day18 {
 
         // Get enclosing grid
         System.out.println("Getting enclosing grid...");
-        final var grid = Grid3D.enclosing(points.stream(), p -> new AtomicBoolean(false));
+        final var grid = Grid3D.enclosing(points.stream(), 1, p -> new AtomicBoolean(false));
 
         System.out.println("Flood filling...");
         grid.flood(grid.getOrigin(), (p, ab) -> {

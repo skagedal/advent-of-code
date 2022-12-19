@@ -6,6 +6,10 @@ import java.util.stream.Stream;
 
 public record Rectangle3D(Point3D origin, Size3D size) {
     public static Rectangle3D enclosing(Stream<Point3D> points) {
+        return enclosing(points, 0);
+    }
+
+    public static Rectangle3D enclosing(Stream<Point3D> points, int margin) {
         int startX = Integer.MAX_VALUE;
         int startY = Integer.MAX_VALUE;
         int startZ = Integer.MAX_VALUE;
@@ -23,11 +27,11 @@ public record Rectangle3D(Point3D origin, Size3D size) {
         }
 
         return new Rectangle3D(
-            new Point3D(startX, startY, startZ),
+            new Point3D(startX - margin, startY - margin, startZ - margin),
             new Size3D(
-                endX - startX + 1,
-                endY - startY + 1,
-                endZ - startZ + 1
+                endX - startX + 1 + margin * 2,
+                endY - startY + 1 + margin * 2,
+                endZ - startZ + 1 + margin * 2
             )
         );
     }

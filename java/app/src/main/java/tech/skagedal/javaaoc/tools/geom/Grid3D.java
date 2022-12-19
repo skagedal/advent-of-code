@@ -27,8 +27,8 @@ public class Grid3D<T> {
         return origin;
     }
 
-    public static <T> Grid3D<T> enclosing(Stream<Point3D> points, Function<Point3D, T> mapper) {
-        return fromBounds(Rectangle3D.enclosing(points), mapper);
+    public static <T> Grid3D<T> enclosing(Stream<Point3D> points, int margin, Function<Point3D, T> mapper) {
+        return fromBounds(Rectangle3D.enclosing(points, margin), mapper);
     }
 
     private static <T> Grid3D<T> fromBounds(Rectangle3D rect, Function<Point3D, T> mapper) {

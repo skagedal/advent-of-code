@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
 import tech.skagedal.javaaoc.tools.geom.Point3D;
 
@@ -12,7 +13,7 @@ import tech.skagedal.javaaoc.tools.geom.Point3D;
  * Writes to an .obj file that can be visualized with e.g. https://3dviewer.net/
  */
 public class VisualizeDay18 {
-    public static void writeObjFile(List<Point3D> points, String filename) {
+    public static void writeObjFile(Collection<Point3D> points, String filename) {
         final var path = Paths.get(System.getProperty("user.home")).resolve("Desktop").resolve(filename);
         try (var writer = Files.newBufferedWriter(path)) {
             writeToWriter(points, writer);
@@ -21,7 +22,7 @@ public class VisualizeDay18 {
         }
     }
 
-    private static void writeToWriter(List<Point3D> points, BufferedWriter writer) {
+    private static void writeToWriter(Collection<Point3D> points, BufferedWriter writer) {
         final var printWriter = new PrintWriter(writer);
         for (var point : points) {
             printWriter.printf("v %d %d %d\n", point.x() + 0, point.y()+ 1, point.z() + 1);
