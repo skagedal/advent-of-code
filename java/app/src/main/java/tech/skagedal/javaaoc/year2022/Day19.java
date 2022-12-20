@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
@@ -12,6 +13,10 @@ import tech.skagedal.javaaoc.tools.streamsetc.Streams;
     description = "Not Enough Minerals"
 )
 public class Day19 {
+
+    public long part1(AdventContext context) {
+        return 0;
+    }
 
     static class Simulation {
         private final Blueprint blueprint;
