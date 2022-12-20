@@ -3,7 +3,8 @@ package tech.skagedal.javaaoc.year2015;
 import java.util.List;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
-import tech.skagedal.javaaoc.tools.math.Longs;
+import tech.skagedal.javaaoc.tools.geom.Size3D;
+import tech.skagedal.javaaoc.tools.math.Ints;
 
 @AdventOfCode(
     description = "I Was Told There Would Be No Math"
@@ -11,17 +12,18 @@ import tech.skagedal.javaaoc.tools.math.Longs;
 public class Day02 {
     public long part1(AdventContext context) {
         return context.lines()
-            .mapToLong(line -> wrappingNeeded(Longs.inString(line).toList()))
+            .mapToInt(line -> wrappingNeeded(Ints.inString(line, Size3D::new)))
             .sum();
     }
 
-    private long wrappingNeeded(List<Long> dims) {
+    private int wrappingNeeded(Size3D size) {
         final var sides = List.of(
-            dims.get(0) * dims.get(1),
-            dims.get(0) * dims.get(2),
-            dims.get(1) * dims.get(2)
+            size.width() * size.height(),
+            size.width() * size.depth(),
+            size.height() * size.depth()
         );
-        return sides.stream().mapToLong(side -> side * 2).sum() +
-            sides.stream().mapToLong(Long::longValue).min().orElseThrow();
+        return sides.stream().mapToInt(side -> side * 2).sum() +
+            sides.stream().mapToInt(Integer::intValue).min().orElseThrow();
     }
+
 }
