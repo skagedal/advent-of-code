@@ -42,31 +42,18 @@ public class Day20 {
         // Lookback array - for each number in the sortarray, what was it's initial position?
         final var initialPositionArray = IntStream.range(0, n).toArray();
 
-        new Mixer(context, mixArray, positionArray, initialPositionArray).run();
+        Mixer mixer = new Mixer(context, mixArray, positionArray, initialPositionArray);
+        mixer.run();
 
         // Now, calculate grove coordinates.
         // Find position of value 0:
 
-        int i = 0;
-        for (; i < n; i++) {
-            if (mixArray[i] == 0) {
-                break;
-            }
-        }
-        System.out.printf("Position of 0 is %d (doublechecking: %d)\n", i, mixArray[i]);
-        int i1 = mixArray[clamp(i + 1000, n)];
-        int i2 = mixArray[clamp(i + 2000, n)];
-        int i3 = mixArray[clamp(i + 3000, n)];
-        var sum = i1 + i2 + i3;
-        System.out.printf("%d + %d + %d == %d\n", i1, i2, i3, sum);
-        return sum;
+        return mixer.findGroveCoordinates();
     }
 
     public long part2(AdventContext context) {
         return 0;
     }
-
-
 
     static class Mixer {
         final AdventContext context;
@@ -119,6 +106,19 @@ public class Day20 {
                 swap(lookbackArray, ic, jc);
                 swap(mixArray, ic, jc);
             }
+        }
+
+        public long findGroveCoordinates() {
+            int i = 0;
+            for (; i < n; i++) {
+                if (mixArray[i] == 0) {
+                    break;
+                }
+            }
+            int i1 = mixArray[clamp(i + 1000, n)];
+            int i2 = mixArray[clamp(i + 2000, n)];
+            int i3 = mixArray[clamp(i + 3000, n)];
+            return i1 + i2 + i3;
         }
 
     }
