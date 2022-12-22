@@ -3,6 +3,7 @@ package tech.skagedal.javaaoc.year2022;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
@@ -32,8 +33,18 @@ public class Day20 {
     // The -3 should be moved so that it is at position 5. It is now at position 1.
     // (1 - 3) % 7 == -2 % 7
     public long part1(AdventContext context) {
+        final var mixer = loadMixer(context, context.lines());
+        mixer.run();
+        return mixer.findGroveCoordinates();
+    }
+
+    public long part2(AdventContext context) {
+        return 0;
+    }
+
+    private static Mixer loadMixer(AdventContext context, Stream<String> lines) {
         // The array that we will mix
-        final var mixArray = context.lines().mapToInt(Integer::parseInt).toArray();
+        final var mixArray = lines.mapToInt(Integer::parseInt).toArray();
         final var n = mixArray.length;
 
         // Array of positions that we will iterate through
@@ -42,17 +53,7 @@ public class Day20 {
         // Lookback array - for each number in the sortarray, what was it's initial position?
         final var initialPositionArray = IntStream.range(0, n).toArray();
 
-        Mixer mixer = new Mixer(context, mixArray, positionArray, initialPositionArray);
-        mixer.run();
-
-        // Now, calculate grove coordinates.
-        // Find position of value 0:
-
-        return mixer.findGroveCoordinates();
-    }
-
-    public long part2(AdventContext context) {
-        return 0;
+        return new Mixer(context, mixArray, positionArray, initialPositionArray);
     }
 
     static class Mixer {
