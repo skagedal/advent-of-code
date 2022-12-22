@@ -13,26 +13,6 @@ import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
     description = "Grove Positioning System"
 )
 public class Day20 {
-    // Mixing the file means that we move the numbers in the order that they originally appear in the file. We move them
-    // by as many position as the value of the number - i.e. a 3 should be moved 3 steps to the right
-    //
-    //  | 1| 2|-3| 3|-2| 0| 4
-    //   ^^
-    //
-    //  | 2| 1|-3| 3|-2| 0| 4
-    //   ^^
-    //
-    //  | 1|-3| 2| 3|-2| 0| 4
-    //      ^^
-    //
-    // Here comes the tricky bit. Imagine that it twice:
-    //
-    //    0  1  2  3  4  5  6  0  1  2  3  4  5  6
-    //  | 1|-3| 2| 3|-2| 0| 4| 1|-3| 2| 3|-2| 0| 4
-    //                           ^^
-    //
-    // The -3 should be moved so that it is at position 5. It is now at position 1.
-    // (1 - 3) % 7 == -2 % 7
     public long part1(AdventContext context) {
         final var mixer = loadMixer(context, context.lines());
         mixer.run();
@@ -50,28 +30,33 @@ public class Day20 {
     }
 
     private static Mixer loadMixer(AdventContext context, Stream<String> lines) {
-        // The array that we will mix
-        final var mixArray = lines.mapToLong(Long::parseLong).toArray();
-        final var n = mixArray.length;
-
-        // Array of positions that we will iterate through
-        final var positionArray = IntStream.range(0, n).toArray();
-
-        // Lookback array - for each number in the mixarray, what was it's initial position?
-        final var initialPositionArray = IntStream.range(0, n).toArray();
-
-        return new Mixer(context, mixArray, positionArray, initialPositionArray);
+        return new Mixer(context.explain(), lines.mapToLong(Long::parseLong).toArray());
     }
 
-    static class Mixer {
-        final AdventContext context;
+    public static class Mixer {
+        final boolean explain;
+
+        // The array that we will mix
         final long[] mixArray;
+
+        // Array of positions that we will iterate through
         final int[] positionArray;
+
+        // Lookback array - for each number in the mixarray, what was it's initial position?
         final int[] lookbackArray;
         final int n;
 
-        Mixer(AdventContext context, long[] mixArray, int[] positionArray, int[] lookbackArray) {
-            this.context = context;
+        public Mixer(boolean explain, long[] mixArray) {
+            this(
+                explain,
+                mixArray,
+                IntStream.range(0, mixArray.length).toArray(),
+                IntStream.range(0, mixArray.length).toArray()
+            );
+        }
+
+        Mixer(boolean explain, long[] mixArray, int[] positionArray, int[] lookbackArray) {
+            this.explain = explain;
             this.mixArray = mixArray;
             this.positionArray = positionArray;
             this.lookbackArray = lookbackArray;
@@ -82,19 +67,18 @@ public class Day20 {
         }
 
         void run() {
-            if (context.explain()) {
+            if (explain) {
                 System.out.println("Initial arrangement:");
                 printArr(mixArray);
                 System.out.println();
             }
 
             for (var i = 0; i < n; i++) {
-//                System.out.printf("mixing %d out of %d...\n", i, n);
                 final var src = positionArray[i];
                 final var valueToMove = mixArray[src];
                 final var dest = findDestination(src, valueToMove);
                 travel(src, dest);
-                if (context.explain()) {
+                if (explain) {
                     System.out.printf("%d moves from position %d to position %d\n", valueToMove, src, dest);
                     printArr(mixArray);
                     System.out.println();
@@ -103,27 +87,26 @@ public class Day20 {
         }
 
         private long findDestination(int src, long valueToMove) {
-            if (valueToMove != (valueToMove % n)) {
-                System.out.printf("valueToMove: %d, valueToMove mod n: %d\n", valueToMove, valueToMove % n);
-            }
-
+            // This works for part 1.
             return src + valueToMove;
-//            return src + (valueToMove % n);
+
+            // This should work as well, and make part 2 effective. But it doesn't work. Why?
+            // return src + (valueToMove % n);
         }
 
         private void travel(long src, long dest) {
-            final var delta = Long.signum(dest - src);
-            for (var i = src; i != dest; i += delta) {
-                var j = i + delta;
+            final var increment = Long.signum(dest - src);
+            for (var i = src; i != dest; i += increment) {
+                var j = i + increment;
 
-                var ic = clamp(i, n);
-                var jc = clamp(j, n);
-                // Swap places of i and j
-                positionArray[lookbackArray[ic]] = jc;
-                positionArray[lookbackArray[jc]] = ic;
-                swap(lookbackArray, ic, jc);
-                swap(mixArray, ic, jc);
+                swapValues(clamp(i, n), clamp(j, n));
             }
+        }
+
+        private void swapValues(int posA, int posB) {
+            swap(positionArray, lookbackArray[posA], lookbackArray[posB]);
+            swap(lookbackArray, posA, posB);
+            swap(mixArray, posA, posB);
         }
 
         public long findGroveCoordinates() {
@@ -163,6 +146,10 @@ public class Day20 {
         return (clamped < 0) ? clamped + n : clamped;
     }
 
+    static void printArr(int[] array) {
+        System.out.printf("%s\n", Arrays.stream(array).mapToObj(Integer::toString).collect(Collectors.joining(", ")));
+    }
+
     static void printArr(long[] array) {
         System.out.printf("%s\n", Arrays.stream(array).mapToObj(Long::toString).collect(Collectors.joining(", ")));
     }
@@ -177,6 +164,5 @@ public class Day20 {
             0
             4""");
         AdventOfCodeRunner.run(new Day20());
-
     }
 }
