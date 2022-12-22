@@ -119,8 +119,8 @@ public class Day20 {
                 var ic = clamp(i, n);
                 var jc = clamp(j, n);
                 // Swap places of i and j
-                addClamped(positionArray, lookbackArray[ic], delta, n);
-                addClamped(positionArray, lookbackArray[jc], -delta, n);
+                positionArray[lookbackArray[ic]] = jc;
+                positionArray[lookbackArray[jc]] = ic;
                 swap(lookbackArray, ic, jc);
                 swap(mixArray, ic, jc);
             }
@@ -144,10 +144,6 @@ public class Day20 {
                 mixArray[i] *= decryptionKey;
             }
         }
-    }
-
-    private static void addClamped(int[] arr, int pos, int delta, int n) {
-        arr[pos] = clamp(arr[pos] + delta, n);
     }
 
     private static void swap(int[] array, int a, int b) {
