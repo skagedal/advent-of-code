@@ -40,7 +40,13 @@ public class Day20 {
     }
 
     public long part2(AdventContext context) {
-        return 0;
+        final var mixer = loadMixer(context, context.lines());
+        mixer.applyDecryptionKey(811589153);
+        for (var i = 0; i < 10; i++) {
+            System.out.printf("Run %d...\n", i);
+            mixer.run();
+        }
+        return mixer.findGroveCoordinates();
     }
 
     private static Mixer loadMixer(AdventContext context, Stream<String> lines) {
@@ -83,9 +89,10 @@ public class Day20 {
             }
 
             for (var i = 0; i < n; i++) {
+//                System.out.printf("mixing %d out of %d...\n", i, n);
                 final var src = positionArray[i];
                 final var valueToMove = mixArray[src];
-                final var dest = src + valueToMove;
+                final var dest = findDestination(src, valueToMove);
                 travel(src, dest);
                 if (context.explain()) {
                     System.out.printf("%d moves from position %d to position %d\n", valueToMove, src, dest);
@@ -93,6 +100,15 @@ public class Day20 {
                     System.out.println();
                 }
             }
+        }
+
+        private long findDestination(int src, long valueToMove) {
+            if (valueToMove != (valueToMove % n)) {
+                System.out.printf("valueToMove: %d, valueToMove mod n: %d\n", valueToMove, valueToMove % n);
+            }
+
+            return src + valueToMove;
+//            return src + (valueToMove % n);
         }
 
         private void travel(long src, long dest) {
@@ -123,6 +139,11 @@ public class Day20 {
             return i1 + i2 + i3;
         }
 
+        public void applyDecryptionKey(long decryptionKey) {
+            for (var i = 0; i < n; i++) {
+                mixArray[i] *= decryptionKey;
+            }
+        }
     }
 
     private static void addClamped(int[] arr, int pos, int delta, int n) {
