@@ -3,6 +3,7 @@ package tech.skagedal.javaaoc.year2022;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
@@ -44,13 +45,13 @@ public class Day20 {
 
     private static Mixer loadMixer(AdventContext context, Stream<String> lines) {
         // The array that we will mix
-        final var mixArray = lines.mapToInt(Integer::parseInt).toArray();
+        final var mixArray = lines.mapToLong(Long::parseLong).toArray();
         final var n = mixArray.length;
 
         // Array of positions that we will iterate through
         final var positionArray = IntStream.range(0, n).toArray();
 
-        // Lookback array - for each number in the sortarray, what was it's initial position?
+        // Lookback array - for each number in the mixarray, what was it's initial position?
         final var initialPositionArray = IntStream.range(0, n).toArray();
 
         return new Mixer(context, mixArray, positionArray, initialPositionArray);
@@ -58,12 +59,12 @@ public class Day20 {
 
     static class Mixer {
         final AdventContext context;
-        final int[] mixArray;
+        final long[] mixArray;
         final int[] positionArray;
         final int[] lookbackArray;
         final int n;
 
-        Mixer(AdventContext context, int[] mixArray, int[] positionArray, int[] lookbackArray) {
+        Mixer(AdventContext context, long[] mixArray, int[] positionArray, int[] lookbackArray) {
             this.context = context;
             this.mixArray = mixArray;
             this.positionArray = positionArray;
@@ -94,8 +95,8 @@ public class Day20 {
             }
         }
 
-        private void travel(int src, int dest) {
-            final var delta = Integer.signum(dest - src);
+        private void travel(long src, long dest) {
+            final var delta = Long.signum(dest - src);
             for (var i = src; i != dest; i += delta) {
                 var j = i + delta;
 
@@ -116,9 +117,9 @@ public class Day20 {
                     break;
                 }
             }
-            int i1 = mixArray[clamp(i + 1000, n)];
-            int i2 = mixArray[clamp(i + 2000, n)];
-            int i3 = mixArray[clamp(i + 3000, n)];
+            long i1 = mixArray[clamp(i + 1000, n)];
+            long i2 = mixArray[clamp(i + 2000, n)];
+            long i3 = mixArray[clamp(i + 3000, n)];
             return i1 + i2 + i3;
         }
 
@@ -134,13 +135,19 @@ public class Day20 {
         array[b] = temp;
     }
 
-    private static int clamp(int i, int n) {
-        int clamped = i % n;
+    private static void swap(long[] array, int a, int b) {
+        var temp = array[a];
+        array[a] = array[b];
+        array[b] = temp;
+    }
+
+    private static int clamp(long i, int n) {
+        int clamped = (int)(i % n);
         return (clamped < 0) ? clamped + n : clamped;
     }
 
-    static void printArr(int[] array) {
-        System.out.printf("%s\n", Arrays.stream(array).mapToObj(Integer::toString).collect(Collectors.joining(", ")));
+    static void printArr(long[] array) {
+        System.out.printf("%s\n", Arrays.stream(array).mapToObj(Long::toString).collect(Collectors.joining(", ")));
     }
 
     public static void main(String[] args) {
