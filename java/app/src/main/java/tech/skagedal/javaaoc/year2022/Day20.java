@@ -23,7 +23,6 @@ public class Day20 {
         final var mixer = loadMixer(context, context.lines());
         mixer.applyDecryptionKey(811589153);
         for (var i = 0; i < 10; i++) {
-            System.out.printf("Run %d...\n", i);
             mixer.run();
         }
         return mixer.findGroveCoordinates();
@@ -87,11 +86,7 @@ public class Day20 {
         }
 
         private long findDestination(int src, long valueToMove) {
-            // This works for part 1.
-            return src + valueToMove;
-
-            // This should work as well, and make part 2 effective. But it doesn't work. Why?
-            // return src + (valueToMove % n);
+            return src + (valueToMove % (n - 1));
         }
 
         private void travel(long src, long dest) {
