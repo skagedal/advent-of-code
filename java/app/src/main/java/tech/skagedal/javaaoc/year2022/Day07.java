@@ -6,13 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.function.Function;
-import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
+import tech.skagedal.javaaoc.tools.string.RegexItemParser;
 
 @AdventOfCode
 public class Day07 {
@@ -39,7 +38,7 @@ public class Day07 {
     }
 
     private Node readTree(AdventContext context) {
-        final Iterable<Line> lines = () -> context.lines().map(Day07::parseLine).iterator();
+        final Iterable<Line> lines = () -> context.lines().map(itemParser::parse).iterator();
         final Stack<String> currentPath = new Stack<>();
         final var root = new DirectoryNode("/");
 
@@ -71,28 +70,12 @@ public class Day07 {
     private static final Pattern DIR_PATTERN = Pattern.compile("^dir\s([a-z.]+)$");
     private static final Pattern FILE_PATTERN = Pattern.compile("^([0-9]+)\s([a-z.]+)$");
 
-    record LineFactory(Pattern pattern, Function<MatchResult, Line> lineSupplier) { }
-
-    private static final List<LineFactory> factories = List.of(
-        new LineFactory(CD_PATTERN, match -> new CdCommand(match.group(1))),
-        new LineFactory(LS_PATTERN, match -> new LsCommand()),
-        new LineFactory(DIR_PATTERN, match -> new DirectoryListing(match.group(1))),
-        new LineFactory(FILE_PATTERN, match -> new FileListing(Long.parseLong(match.group(1)), match.group(2)))
+    private static final RegexItemParser<Line> itemParser = new RegexItemParser<>(
+        new RegexItemParser.ItemFactory<>(CD_PATTERN, match -> new CdCommand(match.group(1))),
+        new RegexItemParser.ItemFactory<>(LS_PATTERN, match -> new LsCommand()),
+        new RegexItemParser.ItemFactory<>(DIR_PATTERN, match -> new DirectoryListing(match.group(1))),
+        new RegexItemParser.ItemFactory<>(FILE_PATTERN, match -> new FileListing(Long.parseLong(match.group(1)), match.group(2)))
     );
-
-    public static Line parseLine(String line) {
-        return factories.stream()
-            .flatMap(factory -> {
-                final var matcher = factory.pattern().matcher(line);
-                if (matcher.matches()) {
-                    return Stream.of(factory.lineSupplier.apply(matcher.toMatchResult()));
-                } else {
-                    return Stream.of();
-                }
-            })
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Could not parse line: " + line));
-    }
 
     public interface Node {
         String getName();
