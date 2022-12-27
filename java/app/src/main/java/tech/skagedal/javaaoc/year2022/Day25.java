@@ -1,16 +1,11 @@
 package tech.skagedal.javaaoc.year2022;
 
-import java.util.stream.Stream;
 import tech.skagedal.javaaoc.aoc.AdventContext;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 
 public class Day25 {
     public String part1(AdventContext context) {
-        final var sum = context.lines().mapToLong(Day25::parseSnafu)
-            .peek(l -> System.out.printf("Got value: %d\n", l))
-            .sum();
-
-        System.out.printf("Sum is %d\n", sum);
+        final var sum = context.lines().mapToLong(Day25::parseSnafu).sum();
         return toSnafu(sum);
     }
 
