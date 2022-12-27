@@ -15,36 +15,23 @@ import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 )
 public class Day03 {
     public long part1(AdventContext context) {
-        var visitedPoints = new HashSet<Point>();
-        var point = Point.ZERO;
-
-        visitedPoints.add(point);
-
-        final var vectorStream = getDirections(context);
-        for (var vector : iterate(vectorStream)) {
-            point = point.plus(vector);
-            visitedPoints.add(point);
-        }
-
-        return visitedPoints.size();
+        return findVisitedPoints(getDirections(context), 1);
     }
 
     public long part2(AdventContext context) {
+        return findVisitedPoints(getDirections(context), 2);
+    }
+
+    private int findVisitedPoints(Stream<Vector> directions, int numberOfWorkers) {
         var visitedPoints = new HashSet<Point>();
-        var point = Point.ZERO;
-        var roboPoint = Point.ZERO;
+        var currentPoints = Stream.generate(() -> Point.ZERO).limit(numberOfWorkers).toArray(Point[]::new);
 
-        visitedPoints.add(point);
+        visitedPoints.add(Point.ZERO);
 
-        final var vectorStream = getDirections(context);
-        for (var enumeratedVector : iterate(Streams.enumerated(vectorStream))) {
-            if (enumeratedVector.number() % 2 == 0) {
-                point = point.plus(enumeratedVector.value());
-                visitedPoints.add(point);
-            } else {
-                roboPoint = roboPoint.plus(enumeratedVector.value());
-                visitedPoints.add(roboPoint);
-            }
+        for (var enumeratedVector : iterate(Streams.enumerated(directions))) {
+            final var worker = enumeratedVector.number() % currentPoints.length;
+            currentPoints[worker] = currentPoints[worker].plus(enumeratedVector.value());
+            visitedPoints.add(currentPoints[worker]);
         }
 
         return visitedPoints.size();
