@@ -1,5 +1,6 @@
 package tech.skagedal.javaaoc.year2015;
 
+import java.security.MessageDigest;
 import java.util.function.Predicate;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -33,11 +34,15 @@ public class Day04 {
     }
 
     private static boolean hasFiveZeros(byte[] md5) {
-        return Hex.encodeHexString(md5).startsWith("00000");
+        return md5[0] == 0 && md5[1] == 0 && (md5[2] & 0xF0) == 0;
+
+        // A simpler implementation is this:
+        //      return Hex.encodeHexString(md5).startsWith("00000");
+        // However, not converting to a string is way faster; for part 2 it changed the run tim to 2 s to 1.4 s.
     }
 
     private static boolean hasSixZeros(byte[] md5) {
-        return Hex.encodeHexString(md5).startsWith("000000");
+        return md5[0] == 0 && md5[1] == 0 && md5[2] == 0;
     }
 
     public static void main(String[] args) {
