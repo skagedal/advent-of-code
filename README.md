@@ -1,4 +1,6 @@
-# aoc-2018
+# advent-of-code
 
-Advent of Code 2018.
+These are my solutions to [Advent of Code](https://adventofcode.com/).
+
+You'll find some Swift solutions in the `swift` directory and some Java solutions in the `java` directory.
 
