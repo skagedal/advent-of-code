@@ -6,6 +6,7 @@ import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGe
 import tech.skagedal.javaaoc.aoc.App;
 
 public class Main {
+    // NOTE: This main runner doesn't work at the moment, use the test suite.
     public static void main(String[] args) {
         final var context = createApplicationContext();
         if (context.getBean(App.class) instanceof App app) {
