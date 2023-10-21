@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 class Day05Test {
     @Test
     void naughty_or_nice() {
-        assertTrue(Day05.isNice("ugknbfddgicrmopn"));
-        assertTrue(Day05.isNice("aaa"));
-        assertFalse(Day05.isNice("jchzalrnumimnmhp"));
-        assertFalse(Day05.isNice("haegwjzuvuyypxyu"));
-        assertFalse(Day05.isNice("dvszwmarrgswjxmb"));
+        assertTrue(Day05.isNiceInPart1("ugknbfddgicrmopn"));
+        assertTrue(Day05.isNiceInPart1("aaa"));
+        assertFalse(Day05.isNiceInPart1("jchzalrnumimnmhp"));
+        assertFalse(Day05.isNiceInPart1("haegwjzuvuyypxyu"));
+        assertFalse(Day05.isNiceInPart1("dvszwmarrgswjxmb"));
     }
 }
