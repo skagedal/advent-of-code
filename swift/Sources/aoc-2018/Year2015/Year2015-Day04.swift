@@ -20,9 +20,9 @@ extension Year2015 {
             repeat {
                 counter += 1
                 let message = messagePrefix + "\(counter)".data(using: .ascii)!
-                _ = digestData.withUnsafeMutableBytes { digestBytes in
-                    message.withUnsafeBytes { messageBytes in
-                        CC_MD5(messageBytes, CC_LONG(message.count), digestBytes)
+                _ = digestData.withUnsafeMutableBytes { (digestBytes: UnsafeMutableRawBufferPointer) in
+                    message.withUnsafeBytes { (messageBytes: UnsafeRawBufferPointer) in
+                        CC_MD5(messageBytes.baseAddress, CC_LONG(message.count), digestBytes.bindMemory(to: UInt8.self).baseAddress)
                     }
                 }
             } while !predicate(digestData)
