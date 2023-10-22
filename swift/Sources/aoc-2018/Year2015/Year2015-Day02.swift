@@ -24,7 +24,7 @@ extension Year2015 {
             return feet.toString
         }
         
-        let knownAnswerToFirstPart = "1588178"
-        let knownAnswerToSecondPart = "3783758"
+        let knownAnswerToFirstPart = "1586300"
+        let knownAnswerToSecondPart = "3737498"
     }
 }

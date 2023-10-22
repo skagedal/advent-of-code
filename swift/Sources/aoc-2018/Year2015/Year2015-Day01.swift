@@ -21,7 +21,7 @@ extension Year2015 {
             })! + 1).toString
         }
         
-        let knownAnswerToFirstPart = "138"
-        let knownAnswerToSecondPart = "1771"
+        let knownAnswerToFirstPart = "232"
+        let knownAnswerToSecondPart = "1783"
     }
 }

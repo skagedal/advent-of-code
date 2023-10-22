@@ -31,8 +31,8 @@ extension Year2015 {
         }
         
         let knownAnswerToExampleForFirstPart = "609043"
-        let knownAnswerToFirstPart = "117946"
-        let knownAnswerToSecondPart = "3938038"
+        let knownAnswerToFirstPart = "346386"
+        let knownAnswerToSecondPart = "9958218"
     }
 }
 

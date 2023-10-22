@@ -12,8 +12,8 @@ extension Year2015 {
             return data.lines.count(where: isNiceAccordingToSecondSetOfRules).toString
         }
 
-        let knownAnswerToFirstPart = "258"
-        let knownAnswerToSecondPart = "53"
+        let knownAnswerToFirstPart = "236"
+        let knownAnswerToSecondPart = "51"
     }
 }
 
