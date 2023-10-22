@@ -9,9 +9,9 @@ import Foundation
 struct Day05: AdventDay2018 {
     let day = 5
     let knownAnswerToExampleForFirstPart = "10"
-    let knownAnswerToFirstPart = "11476"
+    let knownAnswerToFirstPart = "9704"
     let knownAnswerToExampleForSecondPart = "4"
-    let knownAnswerToSecondPart = "5446"
+    let knownAnswerToSecondPart = "6942"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return data
@@ -28,6 +28,9 @@ struct Day05: AdventDay2018 {
 }
 
 private extension UInt8 {
+    var isRealPolymer: Bool {
+        return self >= 32; // skipping whitespace characters
+    }
     func reacts(with other: UInt8) -> Bool {
         return self ^ other == caseBit
     }
@@ -44,6 +47,9 @@ private extension Sequence where Element == UInt8 {
     
     func reducingPolymers() -> Data {
         return reduce(into: Data()) { result, polymer in
+            guard (polymer.isRealPolymer) else {
+                return
+            }
             if let previous = result.last, polymer.reacts(with: previous) {
                 result.removeLast()
             } else {
