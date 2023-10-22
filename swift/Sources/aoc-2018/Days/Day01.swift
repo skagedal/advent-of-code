@@ -7,14 +7,14 @@ struct Day01: AdventDay2018 {
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return data
-            .nonEmptyLines
+            .lines
             .map(makeInt)
             .reduce(0, +)
             .toString
     }
     
     func answerToSecondPart(_ data: Data) throws -> String {
-        let changes = Array(data.nonEmptyLines.map(makeInt))
+        let changes = Array(data.lines.map(makeInt))
         var reached: Set<Int> = []
         var value: Int = 0
         while true {

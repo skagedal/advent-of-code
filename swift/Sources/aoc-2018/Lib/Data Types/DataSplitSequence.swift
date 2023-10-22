@@ -1,6 +1,6 @@
 import Foundation
 
-/// Represents a sequence of Data split at a certain value
+/// Represents a sequence of Data split at a certain value. Skips the last item if it is empty.
 struct DataSplitSequence: Sequence {
     typealias Element = Data
     
@@ -22,6 +22,9 @@ struct DataSplitSequence: Sequence {
             repeat {
                 index += 1
             } while index < sequence.data.count && sequence.data[index] != sequence.separator
+            if (startIndex == sequence.data.count) {
+                return nil
+            }
             return sequence.data[startIndex..<index]
         }
     }
@@ -46,11 +49,5 @@ extension Data {
     
     var lines: LazyMapSequence<DataSplitSequence, String> {
         return splitSequence(separator: ASCII.lineFeed).lazy.map { String(data: $0, encoding: .utf8)! }
-    }
-    
-    var nonEmptyLines: any Sequence<String> {
-        return splitSequence(separator: ASCII.lineFeed).lazy
-            .filter { x in !x.isEmpty }
-            .map { String(data: $0, encoding: .utf8)! }
     }
 }

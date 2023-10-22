@@ -18,7 +18,7 @@ struct Day04: AdventDay2018 {
 
 private func puzzleSolution(_ data: Data, statisticsKey: KeyPath<GuardStatistics, Int>) -> Int {
     let decoder = GuardEventDecoder()
-    let sortedEvents = data.nonEmptyLines.map({ decoder.decode($0) }).sorted()
+    let sortedEvents = data.lines.map({ decoder.decode($0) }).sorted()
     
     let statistics = calculateGuardStatistics(sortedEvents)
     let sleepyStats = statistics.max(byValue: statisticsKey)!

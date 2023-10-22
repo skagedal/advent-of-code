@@ -129,6 +129,6 @@ class FabricClaimDecoder {
 private extension Data {
     var fabricClaims: AnySequence<FabricClaim> {
         let decoder = FabricClaimDecoder()
-        return AnySequence(nonEmptyLines.map({ try! decoder.decode($0) }))
+        return AnySequence(lines.map({ try! decoder.decode($0) }))
     }
 }
