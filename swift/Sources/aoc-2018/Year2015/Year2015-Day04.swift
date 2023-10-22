@@ -1,31 +1,23 @@
 import Foundation
-import CommonCrypto
+import CryptoKit
 
 extension Year2015 {
     struct Day04: AdventDay2015 {
         let day = 4
 
         func answerToFirstPart(_ data: Data) throws -> String {
-            return findMD5(messagePrefix: data, matching: hasFiveZeroNibblePrefix).toString
+            return findMD5(messagePrefix: trimmed(data), matching: hasFiveZeroNibblePrefix).toString
         }
     
         func answerToSecondPart(_ data: Data) throws -> String {
-            return findMD5(messagePrefix: data, matching: hasSixZeroNibblePrefix).toString
+            return findMD5(messagePrefix: trimmed(data), matching: hasSixZeroNibblePrefix).toString
         }
 
-        private func findMD5(messagePrefix: Data, matching predicate: ((Data) -> Bool)) -> Int {
-            var digestData = Data(count: Int(CC_MD5_DIGEST_LENGTH))
-            
-            var counter = 0
-            repeat {
-                counter += 1
-                let message = messagePrefix + "\(counter)".data(using: .ascii)!
-                _ = digestData.withUnsafeMutableBytes { (digestBytes: UnsafeMutableRawBufferPointer) in
-                    message.withUnsafeBytes { (messageBytes: UnsafeRawBufferPointer) in
-                        CC_MD5(messageBytes.baseAddress, CC_LONG(message.count), digestBytes.bindMemory(to: UInt8.self).baseAddress)
-                    }
-                }
-            } while !predicate(digestData)
+        private func findMD5(messagePrefix: Data, matching predicate: ((Insecure.MD5Digest) -> Bool)) -> Int {
+            var counter = 1
+            while (!predicate(makeDigest(messagePrefix, counter: counter))) {
+                counter += 1;
+            }
             
             return counter
         }
@@ -37,15 +29,27 @@ extension Year2015 {
 }
 
 @inlinable
-func hasFiveZeroNibblePrefix(_ data: Data) -> Bool {
-    return data.withUnsafeBytes { (ptr: UnsafePointer<UInt64>) -> Bool in
-        return ptr.pointee.bigEndian & 0xFFFF_F000_0000_0000 == 0
+func makeDigest(_ prefix: Data, counter: Int) -> Insecure.MD5Digest {
+    let message = prefix + "\(counter)".data(using: .ascii)!
+    return Insecure.MD5.hash(data: message)
+}
+
+@inlinable
+func hasFiveZeroNibblePrefix(_ data: Insecure.MD5Digest) -> Bool {
+    return data.withUnsafeBytes { unsafeRawBufferPointer in
+        let int64 = UInt64(bigEndian: unsafeRawBufferPointer.load(as: UInt64.self))
+        return int64.leadingZeroBitCount >= 20;
     }
 }
 
 @inlinable
-func hasSixZeroNibblePrefix(_ data: Data) -> Bool {
-    return data.withUnsafeBytes { (ptr: UnsafePointer<UInt64>) -> Bool in
-        return ptr.pointee.bigEndian & 0xFFFF_FF00_0000_0000 == 0
+func hasSixZeroNibblePrefix(_ data: Insecure.MD5Digest) -> Bool {
+    return data.withUnsafeBytes { unsafeRawBufferPointer in
+        let int64 = UInt64(bigEndian: unsafeRawBufferPointer.load(as: UInt64.self))
+        return int64.leadingZeroBitCount >= 24;
     }
+}
+
+func trimmed(_ data: Data) -> Data {
+    return String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines).data(using: .utf8)!
 }
