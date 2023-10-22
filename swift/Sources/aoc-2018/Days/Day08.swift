@@ -3,20 +3,20 @@ import Foundation
 struct Day08: AdventDay2018 {
     let day = 8
     let knownAnswerToExampleForFirstPart = "138"
-    let knownAnswerToFirstPart = "3290"
+    let knownAnswerToFirstPart = "44338"
     let knownAnswerToExampleForSecondPart = "66"
-    let knownAnswerToSecondPart = "45602"
+    let knownAnswerToSecondPart = "37560"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return LicenseTree
-            .parse(data)
+            .parse(data.firstLineAsData)
             .metadataSum()
             .toString
     }
     
     func answerToSecondPart(_ data: Data) throws -> String {
         return LicenseTree
-            .parse(data)
+            .parse(data.firstLineAsData)
             .value()
             .toString
     }

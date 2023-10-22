@@ -50,4 +50,8 @@ extension Data {
     var lines: LazyMapSequence<DataSplitSequence, String> {
         return splitSequence(separator: ASCII.lineFeed).lazy.map { String(data: $0, encoding: .utf8)! }
     }
+    
+    var firstLineAsData: Data {
+        return lines.first(where: { _ in true })!.data(using: .utf8)!
+    }
 }
