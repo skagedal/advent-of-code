@@ -5,26 +5,27 @@ extension Year2015 {
         let day = 7
 
         func answerToFirstPart(_ data: Data) throws -> String {
-            let statements = data.lines.map(parseStatement)
+            let statements = data.nonEmptyLines.map(parseStatement)
             let evaluator = WireEvaluator(Array(statements))
             return String(evaluator.evaluate("a"))
         }
     
         func answerToExampleForFirstPart(_ data: Data) throws -> String {
-            let statements = data.lines.map(parseStatement)
+            let statements = data.nonEmptyLines.map(parseStatement)
             let evaluator = WireEvaluator(Array(statements))
             return String(evaluator.evaluate("h"))
         }
         
         func answerToSecondPart(_ data: Data) throws -> String {
-            let statements = data.lines.map(parseStatement).filter({ $0.0 != "b" })
+            // TODO
+            let statements = data.nonEmptyLines.map(parseStatement).filter({ $0.0 != "b" })
             let newStatement = ("b", Instruction.signal(.wire("a")))
             let evaluator = WireEvaluator(Array(statements) + [newStatement])
             return String(evaluator.evaluate("a"))
         }
         
         let knownAnswerToExampleForFirstPart = "65412"
-        let knownAnswerToFirstPart = "3176"
+        let knownAnswerToFirstPart = "956"
     }
 }
 

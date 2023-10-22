@@ -47,4 +47,10 @@ extension Data {
     var lines: LazyMapSequence<DataSplitSequence, String> {
         return splitSequence(separator: ASCII.lineFeed).lazy.map { String(data: $0, encoding: .utf8)! }
     }
+    
+    var nonEmptyLines: any Sequence<String> {
+        return splitSequence(separator: ASCII.lineFeed).lazy
+            .filter { x in !x.isEmpty }
+            .map { String(data: $0, encoding: .utf8)! }
+    }
 }

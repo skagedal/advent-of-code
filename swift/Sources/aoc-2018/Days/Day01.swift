@@ -2,19 +2,19 @@ import Foundation
 
 struct Day01: AdventDay2018 {
     let day = 1
-    let knownAnswerToFirstPart = "416"
-    let knownAnswerToSecondPart = "56752"
+    let knownAnswerToFirstPart = "553"
+    let knownAnswerToSecondPart = "78724"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return data
-            .lines
+            .nonEmptyLines
             .map(makeInt)
             .reduce(0, +)
             .toString
     }
     
     func answerToSecondPart(_ data: Data) throws -> String {
-        let changes = Array(data.lines.map(makeInt))
+        let changes = Array(data.nonEmptyLines.map(makeInt))
         var reached: Set<Int> = []
         var value: Int = 0
         while true {

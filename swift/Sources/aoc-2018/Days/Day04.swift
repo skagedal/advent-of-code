@@ -3,9 +3,9 @@ import Foundation
 struct Day04: AdventDay2018 {
     let day = 4
     let knownAnswerToExampleForFirstPart = "240"
-    let knownAnswerToFirstPart = "14346"
+    let knownAnswerToFirstPart = "65489"
     let knownAnswerToExampleForSecondPart = "4455"
-    let knownAnswerToSecondPart = "5705"
+    let knownAnswerToSecondPart = "3852"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return puzzleSolution(data, statisticsKey: \.totalSleepMinutes).toString
@@ -18,7 +18,7 @@ struct Day04: AdventDay2018 {
 
 private func puzzleSolution(_ data: Data, statisticsKey: KeyPath<GuardStatistics, Int>) -> Int {
     let decoder = GuardEventDecoder()
-    let sortedEvents = data.lines.map({ decoder.decode($0) }).sorted()
+    let sortedEvents = data.nonEmptyLines.map({ decoder.decode($0) }).sorted()
     
     let statistics = calculateGuardStatistics(sortedEvents)
     let sleepyStats = statistics.max(byValue: statisticsKey)!

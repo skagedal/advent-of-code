@@ -15,6 +15,9 @@ extension Year2015 {
         private func answer(_ data: Data, lights inputLights: Lights) -> String {
             var lights = inputLights
             for line in data.splitSequence(separator: ASCII.lineFeed) {
+                if line.isEmpty {
+                    continue
+                }
                 let rect = Rect(integers: line.integers)
                 switch line.toString {
                 case turnOnRegex:
@@ -30,8 +33,8 @@ extension Year2015 {
             return lights.countLit.toString
         }
         
-        let knownAnswerToFirstPart = "377891"
-        let knownAnswerToSecondPart = "14110788"
+        let knownAnswerToFirstPart = "400410"
+        let knownAnswerToSecondPart = "15343601"
     }
 }
 

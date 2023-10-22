@@ -2,8 +2,8 @@ import Foundation
 
 struct Day03: AdventDay2018 {
     let day = 3
-    let knownAnswerToFirstPart = "111630"
-    let knownAnswerToSecondPart = "724"
+    let knownAnswerToFirstPart = "110389"
+    let knownAnswerToSecondPart = "552"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return data
@@ -129,6 +129,6 @@ class FabricClaimDecoder {
 private extension Data {
     var fabricClaims: AnySequence<FabricClaim> {
         let decoder = FabricClaimDecoder()
-        return AnySequence(lines.map({ try! decoder.decode($0) }))
+        return AnySequence(nonEmptyLines.map({ try! decoder.decode($0) }))
     }
 }
