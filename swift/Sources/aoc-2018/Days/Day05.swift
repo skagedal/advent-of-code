@@ -15,6 +15,7 @@ struct Day05: AdventDay2018 {
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return data
+            .firstLineAsData
             .reducingPolymers()
             .count
             .toString
@@ -22,15 +23,13 @@ struct Day05: AdventDay2018 {
     
     func answerToSecondPart(_ data: Data) throws -> String {
         return data
+            .firstLineAsData
             .shortestPolymer()
             .toString
     }
 }
 
 private extension UInt8 {
-    var isRealPolymer: Bool {
-        return self >= 32; // skipping whitespace characters
-    }
     func reacts(with other: UInt8) -> Bool {
         return self ^ other == caseBit
     }
@@ -47,9 +46,6 @@ private extension Sequence where Element == UInt8 {
     
     func reducingPolymers() -> Data {
         return reduce(into: Data()) { result, polymer in
-            guard (polymer.isRealPolymer) else {
-                return
-            }
             if let previous = result.last, polymer.reacts(with: previous) {
                 result.removeLast()
             } else {

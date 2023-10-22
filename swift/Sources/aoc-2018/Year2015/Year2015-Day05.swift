@@ -5,11 +5,11 @@ extension Year2015 {
         let day = 5
 
         func answerToFirstPart(_ data: Data) throws -> String {
-            return data.lines.filter { s in !s.isEmpty }.count(where: isNiceAccordingToFirstSetOfRules).toString
+            return data.lines.count(where: isNiceAccordingToFirstSetOfRules).toString
         }
     
         func answerToSecondPart(_ data: Data) throws -> String {
-            return data.lines.filter { s in !s.isEmpty }.count(where: isNiceAccordingToSecondSetOfRules).toString
+            return data.lines.count(where: isNiceAccordingToSecondSetOfRules).toString
         }
 
         let knownAnswerToFirstPart = "236"

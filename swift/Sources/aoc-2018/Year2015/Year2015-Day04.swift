@@ -6,11 +6,11 @@ extension Year2015 {
         let day = 4
 
         func answerToFirstPart(_ data: Data) throws -> String {
-            return findMD5(messagePrefix: trimmed(data), matching: hasFiveZeroNibblePrefix).toString
+            return findMD5(messagePrefix: data.firstLineAsData, matching: hasFiveZeroNibblePrefix).toString
         }
     
         func answerToSecondPart(_ data: Data) throws -> String {
-            return findMD5(messagePrefix: trimmed(data), matching: hasSixZeroNibblePrefix).toString
+            return findMD5(messagePrefix: data.firstLineAsData, matching: hasSixZeroNibblePrefix).toString
         }
 
         private func findMD5(messagePrefix: Data, matching predicate: ((Insecure.MD5Digest) -> Bool)) -> Int {
@@ -48,8 +48,4 @@ func hasSixZeroNibblePrefix(_ data: Insecure.MD5Digest) -> Bool {
         let int64 = UInt64(bigEndian: unsafeRawBufferPointer.load(as: UInt64.self))
         return int64.leadingZeroBitCount >= 24;
     }
-}
-
-func trimmed(_ data: Data) -> Data {
-    return String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines).data(using: .utf8)!
 }

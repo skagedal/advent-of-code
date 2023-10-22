@@ -15,9 +15,6 @@ extension Year2015 {
         private func answer(_ data: Data, lights inputLights: Lights) -> String {
             var lights = inputLights
             for line in data.splitSequence(separator: ASCII.lineFeed) {
-                if line.isEmpty {
-                    continue
-                }
                 let rect = Rect(integers: line.integers)
                 switch line.toString {
                 case turnOnRegex:
