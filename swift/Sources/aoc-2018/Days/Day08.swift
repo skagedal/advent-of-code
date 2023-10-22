@@ -3,9 +3,9 @@ import Foundation
 struct Day08: AdventDay2018 {
     let day = 8
     let knownAnswerToExampleForFirstPart = "138"
-    let knownAnswerToFirstPart = "41454"
+    let knownAnswerToFirstPart = "3290"
     let knownAnswerToExampleForSecondPart = "66"
-    let knownAnswerToSecondPart = "25752"
+    let knownAnswerToSecondPart = "45602"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         return LicenseTree

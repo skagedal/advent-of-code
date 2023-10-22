@@ -22,9 +22,9 @@ struct Day07: AdventDay2018 {
     }
     
     let knownAnswerToExampleForFirstPart = "CABDFE"
-    let knownAnswerToFirstPart = "CFGHAEMNBPRDISVWQUZJYTKLOX"
+    let knownAnswerToFirstPart = "LFMNJRTQVZCHIABKPXYEUGWDSO"
     let knownAnswerToExampleForSecondPart = "15"
-    let knownAnswerToSecondPart = "828"
+    let knownAnswerToSecondPart = "1180"
 }
 
 private class ElfScheduler {

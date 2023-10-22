@@ -5,9 +5,9 @@ import Foundation
 struct Day06: AdventDay2018 {
     let day = 6
     let knownAnswerToExampleForFirstPart = "17"
-    let knownAnswerToFirstPart = "5365"
+    let knownAnswerToFirstPart = "3290"
     // Example two has different values.
-    let knownAnswerToSecondPart = "42513"
+    let knownAnswerToSecondPart = "45602"
     
     func answerToFirstPart(_ data: Data) throws -> String {
         let coordinates = Array(data.lines.enumerated().map({ id, line in InputCoordinate(line, identifier: id) }))
