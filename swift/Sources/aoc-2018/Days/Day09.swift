@@ -51,8 +51,8 @@ struct Day09: AdventDay2018 {
     }
     
     let knownAnswerToExampleForFirstPart = "8317"
-    let knownAnswerToFirstPart = "437654"
-    let knownAnswerToSecondPart = "3689913905"
+    let knownAnswerToFirstPart = "429287"
+    let knownAnswerToSecondPart = "3624387659"
 }
 
 class List<Element> {
