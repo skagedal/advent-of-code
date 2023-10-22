@@ -49,12 +49,14 @@ func timed<T>(_ action: (() throws -> T)) rethrows -> (TimeInterval, T) {
 
 extension AdventDay {
     func data() throws -> Data {
-        let url = URL(fileURLWithPath: "Data/\(year)/day\(day)_input.txt")
+        let url = FileManager.default.homeDirectoryForCurrentUser
+            .appending(components: ".aoc", "data", "\(year)", String(format: "day%02d_input.txt", day))
         return try Data(contentsOf: url)
     }
     
     func exampleData() throws -> Data {
-        let url = URL(fileURLWithPath: "Data/\(year)/day\(day)_example.txt")
+        let url = FileManager.default.homeDirectoryForCurrentUser
+            .appending(components: ".aoc", "data", "\(year)", String(format: "day%02d_example.txt", day))
         return try Data(contentsOf: url)
     }
     
@@ -122,7 +124,7 @@ extension AdventDay {
                 moreInfo = nil
             } else {
                 prefix = "🛑 "
-                moreInfo = "       \(knownAnswer)"
+                moreInfo = "       Expected \(knownAnswer), got \(answer)"
             }
         } else {
             prefix = "   "
@@ -147,7 +149,7 @@ guard let argument = arguments.first else {
             try day.runBoth()
             print()
         } catch CocoaError.fileReadNoSuchFile {
-            // Ignore
+            print("No such file")
         } catch AdventError.unimplemented {
             // Ignore
         }
