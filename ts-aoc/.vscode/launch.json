@@ -12,7 +12,7 @@
           ],
           "program": "${workspaceFolder}/bin/dev.js",
           "args": [
-            "y2016",
+            "run"
           ],
           "internalConsoleOptions": "openOnSessionStart",
       }
