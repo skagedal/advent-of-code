@@ -6,11 +6,19 @@ type Direction = 'N' | 'E' | 'S' | 'W';
 type Position = { x: number, y: number };
 type Turtle = { position: Position, direction: Direction }
 type Instruction = { turn: Turn, distance: number}
+
 const initialTurtle: Turtle = {
     position: {x: 0, y: 0},
     direction: 'N'
 };
-const handleInstruction = ({turn, distance}: Instruction) => ({position, direction}: Turtle) => {
+
+function parseInstruction(instruction: string): Instruction {
+    const turn = instruction[0] as Turn;
+    const distance = Number(instruction.slice(1));
+    return {turn, distance};
+}
+
+function handleInstruction({position, direction}: Turtle, {turn, distance}: Instruction): Turtle {
     const directions = ['N', 'E', 'S', 'W'];
     const index = (directions.indexOf(direction) + (turn === 'L' ? 3 : 1)) % 4;
     const newDirection = directions[index] as Direction;
@@ -23,28 +31,47 @@ const handleInstruction = ({turn, distance}: Instruction) => ({position, directi
     };
 }
 
+function distance({position}: Turtle): number {
+    return Math.abs(position.x) + Math.abs(position.y);
+}
 
 export default class Y2016D01 extends AocDay {
     year = 2016;
     day = 1;
     static description = 'No Time for a Taxicab'
 
-    async run(): Promise<void> {
+    async part1(): Promise<number> {
         const data = await this.readFile();
-        // const data = 'R2, L3';
 
-        let turtle: Turtle = {
-            position: {x: 0, y: 0},
-            direction: 'N'
-        };
-        data.split(', ').forEach((instruction) => {
-            const turn = instruction[0] as Turn;
-            const distance = Number(instruction.slice(1));
-            turtle = handleInstruction({turn, distance})(turtle);
-        });
+        const turtle = data.split(', ')
+            .map(parseInstruction)
+            .reduce(handleInstruction, initialTurtle);
 
-        console.log(Math.abs(turtle.position.x) + Math.abs(turtle.position.y));
-
+        return distance(turtle);
     }
 
+    async part2(): Promise<number> {
+        const data = await this.readFile();
+
+        const instructions = data.split(', ')
+            .map(parseInstruction);
+
+        const visited: Position[] = [];
+        let turtle = initialTurtle;
+        visited.push(turtle.position);
+
+        // TODO: Oh. We need to actually keep track of all visited squares. 
+
+        for (const instruction of instructions) {
+            turtle = handleInstruction(turtle, instruction);
+            console.log(`After instruction ${JSON.stringify(instruction)}: ${JSON.stringify(turtle)}`)
+            if (visited.some(pos => pos.x === turtle.position.x && pos.y === turtle.position.y)) {
+                console.log(`Visited ${JSON.stringify(turtle.position)} twice`);
+                return distance(turtle);
+            }
+            visited.push(turtle.position);
+        }
+
+        return 0;
+    }
 }

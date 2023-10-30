@@ -12,4 +12,7 @@ export abstract class AocDay {
 
         return await readFile(path, { encoding: 'utf-8'})
     }
+
+    abstract part1(): Promise<string | number>;
+    abstract part2(): Promise<string | number>;
 }
