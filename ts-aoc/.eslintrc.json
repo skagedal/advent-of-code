@@ -1,3 +1,12 @@
 {
-  "extends": ["oclif", "oclif-typescript", "prettier"]
+  "extends": ["oclif", "oclif-typescript", "prettier"],
+  "rules": {
+    "padding-line-between-statements": "off",
+    "perfectionist/sort-classes": "off",
+    "perfectionist/sort-union-types": "off",
+    "perfectionist/sort-object-types": "off",
+    "perfectionist/sort-objects": "off",
+    "unicorn/no-array-reduce": "off",
+    "unicorn/no-array-callback-reference": "off"
+  }
 }

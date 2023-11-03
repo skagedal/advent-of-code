@@ -1,6 +1,7 @@
 import { Command } from "@oclif/core";
+
+import { AocDay } from "../../base/aoc-day.js";
 import Y2016D01 from "../../days/2016/d1.js";
-import { AocDay } from "../../base/AocDay.js";
 
 export default class RunCommand extends Command {
     static description = 'Advent of Code 2016'

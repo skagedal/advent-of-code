@@ -1,5 +1,4 @@
-import { Command } from "@oclif/core";
-import { AocDay } from "../../base/AocDay.js";
+import { AocDay } from "../../base/aoc-day.js";
 
 type Turn = 'L' | 'R';
 type Direction = 'N' | 'E' | 'S' | 'W';

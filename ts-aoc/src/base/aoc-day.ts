@@ -1,5 +1,5 @@
-import { readFile } from "fs/promises";
-import { homedir } from "os";
+import { readFile } from "node:fs/promises";
+import { homedir } from "node:os";
 
 export abstract class AocDay {
     abstract year: number;
@@ -10,7 +10,7 @@ export abstract class AocDay {
         const day = String(this.day).padStart(2, '0')
         const path = `${homedir()}/.aoc/data/year${this.year}/day${day}_input.txt`;
 
-        return await readFile(path, { encoding: 'utf-8'})
+        return readFile(path, { encoding: 'utf8'})
     }
 
     abstract part1(): Promise<string | number>;
