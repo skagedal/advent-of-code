@@ -1,6 +1,7 @@
 plugins {
     id("application")
-    id("com.github.ben-manes.versions") version "0.49.0"
+    alias(libs.plugins.com.github.ben.manes.versions)
+    alias(libs.plugins.nl.littlerobots.version.catalog.update)
 }
 
 repositories {
@@ -8,12 +9,12 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.guava:guava:32.1.3-jre")
-    implementation("org.jgrapht:jgrapht-core:1.5.2")
-    implementation("commons-codec:commons-codec:1.16.0")
-    implementation("org.springframework:spring-context:6.0.13")
+    implementation(libs.com.google.guava)
+    implementation(libs.org.jgrapht.jgrapht.core)
+    implementation(libs.commons.codec)
+    implementation(libs.org.springframework.spring.context)
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation(libs.org.junit.jupiter.junit.jupiter)
 }
 
 application {
