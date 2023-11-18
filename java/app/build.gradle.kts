@@ -26,16 +26,13 @@ java {
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.compilerArgs += "--enable-preview"
+tasks.compileJava {
+    options.compilerArgs.add("--enable-preview")
 }
-tasks.withType(Test) {
-    jvmArgs += "--enable-preview"
+tasks.withType<JavaExec> {
+    jvmArgs("--enable-preview")
 }
-tasks.withType(JavaExec) {
-    jvmArgs += "--enable-preview"
-}
-
-tasks.named("test") {
+tasks.test {
+    jvmArgs("--enable-preview")
     useJUnitPlatform()
 }
