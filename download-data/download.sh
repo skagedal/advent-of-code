@@ -2,7 +2,7 @@
 
 data_dir="${HOME}/.aoc/data"
 
-for year in $(seq 2015 2022); do
+for year in $(seq 2015 2023); do
     echo "== $year =="
     year_dir="$data_dir/year$year"
     mkdir -p "$year_dir"
