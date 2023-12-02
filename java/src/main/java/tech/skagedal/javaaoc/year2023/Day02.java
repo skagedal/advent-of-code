@@ -7,6 +7,7 @@ import tech.skagedal.javaaoc.tools.regex.Patterns;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.ToLongFunction;
 import java.util.regex.Pattern;
 
 @AdventOfCode(
@@ -16,9 +17,15 @@ public class Day02 {
     public long part1(AdventContext context) {
         return context.lines()
             .map(Day02::parseGame)
-            .peek(System.out::println)
             .filter(Game::isPossible)
             .mapToLong(Game::id)
+            .sum();
+    }
+
+    public long part2(AdventContext context) {
+        return context.lines()
+            .map(Day02::parseGame)
+            .mapToLong(Game::power)
             .sum();
     }
 
@@ -55,7 +62,11 @@ public class Day02 {
         long red,
         long green,
         long blue
-    ) { }
+    ) {
+        long power() {
+            return red * green * blue;
+        }
+    }
 
     record Game(
         long id,
@@ -63,8 +74,23 @@ public class Day02 {
     ) {
         boolean isPossible() {
             return reveals.stream().allMatch(reveal ->
-                reveal.red <= 12 && reveal.green <= 13 && reveal.blue <= 14
-                );
+                reveal.red <= 12 && reveal.green <= 13 && reveal.blue <= 14);
+        }
+
+        long power() {
+            return maxReveal().power();
+        }
+
+        Reveal maxReveal() {
+            return new Reveal(
+                getMaxForComponent(Reveal::red),
+                getMaxForComponent(Reveal::green),
+                getMaxForComponent(Reveal::blue)
+            );
+        }
+
+        private long getMaxForComponent(ToLongFunction<Reveal> componentPicker) {
+            return reveals.stream().mapToLong(componentPicker).max().orElse(0);
         }
     }
 
