@@ -39,9 +39,6 @@ public class Day01 {
 
     private int findFirst(String string) {
         for (int i = 0; i < string.length(); i++) {
-            if (Character.isDigit(string.codePointAt(i))) {
-                return Character.getNumericValue(string.codePointAt(i));
-            }
             var substr = string.substring(i);
             for (var num : NUMBERS) {
                 if (substr.startsWith(num.representation)) {
@@ -54,9 +51,6 @@ public class Day01 {
 
     private int findLast(String string) {
         for (int i = string.length(); i > 0; i--) {
-            if (Character.isDigit(string.codePointAt(i - 1))) {
-                return Character.getNumericValue(string.codePointAt(i - 1));
-            }
             var substr = string.substring(0, i);
             for (var num : NUMBERS) {
                 if (substr.endsWith(num.representation)) {
@@ -81,7 +75,17 @@ public class Day01 {
         new Number("six", 6),
         new Number("seven", 7),
         new Number("eight", 8),
-        new Number("nine", 9)
+        new Number("nine", 9),
+        new Number("0", 0),
+        new Number("1", 1),
+        new Number("2", 2),
+        new Number("3", 3),
+        new Number("4", 4),
+        new Number("5", 5),
+        new Number("6", 6),
+        new Number("7", 7),
+        new Number("8", 8),
+        new Number("9", 9)
     );
     public static void main(String[] args) {
         AdventOfCodeRunner.run(new Day01());
