@@ -10,7 +10,7 @@ public class Patterns {
         return pattern.matcher(line).results().findFirst().get();
     }
 
-    public static Optional<MatchResult> find(Pattern pattern, String text) {
+    public static Optional<MatchResult> find(Pattern pattern, CharSequence text) {
         var matcher = pattern.matcher(text);
         if (matcher.find()) {
             return Optional.of(matcher.toMatchResult());
