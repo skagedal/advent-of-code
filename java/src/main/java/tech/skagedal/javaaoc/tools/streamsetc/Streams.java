@@ -43,7 +43,7 @@ public class Streams {
     }
 
     public static <T> Iterable<T> iterate(Stream<T> stream) {
-        return () -> stream.iterator();
+        return stream::iterator;
     }
 
     public static <T1, T2> Stream<Tuple2<T1, T2>> zip(Stream<T1> s1, Stream<T2> s2) {

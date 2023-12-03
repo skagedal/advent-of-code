@@ -40,7 +40,7 @@ public class Grid<T> {
      * Takes a stream of strings where each string represents a row and each character a column of that row.
      */
     public static <T> Grid<T> fromLines(Stream<String> lines, IntFunction<T> mapper) {
-        return new Grid<T>(lines.map(line -> line.chars().mapToObj(mapper).toList()).toList());
+        return new Grid<>(lines.map(line -> line.chars().mapToObj(mapper).toList()).toList());
     }
 
     public static <T> Grid<T> fromBounds(int startX, int endX, int startY, int endY, Function<Point, T> mapper) {
@@ -65,10 +65,10 @@ public class Grid<T> {
     }
 
     public Stream<Point> allPoints() {
-        return allPointsInLines().flatMap(Functions.identity());
+        return allLines().flatMap(Functions.identity());
     }
 
-    private Stream<Stream<Point>> allPointsInLines() {
+    public Stream<Stream<Point>> allLines() {
         return pointsFrom(new Point(startX, startY), COLUMN_FORWARD)
             .map(point -> pointsFrom(point, ROW_FORWARD));
     }
@@ -102,7 +102,7 @@ public class Grid<T> {
     }
 
     public void printGrid(Function<Point, String> formatter) {
-        allPointsInLines().forEach(line -> {
+        allLines().forEach(line -> {
             line.forEach(point -> System.out.printf(formatter.apply(point)));
             System.out.println();
         });
