@@ -6,6 +6,8 @@ import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.tools.math.Ints;
 import tech.skagedal.javaaoc.tools.regex.Patterns;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -18,8 +20,24 @@ public class Day04 {
     public long part1(AdventContext context) {
         return context.lines()
             .map(Card::parse)
-            .mapToLong(Card::winningCount)
+            .mapToLong(Card::winningPoints)
             .sum();
+    }
+
+    public long part2(AdventContext context) {
+        var cards = context.lines().map(Card::parse).toList();
+        var count = new int[cards.size()];
+        for (int i = 0; i < cards.size(); i++) {
+            count[i] = 1;
+        }
+        for (int i = 0; i < cards.size(); i++) {
+            var card = cards.get(i);
+            var wins = card.winningCount();
+            for (int k = 0; k < wins && i + k + 1 < cards.size(); k++) {
+                count[i + k + 1] += count[i];
+            }
+        }
+        return Arrays.stream(count).sum();
     }
 
     record Card(
@@ -28,6 +46,7 @@ public class Day04 {
         List<Integer> numbers
     ) {
         private static Pattern PATTERN = Pattern.compile("^Card\\s+(\\d+):\\s*([\\d\\s]*)\\|([\\d\\s]*$)");
+
         public static Card parse(String line) {
             var result = Patterns.match(PATTERN, line);
             return new Card(
@@ -37,9 +56,13 @@ public class Day04 {
             );
         }
 
-        public int winningCount() {
-            var count = numbers.stream().filter(winningNumbers::contains).count();
+        public int winningPoints() {
+            var count = winningCount();
             return count > 0 ? 1 << (count - 1) : 0;
+        }
+
+        private long winningCount() {
+            return numbers.stream().filter(winningNumbers::contains).count();
         }
     }
 
