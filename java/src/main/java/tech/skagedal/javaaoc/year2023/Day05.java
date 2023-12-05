@@ -36,7 +36,9 @@ public class Day05 {
     }
 
     private long findLowestLocation(Stream<Long> stream, List<Map> maps) {
-        return stream.map(seed -> findLocation(seed, maps))
+        return stream
+            .parallel()
+            .map(seed -> findLocation(seed, maps))
             .mapToLong(Long::longValue)
             .min()
             .orElseThrow();
