@@ -19,7 +19,7 @@ public class Day05 {
         var chunks = Streams.splitting(context.lines(), String::isBlank).toList();
         var seeds = Longs.inString(chunks.getFirst().getLast()).toList();
         var maps = chunks.stream().skip(1).map(Map::parse).toList();
-        return findLowestLocation(seeds.stream(), maps);
+        return findLowestLocation(seeds.stream().mapToLong(Long::longValue), maps);
     }
 
     public long part2(AdventContext context) {
@@ -30,21 +30,20 @@ public class Day05 {
         return findLowestLocation(seedsInRanges(seeds.stream()), maps);
     }
 
-    private Stream<Long> seedsInRanges(Stream<Long> stream) {
+    private LongStream seedsInRanges(Stream<Long> stream) {
         return Streams.splittingFixedSize(stream, 2)
-            .flatMap(list -> LongStream.range(list.getFirst(), list.getFirst() + list.getLast()).boxed());
+            .flatMapToLong(list -> LongStream.range(list.getFirst(), list.getFirst() + list.getLast()));
     }
 
-    private long findLowestLocation(Stream<Long> stream, List<Map> maps) {
+    private long findLowestLocation(LongStream stream, List<Map> maps) {
         return stream
             .parallel()
             .map(seed -> findLocation(seed, maps))
-            .mapToLong(Long::longValue)
             .min()
             .orElseThrow();
     }
 
-    private Long findLocation(Long seed, List<Map> maps) {
+    private long findLocation(long seed, List<Map> maps) {
         var output = seed;
         for (var map : maps) {
             output = map.map(output);
