@@ -6,6 +6,7 @@ import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.tools.math.Longs;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.LongStream;
@@ -51,7 +52,7 @@ public class Day05 {
         return output;
     }
 
-    private record Map(
+    public record Map(
         List<MapRange> ranges
     ) {
         static Map parse(List<String> strings) {
@@ -73,9 +74,13 @@ public class Day05 {
             }
             return value;
         }
+
+        public Map then(Map map) {
+            return new Map(Stream.concat(ranges().stream(), map.ranges().stream()).toList());
+        }
     }
 
-    private record MapRange(
+    public record MapRange(
        long destinationStart,
        long sourceStart,
        long rangeLength,
@@ -83,7 +88,11 @@ public class Day05 {
     ) {
         public static MapRange parse(String s) {
             var longs = Longs.inString(s).mapToLong(Long::longValue).toArray();
-            return new MapRange(longs[0], longs[1], longs[2], longs[0] - longs[1]);
+            return create(longs[1], longs[0], longs[2]);
+        }
+
+        public static MapRange create(long sourceStart, long destinationStart, long rangeLength) {
+            return new MapRange(destinationStart, sourceStart, rangeLength, destinationStart - sourceStart);
         }
     }
 
