@@ -5,7 +5,6 @@ import tech.skagedal.javaaoc.aoc.AdventOfCode;
 import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.tools.streamsetc.Streams;
 
-import javax.crypto.spec.PSource;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -17,15 +16,15 @@ public class Day07 {
     public long part1(AdventContext context) {
         return Streams.enumerated(context.lines()
             .map(BidHand::parse)
-            .sorted(BidHand.comparator()))
+            .sorted(BidHand.comparator(false, "23456789TJQKA")))
             .mapToLong(enumeratedHand -> (enumeratedHand.number() + 1) * enumeratedHand.value().bid())
             .sum();
     }
 
     public long part2(AdventContext context) {
         return Streams.enumerated(context.lines()
-                .map(BidHand2::parse)
-                .sorted())
+                .map(BidHand::parse)
+                .sorted(BidHand.comparator(true, "J23456789TQKA")))
             .mapToLong(enumeratedHand -> (enumeratedHand.number() + 1) * enumeratedHand.value().bid())
             .sum();
     }
@@ -52,79 +51,17 @@ public class Day07 {
         static Pattern TWO_PAIR = Pattern.compile("(.)\\1.*(.)\\2");
         static Pattern ONE_PAIR = Pattern.compile("(.)\\1");
 
-        public static Comparator<BidHand> comparator() {
+        public static Comparator<BidHand> comparator(boolean useJokers, String rankOrdering) {
             return Comparator
-                .comparingLong(BidHand::typeValue)
-                .thenComparing(BidHand::rankValue);
+                .comparingLong((BidHand bidHand) -> bidHand.typeValue(useJokers))
+                .thenComparing(bidHand -> bidHand.rankValue(rankOrdering));
         }
 
-        HandType classify() {
+        HandType classify(boolean useJokers) {
             var sortedHand = hand.codePoints().sorted().collect(StringBuilder::new,
                 StringBuilder::appendCodePoint,
                 StringBuilder::append);
-            if (FIVE_OF_A_KIND.matcher(sortedHand).find()) {
-                return HandType.FIVE_OF_A_KIND;
-            }
-            if (FOUR_OF_A_KIND.matcher(sortedHand).find()) {
-                return HandType.FOUR_OF_A_KIND;
-            }
-            if (FULL_HOUSE.stream().anyMatch(p -> p.matcher(sortedHand).find())) {
-                return HandType.FULL_HOUSE;
-            }
-            if (THREE_OF_A_KIND.matcher(sortedHand).find()) {
-                return HandType.THREE_OF_A_KIND;
-            }
-            if (TWO_PAIR.matcher(sortedHand).find()) {
-                return HandType.TWO_PAIR;
-            }
-            if (ONE_PAIR.matcher(sortedHand).find()) {
-                return HandType.ONE_PAIR;
-            }
-            return HandType.HIGH_CARD;
-        }
-
-        public long typeValue() {
-            return classify().value;
-        }
-
-        private String rankValue() {
-            return hand.codePoints().map(cp ->
-                "23456789TJQKA".indexOf(cp) + 'A'
-            ).collect(StringBuilder::new,
-                StringBuilder::appendCodePoint,
-                StringBuilder::append)
-                .toString();
-        }
-    }
-
-
-    public record BidHand2(
-        String hand,
-        long bid
-    ) implements Comparable {
-        static BidHand2 parse(String line) {
-            var split = line.split(" ");
-            return new BidHand2(
-                split[0],
-                Long.parseLong(split[1])
-            );
-        }
-
-        static Pattern FIVE_OF_A_KIND = Pattern.compile("(.)\\1{4}");
-        static Pattern FOUR_OF_A_KIND = Pattern.compile("(.)\\1{3}");
-        static List<Pattern> FULL_HOUSE = List.of(
-            Pattern.compile("(.)\\1{2}(.)\\2"),
-            Pattern.compile("(.)\\1(.)\\2{2}")
-        );
-        static Pattern THREE_OF_A_KIND = Pattern.compile("(.)\\1{2}");
-        static Pattern TWO_PAIR = Pattern.compile("(.)\\1.*(.)\\2");
-        static Pattern ONE_PAIR = Pattern.compile("(.)\\1");
-
-        HandType classify() {
-            var sortedHand = hand.codePoints().sorted().collect(StringBuilder::new,
-                StringBuilder::appendCodePoint,
-                StringBuilder::append);
-            var jokerCount = hand.codePoints().filter(c -> c == 'J').count();
+            var jokerCount = useJokers ? hand.codePoints().filter(c -> c == 'J').count() : 0;
             if (FIVE_OF_A_KIND.matcher(sortedHand).find()) {
                 return HandType.FIVE_OF_A_KIND;
             }
@@ -170,28 +107,16 @@ public class Day07 {
             return HandType.HIGH_CARD;
         }
 
-        @Override
-        public int compareTo(Object other) {
-            if (other instanceof BidHand2 otherHand) {
-                var thisType = classify();
-                var otherType = otherHand.classify();
-                if (thisType.value > otherType.value) {
-                    return 1;
-                } else if (thisType.value < otherType.value) {
-                    return -1;
-                } else {
-                    return rankValue().compareTo(otherHand.rankValue());
-                }
-            }
-            return 0;
+        public long typeValue(boolean useJokers) {
+            return classify(useJokers).value;
         }
 
-        private String rankValue() {
+        private String rankValue(String rankOrdering) {
             return hand.codePoints().map(cp ->
-                    "J23456789TQKA".indexOf(cp) + 'A'
-                ).collect(StringBuilder::new,
-                    StringBuilder::appendCodePoint,
-                    StringBuilder::append)
+                rankOrdering.indexOf(cp) + 'A'
+            ).collect(StringBuilder::new,
+                StringBuilder::appendCodePoint,
+                StringBuilder::append)
                 .toString();
         }
     }
