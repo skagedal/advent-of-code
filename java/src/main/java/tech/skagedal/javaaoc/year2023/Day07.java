@@ -17,7 +17,7 @@ public class Day07 {
     public long part1(AdventContext context) {
         return Streams.enumerated(context.lines()
             .map(BidHand::parse)
-            .sorted())
+            .sorted(BidHand.comparator()))
             .mapToLong(enumeratedHand -> (enumeratedHand.number() + 1) * enumeratedHand.value().bid())
             .sum();
     }
@@ -33,7 +33,7 @@ public class Day07 {
     public record BidHand(
         String hand,
         long bid
-    ) implements Comparable {
+    ) {
         static BidHand parse(String line) {
             var split = line.split(" ");
             return new BidHand(
@@ -51,6 +51,12 @@ public class Day07 {
         static Pattern THREE_OF_A_KIND = Pattern.compile("(.)\\1{2}");
         static Pattern TWO_PAIR = Pattern.compile("(.)\\1.*(.)\\2");
         static Pattern ONE_PAIR = Pattern.compile("(.)\\1");
+
+        public static Comparator<BidHand> comparator() {
+            return Comparator
+                .comparingLong(BidHand::typeValue)
+                .thenComparing(BidHand::rankValue);
+        }
 
         HandType classify() {
             var sortedHand = hand.codePoints().sorted().collect(StringBuilder::new,
@@ -77,20 +83,8 @@ public class Day07 {
             return HandType.HIGH_CARD;
         }
 
-        @Override
-        public int compareTo(Object other) {
-            if (other instanceof BidHand otherHand) {
-                var thisType = classify();
-                var otherType = otherHand.classify();
-                if (thisType.value > otherType.value) {
-                    return 1;
-                } else if (thisType.value < otherType.value) {
-                    return -1;
-                } else {
-                    return rankValue().compareTo(otherHand.rankValue());
-                }
-            }
-            return 0;
+        public long typeValue() {
+            return classify().value;
         }
 
         private String rankValue() {
