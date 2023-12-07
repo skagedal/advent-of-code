@@ -22,6 +22,14 @@ public class Day07 {
             .sum();
     }
 
+    public long part2(AdventContext context) {
+        return Streams.enumerated(context.lines()
+                .map(BidHand2::parse)
+                .sorted())
+            .mapToLong(enumeratedHand -> (enumeratedHand.number() + 1) * enumeratedHand.value().bid())
+            .sum();
+    }
+
     public record BidHand(
         String hand,
         long bid
@@ -91,6 +99,105 @@ public class Day07 {
             ).collect(StringBuilder::new,
                 StringBuilder::appendCodePoint,
                 StringBuilder::append)
+                .toString();
+        }
+    }
+
+
+    public record BidHand2(
+        String hand,
+        long bid
+    ) implements Comparable {
+        static BidHand2 parse(String line) {
+            var split = line.split(" ");
+            return new BidHand2(
+                split[0],
+                Long.parseLong(split[1])
+            );
+        }
+
+        static Pattern FIVE_OF_A_KIND = Pattern.compile("(.)\\1{4}");
+        static Pattern FOUR_OF_A_KIND = Pattern.compile("(.)\\1{3}");
+        static List<Pattern> FULL_HOUSE = List.of(
+            Pattern.compile("(.)\\1{2}(.)\\2"),
+            Pattern.compile("(.)\\1(.)\\2{2}")
+        );
+        static Pattern THREE_OF_A_KIND = Pattern.compile("(.)\\1{2}");
+        static Pattern TWO_PAIR = Pattern.compile("(.)\\1.*(.)\\2");
+        static Pattern ONE_PAIR = Pattern.compile("(.)\\1");
+
+        HandType classify() {
+            var sortedHand = hand.codePoints().sorted().collect(StringBuilder::new,
+                StringBuilder::appendCodePoint,
+                StringBuilder::append);
+            var jokerCount = hand.codePoints().filter(c -> c == 'J').count();
+            if (FIVE_OF_A_KIND.matcher(sortedHand).find()) {
+                return HandType.FIVE_OF_A_KIND;
+            }
+            if (FOUR_OF_A_KIND.matcher(sortedHand).find()) {
+                if (jokerCount == 1 || jokerCount == 4) {
+                    return HandType.FIVE_OF_A_KIND;
+                }
+                return HandType.FOUR_OF_A_KIND;
+            }
+            if (FULL_HOUSE.stream().anyMatch(p -> p.matcher(sortedHand).find())) {
+                if (jokerCount == 2 || jokerCount == 3) {
+                    return HandType.FIVE_OF_A_KIND;
+                }
+                return HandType.FULL_HOUSE;
+            }
+            if (THREE_OF_A_KIND.matcher(sortedHand).find()) {
+                if (jokerCount == 1 || jokerCount == 3) {
+                    return HandType.FOUR_OF_A_KIND;
+                }
+                if (jokerCount == 2) {
+                    return HandType.FIVE_OF_A_KIND;
+                }
+                return HandType.THREE_OF_A_KIND;
+            }
+            if (TWO_PAIR.matcher(sortedHand).find()) {
+                if (jokerCount == 1) {
+                    return HandType.FULL_HOUSE;
+                }
+                if (jokerCount == 2) {
+                    return HandType.FOUR_OF_A_KIND;
+                }
+                return HandType.TWO_PAIR;
+            }
+            if (ONE_PAIR.matcher(sortedHand).find()) {
+                if (jokerCount == 1 || jokerCount == 2) {
+                    return HandType.THREE_OF_A_KIND;
+                }
+                return HandType.ONE_PAIR;
+            }
+            if (jokerCount == 1) {
+                return HandType.ONE_PAIR;
+            }
+            return HandType.HIGH_CARD;
+        }
+
+        @Override
+        public int compareTo(Object other) {
+            if (other instanceof BidHand2 otherHand) {
+                var thisType = classify();
+                var otherType = otherHand.classify();
+                if (thisType.value > otherType.value) {
+                    return 1;
+                } else if (thisType.value < otherType.value) {
+                    return -1;
+                } else {
+                    return rankValue().compareTo(otherHand.rankValue());
+                }
+            }
+            return 0;
+        }
+
+        private String rankValue() {
+            return hand.codePoints().map(cp ->
+                    "J23456789TQKA".indexOf(cp) + 'A'
+                ).collect(StringBuilder::new,
+                    StringBuilder::appendCodePoint,
+                    StringBuilder::append)
                 .toString();
         }
     }
