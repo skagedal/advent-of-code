@@ -6,7 +6,6 @@ import tech.skagedal.javaaoc.aoc.AdventOfCodeRunner;
 import tech.skagedal.javaaoc.tools.math.Longs;
 
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 @AdventOfCode(
     description = ""
@@ -14,24 +13,36 @@ import java.util.stream.Stream;
 public class Day09 {
     public long part1(AdventContext context) {
         return context.lines()
-            .map(Longs::inString)
+            .map(Day09::toLongArray)
             .mapToLong(Day09::findNextExtrapolatedValue)
             .sum();
     }
 
     public long part2(AdventContext context) {
-        return 0;
+        return context.lines()
+            .map(Day09::toLongArray)
+            .mapToLong(Day09::findPreviousExtrapolatedValue)
+            .sum();
     }
-    
-    public static long findNextExtrapolatedValue(Stream<Long> valuesStream) {
-        return findNextExtrapolatedValue(valuesStream.mapToLong(Long::longValue).toArray());
+
+    public static long[] toLongArray(String line) {
+        return Longs.inString(line).mapToLong(Long::longValue).toArray();
     }
 
     public static long findNextExtrapolatedValue(long[] values) {
-        if (Arrays.stream(values).allMatch(l -> l == 0)) {
-            return 0;
-        }
-        return values[values.length - 1] + findNextExtrapolatedValue(diffs(values));
+        return allAreZero(values)
+            ? 0
+            : values[values.length - 1] + findNextExtrapolatedValue(diffs(values));
+    }
+
+    private static long findPreviousExtrapolatedValue(long[] values) {
+        return allAreZero(values)
+            ? 0
+            : values[0] - findPreviousExtrapolatedValue(diffs(values));
+    }
+
+    private static boolean allAreZero(long[] values) {
+        return Arrays.stream(values).allMatch(l -> l == 0);
     }
 
     public static long[] diffs(long[] values) {
