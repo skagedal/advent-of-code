@@ -19,6 +19,22 @@ public class Grid<T> {
         this(grid, 0, 0, grid.get(0).size(), grid.size());
     }
 
+    public int getStartX() {
+        return startX;
+    }
+
+    public int getStartY() {
+        return startY;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
     private Grid(List<List<T>> grid, int startX, int startY, int width, int height) {
         this.grid = grid;
         this.startX = startX;
