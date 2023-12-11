@@ -67,6 +67,24 @@ public class Streams {
             .onClose(s3::close);
     }
 
+
+    public static <T1, T2> Stream<Tuple2<T1, T2>> cartesianProduct(List<T1> l1, List<T2> l2) {
+        return l1.stream().flatMap(v1 -> l2.stream().map(v2 -> new Tuple2<>(v1, v2)));
+    }
+
+    public static <T> Stream<Tuple2<T, T>> allPairs(List<T> values) {
+        if (values.isEmpty()) {
+            return Stream.of();
+        } else {
+            var first = values.getFirst();
+            var rest = values.subList(1, values.size());
+            return Stream.concat(
+                rest.stream().map(val -> new Tuple2<>(first, val)),
+                allPairs(rest)
+            );
+        }
+    }
+
     public static <T> Stream<Enumerated<T>> enumerated(Stream<T> s) {
         return zip(IntStream.iterate(0, i -> i + 1).boxed(), s, Enumerated::new);
     }

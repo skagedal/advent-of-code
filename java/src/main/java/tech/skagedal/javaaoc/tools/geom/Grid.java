@@ -99,6 +99,14 @@ public class Grid<T> {
                 point.x() >= startX && point.x() < (startX + width);
     }
 
+    public Grid<T> invert() {
+        var inverted = IntStream.range(0, width).mapToObj(x ->
+            IntStream.range(0, height)
+                .mapToObj(y -> grid.get(y).get(x)).toList()
+        ).toList();
+        return new Grid<>(inverted);
+    }
+
     public Stream<T> all() {
         return grid.stream().flatMap(Collection::stream);
     }
