@@ -3,7 +3,7 @@ com-google-guava = "com.google.guava:guava:33.1.0-jre"
 commons-codec = "commons-codec:commons-codec:1.16.1"
 org-jgrapht-jgrapht-core = "org.jgrapht:jgrapht-core:1.5.2"
 org-junit-jupiter-junit-jupiter = "org.junit.jupiter:junit-jupiter:5.10.2"
-org-springframework-spring-context = "org.springframework:spring-context:6.1.5"
+org-springframework-spring-context = "org.springframework:spring-context:6.1.6"
 
 [plugins]
 com-github-ben-manes-versions = "com.github.ben-manes.versions:0.51.0"
