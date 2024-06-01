@@ -1,5 +1,5 @@
 [libraries]
-com-google-guava = "com.google.guava:guava:33.2.0-jre"
+com-google-guava = "com.google.guava:guava:33.2.1-jre"
 commons-codec = "commons-codec:commons-codec:1.17.0"
 org-jgrapht-jgrapht-core = "org.jgrapht:jgrapht-core:1.5.2"
 org-junit-jupiter-junit-jupiter = "org.junit.jupiter:junit-jupiter:5.11.0-M2"
