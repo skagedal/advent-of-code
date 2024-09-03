@@ -1,4 +1,5 @@
 #!/bin/sh
-cd java && ./update
+# cd java && ./update
+echo Not updating here, have no easy way to know it is working.
 
 
