@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import test from "node:test";
-import { parse, solvePartOne, solvePartTwo, type Rotation } from "./day-one.ts";
+import { parseDayOne, solvePartOne, solvePartTwo, type Rotation } from "./day-one.ts";
 
 const example = `L68
 L30
@@ -27,7 +27,7 @@ const exampleParsed: Rotation[] = [
 ];
 
 test("parse", (t) => {
-  const parsed = parse(example);
+  const parsed = parseDayOne(example);
   assert.deepStrictEqual(parsed, exampleParsed);
 });
 

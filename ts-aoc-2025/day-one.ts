@@ -5,7 +5,7 @@ export type Rotation = {
   steps: number;
 };
 
-export function parse(input: string): Rotation[] {
+export function parseDayOne(input: string): Rotation[] {
   return input.split("\n").map((part) => {
     const direction = part.charAt(0) as "L" | "R";
     const steps = parseInt(part.slice(1), 10);

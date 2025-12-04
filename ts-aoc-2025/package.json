@@ -1,7 +1,15 @@
 {
-  "dependencies": {
-    "@types/node": "^24.10.1"
+  "main": "./index.ts",
+  "scripts": {
+    "check:types": "tsc --noEmit"
   },
-  "main": "index.ts",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@types/node": "^24"
+  },
+  "devDependencies": {
+    "@tsconfig/node-ts": "latest",
+    "@tsconfig/node24": "latest",
+    "typescript": "latest"
+  }
 }
