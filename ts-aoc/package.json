@@ -1,5 +1,5 @@
 {
-  "author": "Simon Kågedal Reimer @skagedal",
+  "author": "Simon Kågedal @skagedal",
   "bin": {
     "ts-aoc": "./bin/run.js"
   },
